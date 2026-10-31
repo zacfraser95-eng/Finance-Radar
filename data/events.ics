@@ -1,0 +1,36 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Finance Radar//Student Events//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Finance Radar - Confirmed Events
+X-WR-TIMEZONE:Australia/Sydney
+X-WR-CALDESC:Currently confirmed UNSW and Sydney finance events. Check orga
+ niser details.
+BEGIN:VEVENT
+UID:evt-8265eeea6300@finance-radar.unsw-student
+DTSTAMP:20261031T235309Z
+DTSTART:20261105T070000Z
+DTEND:20261105T090000Z
+SUMMARY:Evening with Morgan Stanley
+DESCRIPTION:Organiser: UNIT\nEligibility: Pre-penultimate students encourag
+ ed\; check organiser eligibility.\nOriginal listing: https://forms.gle/eMB
+ VpNogp4awX6Bp9
+LOCATION:Morgan Stanley office\, Sydney CBD
+URL:https://forms.gle/eMBVpNogp4awX6Bp9
+END:VEVENT
+BEGIN:VEVENT
+UID:evt-4bcf2300ad11@finance-radar.unsw-student
+DTSTAMP:20261031T235309Z
+DTSTART:20261125T230000Z
+DTEND:20261126T040000Z
+SUMMARY:McKinsey & Company's 2026 AI and The Path to Progress Workshop
+DESCRIPTION:Organiser: FMAA\nEligibility: Penultimate-year undergraduates a
+ nd master's students. Not suitable for most first-year students.\nOriginal
+  listing: https://www.fmaa.com.au/event/mckinsey-companys-2026-ai-and-the-
+ path-to-progress-workshop
+LOCATION:Sydney — see organiser for address
+URL:https://www.fmaa.com.au/event/mckinsey-companys-2026-ai-and-the-path-to
+ -progress-workshop
+END:VEVENT
+END:VCALENDAR
