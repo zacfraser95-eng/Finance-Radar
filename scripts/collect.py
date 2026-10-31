@@ -33,6 +33,11 @@ SOURCES = {
     'fmaa': ('FMAA', 'https://www.fmaa.com.au/events'),
     'unsw': ('UNSW Employability', 'https://www.unsw.edu.au/employability/events-news/events'),
     'finsoc': ('FINSOC', 'https://www.unswfinsoc.org.au/'),
+    'social_finsoc': ('FINSOC bio links', 'https://linktr.ee/finsocunsw'),
+    'social_unit': ('UNIT bio links', 'https://linktr.ee/unit_unsw'),
+    'social_fintech': ('FinTechSoc bio links', 'https://linktr.ee/unswfintechsoc'),
+    'social_quant': ('QuantSoc bio links', 'https://linktr.ee/unswquantsoc'),
+    'social_bsoc': ('BSOC bio links', 'https://linktr.ee/unswbsoc'),
 }
 MONTHS = ('January February March April May June July August September October November December').split()
 MONTH_RX = '|'.join(MONTHS+[m[:3] for m in MONTHS])
@@ -382,6 +387,82 @@ def jsonld_events(html: str, source: str, source_url: str, today: dt.date) -> li
     return unique(output)
 
 
+# Public Linktree pages belong to societies but do not expose the Instagram or
+# Facebook post feed. Discover links here; never assume an undated link is an event.
+BIO_SOCIAL_NAMES = {
+    'social_finsoc': 'FINSOC', 'social_unit': 'UNIT',
+    'social_fintech': 'UNSW FinTechSoc', 'social_quant': 'UNSW QuantSoc',
+    'social_bsoc': 'UNSW BSOC',
+}
+LINK_EVENT_HOSTS = {'eventbrite.com', 'eventbrite.com.au', 'humanitix.com', 'events.humanitix.com', 'luma.com'}
+LINK_FORM_HOSTS = {'docs.google.com', 'forms.gle', 'form.jotform.com', 'forms.office.com', 'events.humanitix.com', 'app.tribespot.co'}
+HUB_KEYWORDS = re.compile(r'workshop|networking|case competition|careers? (?:fair|panel|night|evening|event)|finance|investment|credit analysis|financial modelling|banking|equity|trading|quant|seminar|webinar|internship|industry insights|mentoring|which major', re.I)
+HUB_EXCLUDE = re.compile(r'director recruitment|subcommittee|membership|subscribe|rubric sign.?up|first year.?s guide|careers? guide|join us|giveaway|pub ?crawl|cruise|hallocrawl|ball 2026|agm|alumni directory|summer analyst.*application', re.I)
+
+def trusted_host(link: str, hosts: set[str]) -> bool:
+    try:
+        u=urlsplit(link)
+        host=(u.hostname or '').lower()
+        if host.startswith('www.'):host=host[4:]
+        return u.scheme == 'https' and host in hosts and not u.username and not u.password
+    except ValueError:
+        return False
+
+def parse_social_hub(html: str, source_key: str, today: dt.date, fetch_detail=get) -> tuple[list[dict],list[dict]]:
+    """Inspect the society's public bio links, not its social-media posts.
+
+    Only dated, verifiable Schema.org event details become calendar events.
+    Other relevant links are *undated signals*, explicitly excluded from alerts.
+    """
+    if source_key not in BIO_SOCIAL_NAMES: raise ValueError('Unknown approved bio source')
+    soup=BeautifulSoup(html,'html.parser')
+    text=soup.get_text(' ',strip=True)
+    # Linktree's rendered HTML may change. Don't claim a successful scan on a login page.
+    if not text or ('linktree' not in text.lower() and not soup.find('a',href=True)):
+        raise ValueError('Public society bio links not exposed')
+    main=soup.find('main') or soup.find(id='__next') or soup
+    candidates=[]; seen=set()
+    for a in main.select('a[href]'):
+        link=urljoin(SOURCES[source_key][1],a.get('href',''))
+        title=re.sub(r'\s+', ' ', a.get_text(' ',strip=True)).strip()[:160]
+        if not title or len(title)<7 or len(title)>160 or HUB_EXCLUDE.search(title):continue
+        # Do not repeatedly advertise an explicitly labelled prior-year link.
+        years=[int(v) for v in re.findall(r'\b20\d{2}\b',title)]
+        if years and max(years)<today.year:continue
+        if not HUB_KEYWORDS.search(title):continue
+        if not trusted_host(link,LINK_EVENT_HOSTS|LINK_FORM_HOSTS):continue
+        norm=link.split('?')[0].rstrip('/').lower()
+        if norm in seen:continue
+        seen.add(norm);candidates.append((title,link))
+    results=[]; signals=[]
+    # Bounds prevent Linktree pages from inducing unbounded external requests.
+    for title,link in candidates[:10]:
+        host=(urlsplit(link).hostname or '').lower()
+        confirmed=[]
+        if trusted_host(link,LINK_EVENT_HOSTS):
+            try:
+                content=fetch_detail(link)
+                confirmed=jsonld_events(content,BIO_SOCIAL_NAMES[source_key],link,today)
+            except (requests.RequestException,ValueError,RuntimeError):pass
+        for record in confirmed:
+            # A random event link should not become a finance event just because
+            # it appeared in a society's bio. jsonld_events performs this check.
+            record['source_urls']=[SOURCES[source_key][1],link]
+            record['sources']=[BIO_SOCIAL_NAMES[source_key], 'Dated registration page']
+            record['organiser']=BIO_SOCIAL_NAMES[source_key]
+            record['registration_url']=link
+            record['relevance_reason']='Dated registration linked from the organiser public bio; review details at destination.'
+            results.append(record)
+        if confirmed:continue
+        # No verified future date: the separate 'link to review' feed is NOT an event.
+        sid=hashlib.sha1((source_key+'|'+link.split('?')[0]).encode()).hexdigest()[:12]
+        signals.append({'id':'signal-'+sid,'title':title,'organiser':BIO_SOCIAL_NAMES[source_key],
+                        'url':link,'source_url':SOURCES[source_key][1],
+                        'status':'date_unverified','note':'Public bio link only; date, availability and eligibility not confirmed.',
+                        'checked_on':today.isoformat()})
+    return unique(results),signals
+
+
 def similar(a:dict,b:dict) -> bool:
     if a['starts_at'][:10]!=b['starts_at'][:10]:return False
     if a.get('registration_url') and a['registration_url']==b.get('registration_url'):
@@ -419,12 +500,21 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
     seed_path=folder/'snapshot.json'
     baseline=json.loads((old_path if old_path.exists() else seed_path).read_text())
     previous=baseline.get('events',[])
-    fresh=[];health={}
+    fresh=[];health={};social_signals=[]
     keys=source_keys or list(SOURCES)
     for key in keys:
         name,url=SOURCES[key]
         try:
             raw=fetcher(url)
+            if key in BIO_SOCIAL_NAMES:
+                found,signals=parse_social_hub(raw,key,today,fetch_detail=fetcher)
+                social_signals.extend(signals)
+                health[key]={'status':'ok' if found else ('links_only' if signals else 'accessible_empty'),
+                             'count':len(found),'signals':len(signals),
+                             'checked_at':dt.datetime.now(TIMEZONE).isoformat(timespec='seconds'),'url':url}
+                fresh.extend(found)
+                print(f'{name}: {health[key]["status"]} ({len(found)} confirmed, {len(signals)} undated links)')
+                continue
             structured=jsonld_events(raw,name,url,today)
             try:
                 if key=='unit': found=parse_unit_home(raw,today)
@@ -459,16 +549,27 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
     by_id={s['id']:s for s in sources}
     if 'unit_calendar' not in by_id:
         sources.append({'id':'unit_calendar','name':'UNIT events archive','url':SOURCES['unit_calendar'][1],'method':'Public events calendar','coverage':'public','note':'A dated archive; historical events are never treated as upcoming.'})
+    for key in BIO_SOCIAL_NAMES:
+        if key not in by_id:
+            sources.append({'id':key,'name':BIO_SOCIAL_NAMES[key]+' · social bio',
+                'url':SOURCES[key][1],'method':'Public link-in-bio monitoring',
+                'coverage':'limited','note':'Only public registration links are readable. No Facebook/Instagram posts, stories or private-group access.'})
     for source in sources:
         if source['id'] in health:source['last_check']=health[source['id']]
     generated=dt.datetime.now(TIMEZONE).isoformat(timespec='seconds')
-    payload={'schema':2,'generated_at':generated,'mode':'scheduled_sync', 'notice':'Automatically collected public event data; compare with organiser before registration. Not all social-only events are covered.', 'sources':sources,'events':records}
-    report={'generated_at':generated,'sources':health,'event_count':len(records),'new_event_ids':newly,'current_event_count':sum(e.get('collection_status')=='current' for e in records),'last_known_event_count':sum(e.get('collection_status')=='last_known' for e in records)}
+    payload={'schema':3,'generated_at':generated,'mode':'scheduled_sync',
+             'notice':'Public event listings and society bio links only; Instagram and Facebook post feeds are not connected.',
+             'sources':sources,'events':records,'signals':social_signals[:16]}
+    report={'generated_at':generated,'sources':health,'event_count':len(records),
+            'unverified_bio_links':len(social_signals),'new_event_ids':newly,
+            'current_event_count':sum(e.get('collection_status')=='current' for e in records),
+            'last_known_event_count':sum(e.get('collection_status')=='last_known' for e in records)}
     folder.mkdir(parents=True,exist_ok=True)
     (folder/'feed.json').write_text(json.dumps(payload,indent=2,ensure_ascii=False)+'\n')
     (folder/'live.js').write_text('// Generated automatically: review organiser links before registering.\nwindow.RADAR_SYNC = '+json.dumps(payload,ensure_ascii=False,separators=(',',':'))+';\n')
     (folder/'health.json').write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n')
     (folder/'new_events.json').write_text(json.dumps(newly,indent=2)+'\n')
+    (folder/'signals.json').write_text(json.dumps(social_signals[:16],indent=2,ensure_ascii=False)+'\n')
     return payload,report
 
 
