@@ -220,3 +220,35 @@ def test_social_hub_empty_fresh_not_phantom_event(tmp_path):
 def test_social_hub_missing_public_links_does_not_fake_posts():
     e,signals=collect.parse_social_hub('<html><h1>Linktree @finsocunsw</h1></html>','social_finsoc',TODAY)
     assert e==[] and signals==[]
+
+
+PUBLIC_FB_SOURCE='''<html><h2>UPCOMING EVENTS.</h2>
+  <a href="https://www.facebook.com/events/3420424424785763">FINSOC event</a>
+  <a href="https://www.facebook.com/events/3420424424785763?ref=feed">Duplicate</a>
+  <a href="https://www.facebook.com.evil.org/events/3420424424785763">Malicious</a>
+</html>'''
+PUBLIC_FB_DETAIL='''<html><head><meta property="og:title" content="FINSOC Investment Banking Networking Evening">
+  <meta property="og:description" content="Event in Sydney, NSW, Australia by UNSW Finance and Banking Society on Thursday, November 26 2026"></head></html>'''
+
+
+def test_public_facebook_event_metadata_only():
+    calls=[]
+    def fetch(url):
+        calls.append(url)
+        return PUBLIC_FB_DETAIL
+    found=collect.parse_public_facebook_events(PUBLIC_FB_SOURCE,TODAY,fetch_detail=fetch)
+    assert len(found)==1
+    assert found[0]['starts_at']=='2026-11-26'
+    assert found[0]['registration_url']=='https://www.facebook.com/events/3420424424785763'
+    assert len(calls)==1
+
+
+def test_public_facebook_event_missing_year_or_private_page_ignored():
+    def fetch(url):
+        return '<html><meta property="og:title" content="Investment Banking Evening"><meta property="og:description" content="Log in to Facebook to view"></html>'
+    assert collect.parse_public_facebook_events(PUBLIC_FB_SOURCE,TODAY,fetch_detail=fetch)==[]
+
+
+def test_public_facebook_event_expired_ignored():
+    past=PUBLIC_FB_DETAIL.replace('November 26 2026','June 25 2026')
+    assert collect.parse_public_facebook_events(PUBLIC_FB_SOURCE,TODAY,fetch_detail=lambda _:past)==[]

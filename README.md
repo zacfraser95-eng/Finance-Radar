@@ -83,3 +83,5 @@ The six-hour collector checks the public link-in-bio pages for FINSOC, UNIT, Fin
 - To capture social-only posts and stories reliably, ask organisers for an approved public event feed, iCal export, newsletters or social-platform API authorization. Do not bypass login walls.
 
 The front end includes separate dated-event and undated-link sections. Email alerts via Resend are optional and unconfigured by default.
+
+Public Facebook event metadata is also inspected only for specific event links already published on FINSOC's official website. This is not access to Facebook Page feeds, private groups, Instagram stories, or a logged-in Facebook session; missing metadata is ignored.
