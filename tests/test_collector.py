@@ -285,3 +285,37 @@ def test_fmaa_facebook_outbound_redirect_cannot_escape_allowlist():
     assert collect.unwrap_public_registration_url(safe)=='https://form.jotform.com/abc/finance-evening'
     unsafe='https://l.facebook.com/l.php?u=https%3A%2F%2Fform.jotform.com.attacker.com%2Fsteal'
     assert collect.unwrap_public_registration_url(unsafe)==unsafe
+
+
+EXPIRED_FB='''<html><main><a href="https://www.eventbrite.com.au/e/old-finance-12345">Finance Careers Networking Evening</a></main></html>'''
+EXPIRED_FORM='''<html><main><a href="https://form.jotform.com/test/old-esg">ESG Industry Insights Evening Register</a></main></html>'''
+
+def test_expired_eventbrite_never_appears_as_new_lead():
+    old='<html><h1>Event ended</h1><h2>Finance Careers Networking Evening</h2>Wednesday, October 14</html>'
+    found,leads=collect.parse_social_hub(EXPIRED_FB,'social_finsoc',TODAY,fetch_detail=lambda _:old)
+    assert found==[] and leads==[]
+
+def test_expired_jotform_never_appears_as_new_lead():
+    old='<html><h1>FMAA ESG Evening</h1><p>Event Details: Date: 29 October 2026 Time: 5:45pm - 8pm</p></html>'
+    found,leads=collect.parse_social_hub(EXPIRED_FORM,'social_fmaa',dt.date(2026,11,1),fetch_detail=lambda _:old)
+    assert found==[] and leads==[]
+
+def test_unknown_form_date_remains_unverified_lead():
+    found,leads=collect.parse_social_hub(EXPIRED_FORM,'social_fmaa',TODAY,fetch_detail=lambda _:'<h1>ESG workshop</h1>')
+    assert found==[] and len(leads)==1 and leads[0]['status']=='date_unverified'
+
+def test_future_form_date_remains_unverified_without_event_schema():
+    found,leads=collect.parse_social_hub(EXPIRED_FORM,'social_fmaa',dt.date(2026,11,1),fetch_detail=lambda _:'<p>Event Details: Date: 15 December 2026 Time: 5pm</p>')
+    assert found==[] and len(leads)==1
+
+def test_expired_links_not_returned_from_collector(tmp_path):
+    (tmp_path/'snapshot.json').write_text(json.dumps({'events': [], 'sources': []}))
+    html='''<html><main><a href="https://www.eventbrite.com.au/e/old-finance-12345">Finance Networking Event</a><a href="https://form.jotform.com/test/old-esg">ESG Industry Insights Evening Register</a></main></html>'''
+    def fetched(u):
+        if u.startswith('https://linktr.ee/'):return html
+        if 'eventbrite.com' in u:return '<h1>Event ended</h1>'
+        if 'jotform.com' in u:return '<p>Event Details: Date: 29 October 2026 Time: 5:45pm</p>'
+        raise AssertionError(u)
+    feed,health=collect.collect(today=dt.date(2026,11,1),fetcher=fetched,source_keys=['social_fmaa'],folder=tmp_path)
+    assert feed['events']==[] and feed['signals']==[]
+    assert health['sources']['social_fmaa']['status']=='accessible_empty'

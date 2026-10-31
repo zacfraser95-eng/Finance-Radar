@@ -538,6 +538,20 @@ def parse_newsletter_mentions(raw: str, key: str, today: dt.date, fetch_detail=g
     return leads[:5]
 
 
+def registration_is_past(html: str, url: str, today: dt.date) -> bool:
+    """Suppress provably expired registration pages from the undated-leads feed."""
+    content=BeautifulSoup(html,'html.parser').get_text(' ',strip=True)[:6000]
+    if trusted_host(url, LINK_EVENT_HOSTS) and re.search(r'\bEvent ended\b',content,re.I):
+        return True
+    if trusted_host(url, {'form.jotform.com'}):
+        date_label=re.search(r'\b(?:Event\s+)?Date\s*:\s*(.{0,65})',content,re.I)
+        if date_label and re.search(r'\b20\d{2}\b',date_label.group(1)):
+            when=parse_date(date_label.group(1),today)
+            if when is not None and when<today:
+                return True
+    return False
+
+
 def parse_social_hub(html: str, source_key: str, today: dt.date, fetch_detail=get) -> tuple[list[dict],list[dict]]:
     """Inspect the society's public bio links, not its social-media posts.
 
@@ -569,11 +583,17 @@ def parse_social_hub(html: str, source_key: str, today: dt.date, fetch_detail=ge
     for title,link in candidates[:10]:
         host=(urlsplit(link).hostname or '').lower()
         confirmed=[]
-        if trusted_host(link,LINK_EVENT_HOSTS):
+        expired=False
+        if trusted_host(link, LINK_EVENT_HOSTS | {'form.jotform.com'}):
             try:
                 content=fetch_detail(link)
-                confirmed=jsonld_events(content,BIO_SOCIAL_NAMES[source_key],link,today)
-            except (requests.RequestException,ValueError,RuntimeError):pass
+                expired=registration_is_past(content,link,today)
+                if not expired and trusted_host(link,LINK_EVENT_HOSTS):
+                    confirmed=jsonld_events(content,BIO_SOCIAL_NAMES[source_key],link,today)
+            except (requests.RequestException,ValueError,RuntimeError):
+                pass
+        if expired:
+            continue
         for record in confirmed:
             # A random event link should not become a finance event just because
             # it appeared in a society's bio. jsonld_events performs this check.
