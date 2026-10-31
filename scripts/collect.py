@@ -42,6 +42,11 @@ SOURCES = {
     'social_fmaa': ('FMAA UNSW bio links', 'https://linktr.ee/fmaaunsw'),
     'bsoc_publications': ('BSOC public newsletter', 'https://unswbsocnewsletter.beehiiv.com/'),
     'unit_publications': ('UNIT Market Wrap RSS', 'https://www.unit.org.au/market-wrap?format=rss'),
+    'capitalw': ('UNSW Capital W', 'https://capitalw.org/events'),
+    'cma': ('UNSW Capital Markets Association', 'https://www.cmaunsw.com/'),
+    'accsoc': ('UNSW Accounting and Taxation Society', 'https://www.unswaccsoc.com/upcoming-events'),
+    'bsoc_calendar': ('UNSW Business Society events', 'https://www.unswbsoc.com/our-events'),
+    'faic': ('UNSW Fintech AI Innovation Consortium', 'https://www.unsw.edu.au/research/faic/events'),
 }
 MONTHS = ('January February March April May June July August September October November December').split()
 MONTH_RX = '|'.join(MONTHS+[m[:3] for m in MONTHS])
@@ -50,7 +55,7 @@ DATE_MONTH_DAY = re.compile(rf'\b(?P<month>{MONTH_RX})\s+(?P<day>\d{{1,2}})(?:st
 RANGE_RX = re.compile(r'\b(?P<start>\d{1,2}(?::\d{2})?\s*(?:am|pm)?)\s*(?:-|–|—|to)\s*(?P<end>\d{1,2}(?::\d{2})?\s*(?:am|pm))\b',re.I)
 CLOCK_RX = re.compile(r'\b\d{1,2}(?::\d{2})?\s*(?:am|pm)\b', re.I)
 ELIGIBILITY_RX = re.compile(r'penultimate[\s-]*year|final[\s-]*year\s+(?:undergrad|students)|postgraduate\s+only|master.s\s+students\s+only',re.I)
-CAREER_RX = re.compile(r'finance|bank|capital|trading|asset management|markets?|invest|portfolio|equity|recruit|intern|network|linkedin|job search|interview|consult|mckinsey|bain|careers?|corporate strategy|accounting',re.I)
+CAREER_RX = re.compile(r'fintech|financial technolog|finance|bank|capital|trading|asset management|markets?|invest|portfolio|equity|recruit|intern|network|linkedin|job search|interview|consult|mckinsey|bain|careers?|corporate strategy|accounting',re.I)
 
 
 def get(url: str) -> str:
@@ -113,7 +118,7 @@ def fit_from(title: str, context: str) -> tuple[str,str]:
     if re.search(r'investment bank|morgan stanley|goldman sachs|m&a',t): category='Investment banking'
     elif re.search(r'equity research|markets?|trading|asset manage|portfolio',t): category='Markets & asset management'
     elif re.search(r'mckinsey|consulting|bain|bcg',t): category='Consulting'
-    elif re.search(r'finance|invest|bank|strategy',t): category='Finance & strategy'
+    elif re.search(r'fintech|finance|invest|bank|strategy',t): category='Finance & strategy'
     else: category='Career skills'
     return category, 'restricted' if restricted else ('high' if category!='Career skills' else 'medium')
 
@@ -553,6 +558,149 @@ def registration_is_past(html: str, url: str, today: dt.date) -> bool:
     return False
 
 
+
+def parse_squarespace_society(html: str, key: str, today: dt.date) -> list[dict]:
+    """Future event entries from the society's dated Squarespace events index.
+
+    The visible <time> date must contain a year. Ignore archive marketing copy
+    containing old future dates, and never import social-only undated events.
+    """
+    if key not in ('capitalw', 'accsoc'):
+        raise ValueError('Unknown society calendar')
+    source,url=SOURCES[key]
+    soup=BeautifulSoup(html,'html.parser')
+    if not re.search(r'Upcoming Events',soup.get_text(' ',strip=True),re.I):
+        raise ValueError('Society events page heading missing')
+    prefix='/events/' if key=='capitalw' else '/upcoming-events/'
+    found=[]
+    for card in soup.select('article'):
+        # Ignore wrapping article elements around nested event articles.
+        if card.find('article'):
+            continue
+        heading=card.find(['h1','h2','h3'])
+        clock=card.find('time')
+        if not heading or not clock:
+            continue
+        title=heading.get_text(' ',strip=True)
+        date_text=clock.get_text(' ',strip=True)
+        if not re.search(r'\b20\d{2}\b',date_text):
+            continue
+        date=parse_date(date_text,today)
+        if not date or date<today:
+            continue
+        summary=card.get_text(' ',strip=True)
+        if not CAREER_RX.search(title+' '+summary[:450]):
+            continue
+        link=next((urljoin(url,a['href']) for a in card.select('a[href]')
+                   if urlsplit(urljoin(url,a['href'])).path.startswith(prefix)
+                   and urlsplit(urljoin(url,a['href'])).path.rstrip('/')!=urlsplit(url).path.rstrip('/')),url)
+        times=' '.join(n.get_text(' ',strip=True) for n in card.select('time')[1:3])
+        rec=event(source,title,date,times,link,today=today,summary=summary[:220],time_known=bool(CLOCK_RX.search(times)))
+        if rec:
+            found.append(rec)
+    return unique(found)
+
+
+def parse_cma(html: str, today: dt.date) -> list[dict]:
+    """Parse dated CMA event cards, never deriving dates from unrelated headings."""
+    soup=BeautifulSoup(html,'html.parser')
+    if not re.search(r'Capital Markets Association',soup.get_text(' ',strip=True),re.I):
+        raise ValueError('CMA site unavailable')
+    output=[]
+    for heading in soup.select('h3'):
+        title=heading.get_text(' ',strip=True)
+        if not CAREER_RX.search(title):
+            continue
+        context=[]
+        links=[]
+        # Gather only material belonging to this heading, ending at next h3.
+        for node in heading.next_elements:
+            if getattr(node,'name',None)=='h3':
+                break
+            if getattr(node,'name',None)=='a':
+                href=node.get('href','')
+                if href.startswith('https://'):
+                    links.append(href)
+            if isinstance(node,str):
+                context.append(node.strip())
+            if len(' '.join(context))>800:
+                break
+        segment=' '.join(context)
+        m=re.search(r'\b([0-3]?\d)/([01]?\d)/(20\d{2}|\d{2})\b',segment)
+        if not m:
+            continue
+        year=int(m.group(3))
+        if year<100:year+=2000
+        try:
+            day=dt.date(year,int(m.group(2)),int(m.group(1)))
+        except ValueError:
+            continue
+        if day<today:
+            continue
+        time_match=CLOCK_RX.search(segment[m.end():m.end()+70])
+        raw_time=time_match.group(0) if time_match else ''
+        link=next((x for x in links if trusted_host(x,{'facebook.com','www.facebook.com','forms.gle','docs.google.com'})),SOURCES['cma'][1]+'#events')
+        rec=event('UNSW CMA',title,day,raw_time,link,today=today,summary=segment[:220],time_known=bool(raw_time))
+        if rec:
+            output.append(rec)
+    return unique(output)
+
+
+def parse_bsoc_events(html: str, today: dt.date) -> list[dict]:
+    """BSOC's current public event page consists of *recaps*, not registrations.
+
+    Do not turn a recap into a future calendar record simply because its date
+    is in the future. This source stays on the coverage monitor awaiting a
+    separately labelled, official upcoming-event listing.
+    """
+    soup=BeautifulSoup(html,'html.parser')
+    if 'Our Events' not in soup.get_text(' ',strip=True):
+        raise ValueError('BSOC event page unavailable')
+    return []
+
+
+def parse_faic(html: str, today: dt.date) -> list[dict]:
+    soup=BeautifulSoup(html,'html.parser')
+    if not re.search(r'Fintech AI Innovation Consortium',soup.get_text(' ',strip=True),re.I):
+        raise ValueError('UNSW FAIC heading missing')
+    result=[]
+    for heading in soup.select('h3'):
+        name=heading.get_text(' ',strip=True)
+        if not re.search(r'End of Year Event',name,re.I):
+            continue
+        # Use the dated event-details block, not a year mentioned in a
+        # programme description or a separate announcement on the same page.
+        details=soup.find(['h3','h2'],string=re.compile(r'Event details',re.I))
+        if not details:
+            continue
+        context=details.parent.get_text(' ',strip=True)
+        if not DATE_DAY_MONTH.search(context):
+            # UNSW's details list may be a sibling of the heading.
+            context=' '.join(x.get_text(' ',strip=True) for x in list(details.next_elements)
+                             if getattr(x,'name',None) in ('li','p'))[:1100]
+        m=DATE_DAY_MONTH.search(context)
+        if not m or not m.group('year'):
+            continue
+        date=parse_date(m.group(0),today)
+        if not date or date<today:
+            continue
+        title_year=re.search(r'\b20\d{2}\b',name)
+        if title_year and int(title_year.group(0))!=date.year:
+            continue
+        link=next((a['href'] for a in soup.select('a[href]')
+                   if trusted_host(a['href'],{'luma.com'})),SOURCES['faic'][1])
+        period=RANGE_RX.search(context)
+        time_text=period.group(0) if period else ''
+        rec=event('UNSW FAIC',name,date,time_text,SOURCES['faic'][1],today=today,
+                  venue='UNSW Ainsworth Building J17, Room 102',
+                  summary='Fintech and AI research showcase with industry partners and networking.',
+                  registration_url=link,time_known=bool(period))
+        if rec:
+            rec['source_urls']=[SOURCES['faic'][1]]
+            result.append(rec)
+    return unique(result)
+
+
 def parse_social_hub(html: str, source_key: str, today: dt.date, fetch_detail=get) -> tuple[list[dict],list[dict]]:
     """Inspect the society's public bio links, not its social-media posts.
 
@@ -681,6 +829,10 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
                 elif key=='unit_calendar': found=parse_unit_calendar(raw,today)
                 elif key=='fmaa': found=parse_fmaa(raw,today,fetch_detail=fetcher)
                 elif key=='finsoc':found=parse_finsoc(raw,today)
+                elif key in ('capitalw','accsoc'):found=parse_squarespace_society(raw,key,today)
+                elif key=='cma':found=parse_cma(raw,today)
+                elif key=='bsoc_calendar':found=parse_bsoc_events(raw,today)
+                elif key=='faic':found=parse_faic(raw,today)
                 else:found=parse_unsw(raw,today)
             except Exception:
                 if not structured:raise
@@ -720,6 +872,11 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
             sources.append({'id':key,'name':SOURCES[key][0], 'url':SOURCES[key][1],
                             'method':'Public newsletters / articles', 'coverage':'limited',
                             'note':'Publication mentions are review-only leads, not verified calendar events.'})
+    for key in ('capitalw','cma','accsoc','bsoc_calendar','faic'):
+        if key not in by_id:
+            sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],
+                'method':'Official public events page','coverage':'public' if key!='bsoc_calendar' else 'limited',
+                'note':'Date-backed career events only; old recaps and unrelated social listings are excluded.'})
     for source in sources:
         if source['id'] in health:source['last_check']=health[source['id']]
     generated=dt.datetime.now(TIMEZONE).isoformat(timespec='seconds')

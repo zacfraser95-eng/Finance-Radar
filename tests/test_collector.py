@@ -319,3 +319,73 @@ def test_expired_links_not_returned_from_collector(tmp_path):
     feed,health=collect.collect(today=dt.date(2026,11,1),fetcher=fetched,source_keys=['social_fmaa'],folder=tmp_path)
     assert feed['events']==[] and feed['signals']==[]
     assert health['sources']['social_fmaa']['status']=='accessible_empty'
+
+
+CAPITALW_FUTURE='''<html><h1>Upcoming Events</h1><article><h1>Women in Finance Networking Workshop</h1>
+<time>Tuesday, November 24, 2026</time><time>6:00 PM</time><time>8:00 PM</time>
+<p>Networking with industry professionals for finance students.</p>
+<a href="/events/women-in-finance">View Event</a></article>
+<article><h1>Old Trading Workshop</h1><time>Tuesday, November 10, 2025</time>
+<a href="/events/old">Old</a></article></html>'''
+
+ACCSOC_OLD='''<html><h2>Upcoming Events</h2><article>
+<h1>UNSW AccSoc Presents: Careers Fair</h1><time>Monday 14 July 2025</time>
+<a href="/upcoming-events/old">View event</a></article></html>'''
+
+FAIC_2026='''<html><h1>Fintech AI Innovation Consortium</h1>
+<h3>UNSW Fintech AI Innovation Consortium (FAIC) End of Year Event for 2026</h3>
+<h3>Event details</h3><div><ul>
+<li><h5>Date</h5><p>Friday 27 November 2026</p></li>
+<li><h5>Time</h5><p>2:00pm to 5:00pm</p></li>
+<li><h5>Place</h5><p>UNSW (J17 Ainsworth 102)</p></li>
+</ul></div><a href="https://luma.com/lxsi2n5i">Secure Your Place</a></html>'''
+
+def test_capitalw_future_career_event_accepted_and_past_rejected():
+    found=collect.parse_squarespace_society(CAPITALW_FUTURE,'capitalw',dt.date(2026,11,1))
+    assert len(found)==1
+    assert found[0]['starts_at'].startswith('2026-11-24T18:00')
+    assert found[0]['registration_url'].endswith('/events/women-in-finance')
+
+
+def test_accounting_society_old_events_not_promoted():
+    assert collect.parse_squarespace_society(ACCSOC_OLD,'accsoc',dt.date(2026,11,1))==[]
+
+
+def test_faic_official_event_is_dated_with_real_time():
+    out=collect.parse_faic(FAIC_2026,dt.date(2026,11,1))
+    assert len(out)==1
+    assert out[0]['starts_at']=='2026-11-27T14:00:00+11:00'
+    assert out[0]['ends_at']=='2026-11-27T17:00:00+11:00'
+    assert out[0]['registration_url']=='https://luma.com/lxsi2n5i'
+
+
+def test_faic_year_mismatch_is_not_guessed():
+    out=collect.parse_faic(FAIC_2026.replace('End of Year Event for 2026','End of Year Event for 2027'),
+                           dt.date(2026,11,1))
+    assert out==[]
+
+
+def test_bsoc_recaps_not_future_events():
+    markup='<html><h1>Our Events</h1><h2>EVENT RECAPS</h2><h1>10/12/2026</h1>UNSW BSOC Finance Networking View Event Recap</html>'
+    assert collect.parse_bsoc_events(markup,dt.date(2026,11,1))==[]
+
+
+def test_cma_short_date_and_career_only():
+    markup='<html><h1>UNSW Capital Markets Association</h1><h3>Trading Careers Night</h3>'
+    markup+='<p>24/11/26 - 6:00 PM</p><p>Trading industry Q&A for students</p>'
+    markup+='<h3>CMA Club BBQ</h3><p>25/11/26 - 12:00 PM</p></html>'
+    out=collect.parse_cma(markup,dt.date(2026,11,1))
+    assert len(out)==1
+    assert out[0]['starts_at'].startswith('2026-11-24T18:00')
+
+
+def test_new_sources_are_monitored_not_made_up(tmp_path):
+    (tmp_path/'snapshot.json').write_text(json.dumps({'events':[],'sources':[]}))
+    feeds={'capitalw':ACCSOC_OLD.replace('Upcoming Events','Upcoming Events'),
+           'accsoc':ACCSOC_OLD,
+           'bsoc_calendar':'<h1>Our Events</h1><h2>EVENT RECAPS</h2>'}
+    lookup={collect.SOURCES[k][1]:v for k,v in feeds.items()}
+    _,health=collect.collect(today=dt.date(2026,11,1),source_keys=['accsoc','bsoc_calendar'],
+                            fetcher=lambda u:lookup[u],folder=tmp_path)
+    assert health['event_count']==0
+    assert health['sources']['accsoc']['status']=='accessible_empty'

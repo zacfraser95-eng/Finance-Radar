@@ -99,3 +99,9 @@ Public Facebook event metadata is also inspected only for specific event links a
 - Dates with no advertised start time become all-day entries with no invented clock time. Times are converted from Sydney offsets to UTC; missing end times are omitted.
 - A `webcal:` link allows subscribing in supporting calendar applications. Updates depend on each calendar provider; Google Calendar subscriptions may need the HTTPS URL added manually.
 - RSS has stable event GUIDs and never claims events are newly published simply because a scan rechecked them.
+
+## Expanded university society coverage
+
+- Official event indexes: UNSW Capital W, Capital Markets Association (CMA), Accounting and Taxation Society, Business Society event recaps, and UNSW Fintech AI Innovation Consortium (FAIC).
+- Each listed event needs a source-backed future date. BSOC recap posts are **not** upcoming events; social-only, undated entries never enter the verified calendar.
+- FAIC's published November 2026 industry showcase is collected with its official date and registration link, subject to the organiser's published eligibility.
