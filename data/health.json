@@ -1,74 +1,95 @@
 {
-  "generated_at": "2026-11-01T10:20:08+11:00",
+  "generated_at": "2026-11-01T10:36:27+11:00",
   "sources": {
     "unit": {
       "status": "ok",
       "count": 1,
-      "checked_at": "2026-11-01T10:19:58+11:00",
+      "checked_at": "2026-11-01T10:36:21+11:00",
       "url": "https://www.unit.org.au/"
     },
     "unit_calendar": {
       "status": "accessible_empty",
       "count": 0,
-      "checked_at": "2026-11-01T10:19:58+11:00",
+      "checked_at": "2026-11-01T10:36:21+11:00",
       "url": "https://www.unit.org.au/upcoming-events"
     },
     "fmaa": {
       "status": "ok",
       "count": 1,
-      "checked_at": "2026-11-01T10:19:59+11:00",
+      "checked_at": "2026-11-01T10:36:22+11:00",
       "url": "https://www.fmaa.com.au/events"
     },
     "unsw": {
       "status": "accessible_empty",
       "count": 0,
-      "checked_at": "2026-11-01T10:19:59+11:00",
+      "checked_at": "2026-11-01T10:36:23+11:00",
       "url": "https://www.unsw.edu.au/employability/events-news/events"
     },
     "finsoc": {
       "status": "accessible_empty",
       "count": 0,
-      "checked_at": "2026-11-01T10:20:01+11:00",
+      "checked_at": "2026-11-01T10:36:24+11:00",
       "url": "https://www.unswfinsoc.org.au/"
     },
     "social_finsoc": {
       "status": "links_only",
       "count": 0,
       "signals": 3,
-      "checked_at": "2026-11-01T10:20:04+11:00",
+      "checked_at": "2026-11-01T10:36:24+11:00",
       "url": "https://linktr.ee/finsocunsw"
     },
     "social_unit": {
       "status": "accessible_empty",
       "count": 0,
       "signals": 0,
-      "checked_at": "2026-11-01T10:20:05+11:00",
+      "checked_at": "2026-11-01T10:36:25+11:00",
       "url": "https://linktr.ee/unit_unsw"
     },
     "social_fintech": {
       "status": "links_only",
       "count": 0,
       "signals": 1,
-      "checked_at": "2026-11-01T10:20:06+11:00",
+      "checked_at": "2026-11-01T10:36:25+11:00",
       "url": "https://linktr.ee/unswfintechsoc"
     },
     "social_quant": {
       "status": "accessible_empty",
       "count": 0,
       "signals": 0,
-      "checked_at": "2026-11-01T10:20:07+11:00",
+      "checked_at": "2026-11-01T10:36:25+11:00",
       "url": "https://linktr.ee/unswquantsoc"
     },
     "social_bsoc": {
       "status": "accessible_empty",
       "count": 0,
       "signals": 0,
-      "checked_at": "2026-11-01T10:20:08+11:00",
+      "checked_at": "2026-11-01T10:36:25+11:00",
       "url": "https://linktr.ee/unswbsoc"
+    },
+    "social_fmaa": {
+      "status": "links_only",
+      "count": 0,
+      "signals": 1,
+      "checked_at": "2026-11-01T10:36:26+11:00",
+      "url": "https://linktr.ee/fmaaunsw"
+    },
+    "bsoc_publications": {
+      "status": "accessible_empty",
+      "count": 0,
+      "signals": 0,
+      "checked_at": "2026-11-01T10:36:26+11:00",
+      "url": "https://unswbsocnewsletter.beehiiv.com/"
+    },
+    "unit_publications": {
+      "status": "accessible_empty",
+      "count": 0,
+      "signals": 0,
+      "checked_at": "2026-11-01T10:36:27+11:00",
+      "url": "https://www.unit.org.au/market-wrap?format=rss"
     }
   },
   "event_count": 6,
-  "unverified_bio_links": 4,
+  "unverified_bio_links": 5,
   "new_event_ids": [],
   "current_event_count": 2,
   "last_known_event_count": 4

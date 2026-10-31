@@ -1,6 +1,6 @@
 {
   "schema": 3,
-  "generated_at": "2026-11-01T10:20:08+11:00",
+  "generated_at": "2026-11-01T10:36:27+11:00",
   "mode": "scheduled_sync",
   "notice": "Public event listings and society bio links only; Instagram and Facebook post feeds are not connected.",
   "sources": [
@@ -14,7 +14,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T10:19:58+11:00",
+        "checked_at": "2026-11-01T10:36:21+11:00",
         "url": "https://www.unit.org.au/"
       }
     },
@@ -28,7 +28,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T10:19:59+11:00",
+        "checked_at": "2026-11-01T10:36:22+11:00",
         "url": "https://www.fmaa.com.au/events"
       }
     },
@@ -42,7 +42,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T10:19:59+11:00",
+        "checked_at": "2026-11-01T10:36:23+11:00",
         "url": "https://www.unsw.edu.au/employability/events-news/events"
       }
     },
@@ -56,7 +56,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T10:20:01+11:00",
+        "checked_at": "2026-11-01T10:36:24+11:00",
         "url": "https://www.unswfinsoc.org.au/"
       }
     },
@@ -70,7 +70,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T10:19:58+11:00",
+        "checked_at": "2026-11-01T10:36:21+11:00",
         "url": "https://www.unit.org.au/upcoming-events"
       }
     },
@@ -85,7 +85,7 @@
         "status": "links_only",
         "count": 0,
         "signals": 3,
-        "checked_at": "2026-11-01T10:20:04+11:00",
+        "checked_at": "2026-11-01T10:36:24+11:00",
         "url": "https://linktr.ee/finsocunsw"
       }
     },
@@ -100,7 +100,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T10:20:05+11:00",
+        "checked_at": "2026-11-01T10:36:25+11:00",
         "url": "https://linktr.ee/unit_unsw"
       }
     },
@@ -115,7 +115,7 @@
         "status": "links_only",
         "count": 0,
         "signals": 1,
-        "checked_at": "2026-11-01T10:20:06+11:00",
+        "checked_at": "2026-11-01T10:36:25+11:00",
         "url": "https://linktr.ee/unswfintechsoc"
       }
     },
@@ -130,7 +130,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T10:20:07+11:00",
+        "checked_at": "2026-11-01T10:36:25+11:00",
         "url": "https://linktr.ee/unswquantsoc"
       }
     },
@@ -145,8 +145,53 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T10:20:08+11:00",
+        "checked_at": "2026-11-01T10:36:25+11:00",
         "url": "https://linktr.ee/unswbsoc"
+      }
+    },
+    {
+      "id": "social_fmaa",
+      "name": "FMAA UNSW · social bio",
+      "url": "https://linktr.ee/fmaaunsw",
+      "method": "Public link-in-bio monitoring",
+      "coverage": "limited",
+      "note": "Only public registration links are readable. No Facebook/Instagram posts, stories or private-group access.",
+      "last_check": {
+        "status": "links_only",
+        "count": 0,
+        "signals": 1,
+        "checked_at": "2026-11-01T10:36:26+11:00",
+        "url": "https://linktr.ee/fmaaunsw"
+      }
+    },
+    {
+      "id": "bsoc_publications",
+      "name": "BSOC public newsletter",
+      "url": "https://unswbsocnewsletter.beehiiv.com/",
+      "method": "Public newsletters / articles",
+      "coverage": "limited",
+      "note": "Publication mentions are review-only leads, not verified calendar events.",
+      "last_check": {
+        "status": "accessible_empty",
+        "count": 0,
+        "signals": 0,
+        "checked_at": "2026-11-01T10:36:26+11:00",
+        "url": "https://unswbsocnewsletter.beehiiv.com/"
+      }
+    },
+    {
+      "id": "unit_publications",
+      "name": "UNIT Market Wrap RSS",
+      "url": "https://www.unit.org.au/market-wrap?format=rss",
+      "method": "Public newsletters / articles",
+      "coverage": "limited",
+      "note": "Publication mentions are review-only leads, not verified calendar events.",
+      "last_check": {
+        "status": "accessible_empty",
+        "count": 0,
+        "signals": 0,
+        "checked_at": "2026-11-01T10:36:27+11:00",
+        "url": "https://www.unit.org.au/market-wrap?format=rss"
       }
     }
   ],
@@ -360,6 +405,16 @@
       "organiser": "UNSW FinTechSoc",
       "url": "https://docs.google.com/forms/d/e/1FAIpQLSdkWXXqHhYLAp-dYC8WmFlNU1DuSSrPY8DXyJlFc5vUYF6HuQ/viewform",
       "source_url": "https://linktr.ee/unswfintechsoc",
+      "status": "date_unverified",
+      "note": "Public bio link only; date, availability and eligibility not confirmed.",
+      "checked_on": "2026-11-01"
+    },
+    {
+      "id": "signal-de759f76077d",
+      "title": "ESG Industry Insights Evening Register",
+      "organiser": "FMAA UNSW",
+      "url": "https://form.jotform.com/fmaamelb/2026-fmaa-nsw-esg-industry-insights?fbclid=IwZXh0bgNhZW0CMTEAcGRvZgNzcnRjBmFwcF9pZA80Mzc2MjYzMTY5NzM3ODgAAR5vHp0ItxXmzBmwcHkwgVs_ZjAM3efXzTKm3GtQRJooooItBayaAU17x39Z8Q_aem_i7kWahbmo3C9z4NV0kW2dA&utm_id=97757_v0_s00_e0_tv0",
+      "source_url": "https://linktr.ee/fmaaunsw",
       "status": "date_unverified",
       "note": "Public bio link only; date, availability and eligibility not confirmed.",
       "checked_on": "2026-11-01"
