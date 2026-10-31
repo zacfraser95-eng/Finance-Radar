@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Check parsing and repeat-run behaviour
-        run: python -m pytest -q tests/test_collector.py tests/test_site.py
+        run: python -m pytest -q tests/test_collector.py tests/test_site.py tests/test_syndication.py
       - name: Refresh the public feed
         run: python scripts/collect.py
       - name: Save source-health diagnostics
@@ -55,7 +55,7 @@ jobs:
         run: |
           git config user.name 'Finance Radar automation'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/feed.json data/live.js data/health.json data/new_events.json data/signals.json data/notified.json
+          git add data/feed.json data/live.js data/health.json data/new_events.json data/signals.json data/notified.json data/events.ics data/events.xml
           if ! git diff --cached --quiet; then
             git commit -m 'Refresh public finance events'
             for attempt in 1 2 3; do
@@ -74,6 +74,7 @@ jobs:
           mkdir -p _site/data
           cp index.html _site/index.html
           cp data/feed.json data/live.js data/health.json data/signals.json _site/data/
+          cp data/events.ics data/events.xml _site/
           touch _site/.nojekyll
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

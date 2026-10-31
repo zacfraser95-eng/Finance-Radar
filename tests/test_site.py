@@ -11,3 +11,8 @@ def test_current_day_sydney_date_stamp_is_locale_independent():
 def test_feedback_links_are_present():
     assert 'issues/new?template=suggest-event.yml' in SITE
     assert 'issues/new?template=bug-report.yml' in SITE
+
+def test_feed_subscription_links_and_sydney_date_only_fix():
+    assert 'webcal://zacfraser95-eng.github.io/Finance-Radar/events.ics' in SITE
+    assert 'href="./events.xml"' in SITE
+    assert "e.starts_at+'T00:00:00Z'" in SITE

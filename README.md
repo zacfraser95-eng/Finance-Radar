@@ -91,3 +91,11 @@ Public Facebook event metadata is also inspected only for specific event links a
 - FMAA UNSW's official Linktree is monitored, including permitted public event registration links behind Facebook's outbound URL wrapper.
 - BSOC's public Beehiiv newsletter and UNIT's Market Wrap RSS are checked for **recent clearly event-related publications**. Newsletter article mentions are **review-only leads**, not calendar events or alerts; published dates are never misrepresented as event dates.
 - This approach cannot read private Facebook/Instagram feeds. Search-engine RSS results are not republished.
+
+## Public subscription feeds
+
+- The GitHub Actions collector writes `data/events.ics` and `data/events.xml` from **only current, future-dated, confirmed events**. Previously listed events and undated social leads are excluded.
+- GitHub Pages publishes these at `/Finance-Radar/events.ics` (calendar subscriptions) and `/Finance-Radar/events.xml` (RSS).
+- Dates with no advertised start time become all-day entries with no invented clock time. Times are converted from Sydney offsets to UTC; missing end times are omitted.
+- A `webcal:` link allows subscribing in supporting calendar applications. Updates depend on each calendar provider; Google Calendar subscriptions may need the HTTPS URL added manually.
+- RSS has stable event GUIDs and never claims events are newly published simply because a scan rechecked them.

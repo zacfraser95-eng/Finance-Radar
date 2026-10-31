@@ -22,6 +22,7 @@ from zoneinfo import ZoneInfo
 import requests
 from bs4 import BeautifulSoup
 from dateutil import parser as dateparser
+from syndication import calendar_ics, events_rss
 
 BASE = Path(__file__).resolve().parents[1]
 DATA = BASE / 'data'
@@ -735,6 +736,8 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
     (folder/'health.json').write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n')
     (folder/'new_events.json').write_text(json.dumps(newly,indent=2)+'\n')
     (folder/'signals.json').write_text(json.dumps(social_signals[:16],indent=2,ensure_ascii=False)+'\n')
+    (folder/'events.ics').write_text(calendar_ics(records,today),encoding='utf-8',newline='')
+    (folder/'events.xml').write_text(events_rss(records,today),encoding='utf-8')
     return payload,report
 
 
