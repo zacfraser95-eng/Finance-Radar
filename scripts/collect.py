@@ -476,14 +476,14 @@ def parse_newsletter_mentions(raw: str, key: str, today: dt.date, fetch_detail=g
     if key not in ('bsoc_publications', 'unit_publications'):
         raise ValueError('Unknown newsletter')
     is_rss = key == 'unit_publications'
-    soup = BeautifulSoup(raw, 'xml' if is_rss else 'html.parser')
+    soup = BeautifulSoup(raw, 'html.parser')
     items = []
     if is_rss:
         if not soup.find('rss'):
             raise ValueError('UNIT newsletter RSS unavailable')
         for node in soup.select('item')[:15]:
             title = node.find('title')
-            date = node.find('pubDate')
+            date = node.find('pubdate')
             link = node.find('link')
             if title and date and link:
                 items.append((title.get_text(' ', strip=True), link.get_text(' ', strip=True),
