@@ -164,3 +164,59 @@ def test_source_url_hostname_is_checked_not_substring():
       6:00 PM - 7:00 PM <a href="https://eventbrite.com.au.bad-example.com/e/123">Read more</a>
     </div>'''
     assert collect.parse_unsw(html,TODAY)==[]
+
+SOCIAL_HUB = '''<html><title>FINSOC | Linktree</title><main>
+<a href="https://docs.google.com/forms/d/e/sample/viewform">FINSOC x Credit Analyst: Commercial Banking &amp; Credit Analysis Workshop</a>
+<a href="https://www.eventbrite.com.au/e/panel-123">UNSW Finance Trading &amp; Markets Panel</a>
+<a href="https://www.eventbrite.com.au/e/old-456">Investment Banking Careers Panel 2025</a>
+<a href="https://www.eventbrite.com.au/e/nightclub-789">Halloween Nightclub</a>
+<a href="https://forms.gle/membership">Sign up for membership</a>
+</main><footer><a href="https://www.eventbrite.com.au/e/unrelated-999">Finance Society Conference</a></footer></html>'''
+EVENTBRITE_CONFIRMED='''<html><h1>Finance Trading & Markets Panel</h1><script type="application/ld+json">{"@context":"https://schema.org","@type":"Event","name":"Finance Trading & Markets Panel","startDate":"2026-11-20T18:00:00+11:00","endDate":"2026-11-20T20:00:00+11:00","location":{"@type":"Place","name":"UNSW Sydney"}}</script></html>'''
+EVENTBRITE_OLD='''<html><script type="application/ld+json">{"@type":"Event","name":"Investment Banking Careers Panel","startDate":"2025-10-15T18:00:00+11:00"}</script></html>'''
+
+
+def test_social_bio_only_dated_external_events_make_calendar():
+    calls=[]
+    def fetch(u):
+        calls.append(u)
+        if u.endswith('/panel-123'):return EVENTBRITE_CONFIRMED
+        if u.endswith('/old-456'):return EVENTBRITE_OLD
+        raise AssertionError('Should not fetch unrelated or form: '+u)
+    events,signals=collect.parse_social_hub(SOCIAL_HUB,'social_finsoc',TODAY,fetch_detail=fetch)
+    assert len(events)==1
+    assert events[0]['starts_at']=='2026-11-20T18:00:00+11:00'
+    assert events[0]['sources']==['FINSOC','Dated registration page']
+    assert events[0]['registration_url'].endswith('/panel-123')
+    assert all('eventbrite' not in s['url'] for s in signals)
+    assert len(signals)==1  # Credit Analyst undated; prior-year event omitted
+    assert any('Credit Analysis' in s['title'] for s in signals)
+    assert 'nightclub' not in str(signals).lower()
+    assert 'unrelated' not in str(signals).lower()
+    assert len(calls)==1
+
+
+def test_social_bio_cannot_import_fake_or_malicious_urls():
+    raw='''<html><main>
+      <a href="https://www.eventbrite.com.au.evil.net/e/123">Investment Banking Networking</a>
+      <a href="javascript:alert(1)">Finance Careers Event</a>
+      <a href="https://docs.google.com/forms/d/e/xyz/viewform">Director Recruitment Application</a>
+    </main></html>'''
+    e,l=collect.parse_social_hub(raw,'social_unit',TODAY,fetch_detail=lambda _:pytest.fail('unsafe fetch'))
+    assert e==[] and l==[]
+
+
+def test_social_hub_empty_fresh_not_phantom_event(tmp_path):
+    (tmp_path/'snapshot.json').write_text(json.dumps({'events':[], 'sources':[]}))
+    raw='<html><h1>Linktree</h1><main><a href="https://forms.gle/dummy">FINSOC Finance Networking Workshop</a></main></html>'
+    feed,report=collect.collect(today=TODAY,fetcher=lambda _:raw,source_keys=['social_finsoc'],folder=tmp_path)
+    assert feed['events']==[]
+    assert len(feed['signals'])==1
+    assert report['sources']['social_finsoc']['status']=='links_only'
+    assert report['new_event_ids']==[]
+    assert (tmp_path/'signals.json').is_file()
+
+
+def test_social_hub_missing_public_links_does_not_fake_posts():
+    e,signals=collect.parse_social_hub('<html><h1>Linktree @finsocunsw</h1></html>','social_finsoc',TODAY)
+    assert e==[] and signals==[]
