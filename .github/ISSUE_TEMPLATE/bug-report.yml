@@ -1,0 +1,26 @@
+name: Report an issue
+description: Report inaccurate event details, broken functionality or mobile layout problems.
+title: "[Bug] "
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: Problem type
+      options:
+        - Wrong event information
+        - Broken registration link
+        - Mobile layout or accessibility
+        - Search, filters, calendar or bookmarks
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: What happened and what should have happened?
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Affected page or event link

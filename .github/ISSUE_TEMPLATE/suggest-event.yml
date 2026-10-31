@@ -1,0 +1,34 @@
+name: Suggest an event
+description: Submit a public student finance event we might have missed.
+title: "[Event suggestion] "
+body:
+  - type: markdown
+    attributes:
+      value: "Please link to an official public listing. Never include private or personal details."
+  - type: input
+    id: event
+    attributes:
+      label: Event name
+    validations:
+      required: true
+  - type: input
+    id: organiser
+    attributes:
+      label: Organiser
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Official event link
+      placeholder: "https://..."
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Event date (if confirmed)
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional public details
