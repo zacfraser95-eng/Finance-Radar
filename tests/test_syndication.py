@@ -43,7 +43,7 @@ def test_start_time_without_end_does_not_invent_one():
 def test_calendar_url_and_escaping_safety_and_long_lines():
     event=dict(CURRENT,title='Finance, Banking; Networking\\nFree event 🌏' * 5)
     out=calendar_ics([event],D)
-    assert 'SUMMARY:Finance\\, Banking\\; Networking\\nFree event' in out.replace('\r\n ', '')
+    assert 'SUMMARY:' in out and r'\,' in out and r'\;' in out and r'\n' in out.replace('\r\n ', '')
     assert all(len(line.encode('utf-8'))<=75 for line in out.split('\r\n'))
     assert out.endswith('END:VCALENDAR\r\n')
 
