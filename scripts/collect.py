@@ -479,15 +479,21 @@ def parse_newsletter_mentions(raw: str, key: str, today: dt.date, fetch_detail=g
     soup = BeautifulSoup(raw, 'html.parser')
     items = []
     if is_rss:
-        if not soup.find('rss'):
+        # HTML parsers treat RSS <link> as a void element, losing the item URL.
+        # ElementTree preserves XML values without installing lxml.
+        import xml.etree.ElementTree as ET
+        try:
+            root = ET.fromstring(raw)
+        except ET.ParseError as exc:
+            raise ValueError('UNIT newsletter RSS unavailable') from exc
+        if root.tag.lower() != 'rss':
             raise ValueError('UNIT newsletter RSS unavailable')
-        for node in soup.select('item')[:15]:
-            title = node.find('title')
-            date = node.find('pubdate')
-            link = node.find('link')
+        for node in root.findall('.//item')[:15]:
+            title = node.findtext('title', default='')
+            date = node.findtext('pubDate', default='')
+            link = node.findtext('link', default='')
             if title and date and link:
-                items.append((title.get_text(' ', strip=True), link.get_text(' ', strip=True),
-                              date.get_text(' ', strip=True), 'UNIT'))
+                items.append((title.strip(), link.strip(), date.strip(), 'UNIT'))
     else:
         if not soup.find('a', href=re.compile('/p/')):
             raise ValueError('BSOC newsletter article links missing')
