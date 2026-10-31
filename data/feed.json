@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "generated_at": "2026-11-01T00:03:06+11:00",
+  "generated_at": "2026-11-01T00:04:12+11:00",
   "mode": "scheduled_sync",
   "notice": "Automatically collected public event data; compare with organiser before registration. Not all social-only events are covered.",
   "sources": [
@@ -14,7 +14,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T00:03:03+11:00",
+        "checked_at": "2026-11-01T00:04:09+11:00",
         "url": "https://www.unit.org.au/"
       }
     },
@@ -28,7 +28,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T00:03:05+11:00",
+        "checked_at": "2026-11-01T00:04:10+11:00",
         "url": "https://www.fmaa.com.au/events"
       }
     },
@@ -42,7 +42,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T00:03:06+11:00",
+        "checked_at": "2026-11-01T00:04:11+11:00",
         "url": "https://www.unsw.edu.au/employability/events-news/events"
       }
     },
@@ -56,7 +56,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T00:03:06+11:00",
+        "checked_at": "2026-11-01T00:04:12+11:00",
         "url": "https://www.unswfinsoc.org.au/"
       }
     },
@@ -70,7 +70,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T00:03:04+11:00",
+        "checked_at": "2026-11-01T00:04:10+11:00",
         "url": "https://www.unit.org.au/upcoming-events"
       }
     }
