@@ -57,7 +57,19 @@ jobs:
           git add data/feed.json data/live.js data/health.json data/new_events.json data/notified.json
           if ! git diff --cached --quiet; then
             git commit -m 'Refresh public finance events'
-            git push origin "HEAD:${GITHUB_REF_NAME}"
+            # A source or workflow update may have landed while the scan ran.
+            # Replay our generated snapshot on top of the latest branch before publishing.
+            for attempt in 1 2 3; do
+              git fetch origin "${GITHUB_REF_NAME}"
+              git rebase -X ours "origin/${GITHUB_REF_NAME}"
+              if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+                break
+              fi
+              if [ "$attempt" -eq 3 ]; then
+                echo "Could not persist the refreshed feed after three attempts" >&2
+                exit 1
+              fi
+            done
           fi
       - name: Package static website
         run: |
