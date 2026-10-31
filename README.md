@@ -71,3 +71,15 @@ Before expanding: add live HTML integration fixtures from the actual GitHub runn
 Optional browser smoke check (requires Playwright + a local Chromium binary): `python tests/browser_smoke.py`.
 
 See [LIVE_SOURCE_AUDIT.md](LIVE_SOURCE_AUDIT.md) and [TEST_REPORT.md](TEST_REPORT.md) for current evidence and the exact remaining deployment proof.
+
+## Public social bio-link monitoring (v5)
+
+The six-hour collector checks the public link-in-bio pages for FINSOC, UNIT, FinTechSoc, QuantSoc and BSOC. This is **not** direct Instagram, Facebook, LinkedIn, or private story/post access. Social platform APIs typically require access tokens and permissions from the account owners; ordinary student credentials do not grant third-party society feed access.
+
+- `data/signals.json`: social bio registration links **without a verified future date**. They are displayed in a clearly separate section and never trigger confirmed-event alerts or calendar entries.
+- A link becomes a verified upcoming event only when its public destination supplies a future-dated Schema.org `Event` entry and passes finance relevance screening.
+- Public bio-page errors, no-date links, empty results and confirmed events have separate source-health states.
+- An old link kept in a society bio may still be in the review section; check its destination before applying.
+- To capture social-only posts and stories reliably, ask organisers for an approved public event feed, iCal export, newsletters or social-platform API authorization. Do not bypass login walls.
+
+The front end includes separate dated-event and undated-link sections. Email alerts via Resend are optional and unconfigured by default.
