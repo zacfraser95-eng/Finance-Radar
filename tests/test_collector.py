@@ -252,3 +252,36 @@ def test_public_facebook_event_missing_year_or_private_page_ignored():
 def test_public_facebook_event_expired_ignored():
     past=PUBLIC_FB_DETAIL.replace('November 26 2026','June 25 2026')
     assert collect.parse_public_facebook_events(PUBLIC_FB_SOURCE,TODAY,fetch_detail=lambda _:past)==[]
+
+
+def test_publication_feeds_reject_stale_and_generic_articles():
+    old='''<rss><channel><item><title>UNSW Investment Banking Evening</title><pubDate>Wed, 14 Oct 2025 00:00:00 GMT</pubDate><link>https://www.unit.org.au/old-event</link></item></channel></rss>'''
+    assert collect.parse_newsletter_mentions(old,'unit_publications',TODAY)==[]
+    generic='''<rss><channel><item><title>2026 Term 3 Week 2</title><pubDate>Wed, 14 Oct 2026 00:00:00 GMT</pubDate><link>https://www.unit.org.au/market-wrap/one</link></item></channel></rss>'''
+    assert collect.parse_newsletter_mentions(generic,'unit_publications',TODAY)==[]
+
+
+def test_publication_feeds_recent_titled_newsletter_is_unverified_only():
+    pub='''<rss><channel><item><title>Investment Banking Networking Evening</title><pubDate>Wed, 28 Oct 2026 00:00:00 GMT</pubDate><link>https://www.unit.org.au/announcements/event</link></item></channel></rss>'''
+    leads=collect.parse_newsletter_mentions(pub,'unit_publications',TODAY)
+    assert len(leads)==1
+    assert leads[0]['status']=='date_unverified'
+    assert leads[0]['url'].endswith('/event')
+
+
+def test_public_newsletter_bsoc_rejects_old_and_accepts_recent():
+    archive='''<html><a href="/p/bsoc-upcoming-events">BSOC Upcoming Events!</a></html>'''
+    def detail(url):
+        return '<html><h1>BSOC Upcoming Events!</h1>Jun 30, 2025</html>'
+    assert collect.parse_newsletter_mentions(archive,'bsoc_publications',TODAY,fetch_detail=detail)==[]
+    def newer(url):
+        return '<html><h1>BSOC Upcoming Events!</h1>Oct 30, 2026</html>'
+    leads=collect.parse_newsletter_mentions(archive,'bsoc_publications',TODAY,fetch_detail=newer)
+    assert len(leads)==1 and leads[0]['status']=='date_unverified'
+
+
+def test_fmaa_facebook_outbound_redirect_cannot_escape_allowlist():
+    safe='https://l.facebook.com/l.php?u=https%3A%2F%2Fform.jotform.com%2Fabc%2Ffinance-evening&h=something'
+    assert collect.unwrap_public_registration_url(safe)=='https://form.jotform.com/abc/finance-evening'
+    unsafe='https://l.facebook.com/l.php?u=https%3A%2F%2Fform.jotform.com.attacker.com%2Fsteal'
+    assert collect.unwrap_public_registration_url(unsafe)==unsafe

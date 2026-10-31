@@ -17,7 +17,7 @@ import sys
 import time
 from difflib import SequenceMatcher
 from pathlib import Path
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import urljoin, urlsplit, parse_qs
 from zoneinfo import ZoneInfo
 import requests
 from bs4 import BeautifulSoup
@@ -38,6 +38,9 @@ SOURCES = {
     'social_fintech': ('FinTechSoc bio links', 'https://linktr.ee/unswfintechsoc'),
     'social_quant': ('QuantSoc bio links', 'https://linktr.ee/unswquantsoc'),
     'social_bsoc': ('BSOC bio links', 'https://linktr.ee/unswbsoc'),
+    'social_fmaa': ('FMAA UNSW bio links', 'https://linktr.ee/fmaaunsw'),
+    'bsoc_publications': ('BSOC public newsletter', 'https://unswbsocnewsletter.beehiiv.com/'),
+    'unit_publications': ('UNIT Market Wrap RSS', 'https://www.unit.org.au/market-wrap?format=rss'),
 }
 MONTHS = ('January February March April May June July August September October November December').split()
 MONTH_RX = '|'.join(MONTHS+[m[:3] for m in MONTHS])
@@ -55,7 +58,7 @@ def get(url: str) -> str:
     response.raise_for_status()
     if len(response.content) > 3_000_000:
         raise ValueError('Oversized response (>3MB)')
-    if 'text/html' not in response.headers.get('Content-Type', 'text/html').lower():
+    if not any(t in response.headers.get('Content-Type', 'text/html').lower() for t in ('text/html', 'application/rss+xml', 'application/xml', 'text/xml')):
         raise ValueError('Expected HTML response')
     return response.text
 
@@ -434,11 +437,11 @@ def jsonld_events(html: str, source: str, source_url: str, today: dt.date) -> li
 BIO_SOCIAL_NAMES = {
     'social_finsoc': 'FINSOC', 'social_unit': 'UNIT',
     'social_fintech': 'UNSW FinTechSoc', 'social_quant': 'UNSW QuantSoc',
-    'social_bsoc': 'UNSW BSOC',
+    'social_bsoc': 'UNSW BSOC', 'social_fmaa': 'FMAA UNSW',
 }
 LINK_EVENT_HOSTS = {'eventbrite.com', 'eventbrite.com.au', 'humanitix.com', 'events.humanitix.com', 'luma.com'}
 LINK_FORM_HOSTS = {'docs.google.com', 'forms.gle', 'form.jotform.com', 'forms.office.com', 'events.humanitix.com', 'app.tribespot.co'}
-HUB_KEYWORDS = re.compile(r'workshop|networking|case competition|careers? (?:fair|panel|night|evening|event)|finance|investment|credit analysis|financial modelling|banking|equity|trading|quant|seminar|webinar|internship|industry insights|mentoring|which major', re.I)
+HUB_KEYWORDS = re.compile(r'ESG|workshop|networking|case competition|careers? (?:fair|panel|night|evening|event)|finance|investment|credit analysis|financial modelling|banking|equity|trading|quant|seminar|webinar|internship|industry insights|mentoring|which major', re.I)
 HUB_EXCLUDE = re.compile(r'director recruitment|subcommittee|membership|subscribe|rubric sign.?up|first year.?s guide|careers? guide|join us|giveaway|pub ?crawl|cruise|hallocrawl|ball 2026|agm|alumni directory|summer analyst.*application', re.I)
 
 def trusted_host(link: str, hosts: set[str]) -> bool:
@@ -449,6 +452,85 @@ def trusted_host(link: str, hosts: set[str]) -> bool:
         return u.scheme == 'https' and host in hosts and not u.username and not u.password
     except ValueError:
         return False
+
+
+def unwrap_public_registration_url(link: str) -> str:
+    """Unwrap Facebook's public outbound-link wrapper, not Facebook login."""
+    try:
+        u = urlsplit(link)
+        if u.scheme == 'https' and (u.hostname or '').lower() in ('l.facebook.com', 'lm.facebook.com') and u.path == '/l.php':
+            target = parse_qs(u.query).get('u', [''])[0]
+            if trusted_host(target, LINK_EVENT_HOSTS | LINK_FORM_HOSTS):
+                return target
+    except (ValueError, IndexError):
+        pass
+    return link
+
+
+def parse_newsletter_mentions(raw: str, key: str, today: dt.date, fetch_detail=get) -> list[dict]:
+    """Only surface RECENT, specifically titled newsletter articles as leads.
+
+    These are not scheduled events and cannot trigger the confirmed-event alert.
+    Old newsletters and generic market wrap stories are ignored.
+    """
+    if key not in ('bsoc_publications', 'unit_publications'):
+        raise ValueError('Unknown newsletter')
+    is_rss = key == 'unit_publications'
+    soup = BeautifulSoup(raw, 'xml' if is_rss else 'html.parser')
+    items = []
+    if is_rss:
+        if not soup.find('rss'):
+            raise ValueError('UNIT newsletter RSS unavailable')
+        for node in soup.select('item')[:15]:
+            title = node.find('title')
+            date = node.find('pubDate')
+            link = node.find('link')
+            if title and date and link:
+                items.append((title.get_text(' ', strip=True), link.get_text(' ', strip=True),
+                              date.get_text(' ', strip=True), 'UNIT'))
+    else:
+        if not soup.find('a', href=re.compile('/p/')):
+            raise ValueError('BSOC newsletter article links missing')
+        seen = set()
+        for a in soup.select('a[href*="/p/"]'):
+            link = urljoin('https://unswbsocnewsletter.beehiiv.com/', a.get('href', ''))
+            title = a.get_text(' ', strip=True)
+            if not title:
+                title = link.split('/p/')[-1].replace('-', ' ')
+            if link not in seen:
+                seen.add(link)
+                items.append((title, link, '', 'BSOC'))
+    leads = []
+    specific = re.compile(r'upcoming events?|finance (?:career|networking|panel|workshop)|investment bank|career fair|industry (?:insights|networking|panel)|trading workshop', re.I)
+    for title, link, published, organiser in items[:30]:
+        if not specific.search(title):
+            continue
+        if urlsplit(link).scheme != 'https':
+            continue
+        try:
+            if not published:
+                page = BeautifulSoup(fetch_detail(link), 'html.parser')
+                meta = page.find('meta', attrs={'property': 'article:published_time'})
+                t = page.find('time', attrs={'datetime': True})
+                published = (meta.get('content', '') if meta else '') or (t.get('datetime', '') if t else '')
+                if not published:
+                    match = re.search(r'\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2},?\s+20\d{2}\b',
+                                      page.get_text(' ', strip=True)[:700], re.I)
+                    published = match.group(0) if match else ''
+            if not published:
+                continue
+            when = dateparser.parse(published).date()
+            if not (dt.timedelta(days=0) <= today - when <= dt.timedelta(days=45)):
+                continue
+        except (requests.RequestException, ValueError, TypeError, OverflowError):
+            continue
+        sid = hashlib.sha1((key + '|' + link).encode()).hexdigest()[:12]
+        leads.append({'id': 'signal-' + sid, 'title': title[:150], 'organiser': organiser,
+                      'url': link, 'source_url': SOURCES[key][1], 'status': 'date_unverified',
+                      'note': 'Recent public newsletter post; check the article for actual event dates.',
+                      'checked_on': today.isoformat()})
+    return leads[:5]
+
 
 def parse_social_hub(html: str, source_key: str, today: dt.date, fetch_detail=get) -> tuple[list[dict],list[dict]]:
     """Inspect the society's public bio links, not its social-media posts.
@@ -465,7 +547,7 @@ def parse_social_hub(html: str, source_key: str, today: dt.date, fetch_detail=ge
     main=soup.find('main') or soup.find(id='__next') or soup
     candidates=[]; seen=set()
     for a in main.select('a[href]'):
-        link=urljoin(SOURCES[source_key][1],a.get('href',''))
+        link=unwrap_public_registration_url(urljoin(SOURCES[source_key][1],a.get('href','')))
         title=re.sub(r'\s+', ' ', a.get_text(' ',strip=True)).strip()[:160]
         if not title or len(title)<7 or len(title)>160 or HUB_EXCLUDE.search(title):continue
         # Do not repeatedly advertise an explicitly labelled prior-year link.
@@ -548,6 +630,15 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
         name,url=SOURCES[key]
         try:
             raw=fetcher(url)
+
+            if key in ('bsoc_publications','unit_publications'):
+                signals=parse_newsletter_mentions(raw,key,today,fetch_detail=fetcher)
+                social_signals.extend(signals)
+                health[key]={'status':'links_only' if signals else 'accessible_empty',
+                             'count':0,'signals':len(signals),
+                             'checked_at':dt.datetime.now(TIMEZONE).isoformat(timespec='seconds'),'url':url}
+                print(f'{name}: {health[key]["status"]} ({len(signals)} recent publication leads)')
+                continue
             if key in BIO_SOCIAL_NAMES:
                 found,signals=parse_social_hub(raw,key,today,fetch_detail=fetcher)
                 social_signals.extend(signals)
@@ -596,6 +687,12 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
             sources.append({'id':key,'name':BIO_SOCIAL_NAMES[key]+' · social bio',
                 'url':SOURCES[key][1],'method':'Public link-in-bio monitoring',
                 'coverage':'limited','note':'Only public registration links are readable. No Facebook/Instagram posts, stories or private-group access.'})
+
+    for key in ('bsoc_publications','unit_publications'):
+        if key not in by_id:
+            sources.append({'id':key,'name':SOURCES[key][0], 'url':SOURCES[key][1],
+                            'method':'Public newsletters / articles', 'coverage':'limited',
+                            'note':'Publication mentions are review-only leads, not verified calendar events.'})
     for source in sources:
         if source['id'] in health:source['last_check']=health[source['id']]
     generated=dt.datetime.now(TIMEZONE).isoformat(timespec='seconds')

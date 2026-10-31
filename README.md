@@ -85,3 +85,9 @@ The six-hour collector checks the public link-in-bio pages for FINSOC, UNIT, Fin
 The front end includes separate dated-event and undated-link sections. Email alerts via Resend are optional and unconfigured by default.
 
 Public Facebook event metadata is also inspected only for specific event links already published on FINSOC's official website. This is not access to Facebook Page feeds, private groups, Instagram stories, or a logged-in Facebook session; missing metadata is ignored.
+
+## Additional public sources (no social-media login)
+
+- FMAA UNSW's official Linktree is monitored, including permitted public event registration links behind Facebook's outbound URL wrapper.
+- BSOC's public Beehiiv newsletter and UNIT's Market Wrap RSS are checked for **recent clearly event-related publications**. Newsletter article mentions are **review-only leads**, not calendar events or alerts; published dates are never misrepresented as event dates.
+- This approach cannot read private Facebook/Instagram feeds. Search-engine RSS results are not republished.
