@@ -53,6 +53,8 @@ SOURCES = {
     'finsoc_humanitix': ('FINSOC official Humanitix organiser', 'https://events.humanitix.com/host/unsw-finance-and-banking-society'),
     'cfa': ('CFA Society Australia', 'https://cfas.org.au/Events/'),
     'finma': ('FINMA Financial Markets Academy', 'https://www.finma.au/events-1'),
+    'unsw_public_events': ('UNSW public events calendar', 'https://events.unsw.edu.au/'),
+    'unsw_accounting_lecture': ('UNSW Accounting & CPA Australia public lecture', 'https://www.unsw.edu.au/business/our-schools/accounting-auditing-taxation/news-events/birkett-memorial-lecture/bill-birkett-lecture-series-2026'),
 }
 MONTHS = ('January February March April May June July August September October November December').split()
 MONTH_RX = '|'.join(MONTHS+[m[:3] for m in MONTHS])
@@ -651,6 +653,134 @@ def registration_is_past(html: str, url: str, today: dt.date) -> bool:
 
 
 
+
+UNSW_FINANCE_PUBLIC_LINK_RX = re.compile(
+    r'investment|investor|finance|banking|private-equity|capital|entrepreneur|'
+    r'venture|fundrais|startup|start-up|asset-pricing|fintech|accounting|'
+    r'financial|funding|trading|markets?',re.I)
+UNSW_FINANCE_SUBJECT_RX = re.compile(
+    r'investment|investor|finance|capital|funding|commercialis|venture|'
+    r'equity|entrepreneur|fintech|asset.pricing|banking',re.I)
+
+
+def parse_unsw_public_event_detail(html: str, url: str, today: dt.date) -> dict | None:
+    """Event details from UNSW's public calendar, not category-based guesses.
+
+    Only a finance/investment-themed, individually dated event with a future
+    start and registration link qualifies. A generic Business and Economics
+    tag on an unrelated conference isn't sufficient.
+    """
+    if not trusted_host(url, {'events.unsw.edu.au'}):
+        return None
+    if not re.fullmatch(r'/event/[a-z0-9][a-z0-9-]{5,150}/?',urlsplit(url).path,re.I):
+        return None
+    soup=BeautifulSoup(html,'html.parser')
+    heading=soup.find('h1')
+    if not heading:return None
+    title=heading.get_text(' ',strip=True)
+    if not title or not UNSW_FINANCE_PUBLIC_LINK_RX.search(title):
+        return None
+    section=heading.find_parent('section')
+    if section is None:
+        return None
+    visible=section.get_text(' ',strip=True)
+    # Date and time must be in the official detail header, not in bios or
+    # a later unrelated speaker section with an old publication year.
+    heading_context=visible[:510]
+    dm=DATE_DAY_MONTH.search(heading_context) or DATE_MONTH_DAY.search(heading_context)
+    if not dm or not dm.group('year'):return None
+    date=parse_date(dm.group(0),today)
+    if not date or date<today:return None
+    clock_context=re.sub(r'\b(\d{1,2})\.(\d{2})\s*(am|pm)\b',r'\1:\2 \3',
+                         heading_context,flags=re.I)
+    timer=RANGE_RX.search(clock_context)
+    if not timer:return None
+    times=timer.group(0)
+    # Guard against broad "Innovation" events that mention finance only
+    # as a page taxonomy tag: require substantive financial themes.
+    overview=visible[dm.end():min(len(visible),3300)]
+    if not UNSW_FINANCE_SUBJECT_RX.search(title+' '+overview):
+        return None
+    registration=None
+    for a in section.select('a[href]'):
+        href=urljoin(url,a.get('href','').strip())
+        if trusted_host(href,{'eventbrite.com.au','events.humanitix.com','luma.com'}):
+            registration=href
+            break
+    if not registration:return None
+    venue='See organiser'
+    m=re.search(r'\b(Australian Museum|UNSW Kensington|UNSW Sydney|The Roundhouse)\b',heading_context,re.I)
+    if m:venue=m.group(1)
+    summary=(soup.find(string=re.compile(r'From world-changing research|investors assess risk|investment|funding',re.I)))
+    summary=summary.strip()[:220] if isinstance(summary,str) else overview[:220]
+    rec=event('UNSW public events',title,date,times,url,today=today,
+        venue=venue,summary=summary,
+        eligibility=('Free public event; register with organiser.' if re.search(r'Free for everyone',heading_context,re.I)
+                     else 'Public event; check eligibility and any fees with organiser.'),
+        registration_url=registration)
+    if rec:
+        rec['relevance_reason']='UNSW public event with an explicitly dated investment/entrepreneurship theme and official registration.'
+    return rec
+
+
+def parse_unsw_public_events(html: str, today: dt.date, fetch_detail=get) -> list[dict]:
+    """Bounded finance-specific discovery using the official public calendar."""
+    soup=BeautifulSoup(html,'html.parser')
+    if not re.search(r'\bEvents\b',soup.get_text(' ',strip=True)[:450],re.I):
+        raise ValueError('UNSW public event calendar unavailable')
+    home=SOURCES['unsw_public_events'][1]
+    urls=[]
+    for anchor in soup.select('a[href]'):
+        candidate=urljoin(home,anchor.get('href','').strip())
+        if not trusted_host(candidate,{'events.unsw.edu.au'}):
+            continue
+        path=urlsplit(candidate).path
+        if (not re.fullmatch(r'/event/[a-z0-9][a-z0-9-]{5,150}/?',path,re.I)
+            or not UNSW_FINANCE_PUBLIC_LINK_RX.search(path)):
+            continue
+        if candidate not in urls:urls.append(candidate)
+    found=[]
+    for url in urls[:10]:
+        try:
+            item=parse_unsw_public_event_detail(fetch_detail(url),url,today)
+            if item:found.append(item)
+        except (requests.RequestException,ValueError,RuntimeError):
+            continue
+    return unique(found)
+
+
+def parse_unsw_accounting_lecture(html: str, today: dt.date) -> list[dict]:
+    """Public CPA Australia / UNSW lecture only, with an explicit event date."""
+    soup=BeautifulSoup(html,'html.parser')
+    text=soup.get_text(' ',strip=True)
+    if not re.search(r'Bill Birkett (?:Memorial )?Lecture(?: Series)? 2026',text,re.I):
+        raise ValueError('UNSW accounting lecture source unavailable')
+    date_match=re.search(r'\bDate\s+(?:Wednesday\s+)?(4\s+November\s+2026)\b',text,re.I)
+    if not date_match:return []
+    date=parse_date(date_match.group(1),today)
+    if not date or date<today:return []
+    times_match=re.search(r'\bTime\s+(4:30\s*[–-]\s*8:00\s*pm)\b',text,re.I)
+    if not times_match:return []
+    link=None
+    for a in soup.select('a[href]'):
+        candidate=a['href'].strip()
+        if trusted_host(candidate,{'eventbrite.com.au'}):
+            link=candidate
+            break
+    if not link:return []
+    record=event('UNSW School of Accounting & CPA Australia',
+        'Bill Birkett Memorial Lecture 2026',date,times_match.group(1),
+        SOURCES['unsw_accounting_lecture'][1],today=today,
+        venue='12-Micron Barangaroo, Sydney',
+        summary='Accounting and finance perspectives, ANZ executive keynote and professional networking.',
+        eligibility='Professional event — confirm student eligibility and any registration fee with organiser.',
+        registration_url=link)
+    if record:
+        record['relevance_reason']='Dated UNSW and CPA Australia accounting lecture with a public registration link.'
+        return [record]
+    return []
+
+
 def parse_cfa_australia(html: str, today: dt.date) -> list[dict]:
     """Only relevant, future-dated NSW/online CFA Society sessions.
 
@@ -1199,6 +1329,8 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
                 elif key=='mathsoc_quant':found=parse_mathsoc_quant(raw,today)
                 elif key=='cfa':found=parse_cfa_australia(raw,today)
                 elif key=='finma':found=parse_finma_student_events(raw,today)
+                elif key=='unsw_public_events':found=parse_unsw_public_events(raw,today,fetch_detail=fetcher)
+                elif key=='unsw_accounting_lecture':found=parse_unsw_accounting_lecture(raw,today)
                 elif key=='finsoc_humanitix':found=parse_finsoc_humanitix(raw,today,fetch_detail=fetcher)
                 elif key=='unsw':found=parse_unsw_with_registration_fallback(raw,today,fetch_detail=fetcher)
                 else:found=parse_unsw(raw,today)
@@ -1278,6 +1410,11 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
             sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],
                 'method':'Public Humanitix organiser host','coverage':'limited',
                 'note':'Only official upcoming ticket pages with explicit dated event schema and FINSOC attribution; does not access private events.'})
+    for key in ('unsw_public_events','unsw_accounting_lecture'):
+        if key not in by_id:
+            sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],
+                'method':'Official dated UNSW event listings','coverage':'public',
+                'note':'UNSW public calendar scans only investment/finance-themed event pages with verified dates and registration links; professional lecture may have eligibility or cost restrictions.'})
     for key in ('cfa','finma'):
         if key not in by_id:
             sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],

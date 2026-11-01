@@ -159,3 +159,7 @@ Finance Radar now rechecks public Google Forms linked directly by official FINSO
 ### Completed workshop registration cleanup
 
 FINSOC's publicly visible LinkedIn company updates contain recaps of its October 2026 Commercial Banking & Credit Analysis Workshop and Financial Modelling Masterclass. Although old Google Forms remain linked in the FINSOC Linktree, the collector removes those two event-specific registration URLs from current event leads. A different upcoming form is unaffected. https://au.linkedin.com/company/unsw-finsoc
+
+## Finance-relevant official UNSW event discovery
+
+The UNSW public events calendar (events.unsw.edu.au) is checked for event links with investment, capital-raising, venture, banking, entrepreneurship, financial markets or finance keywords. We inspect only the organiser's own detail page and require a future dated event, explicit start/end range, substantive finance/investment relevance, and a trusted public booking URL; generic innovation or science conferences aren't promoted merely for carrying a Business & Economics tag. A public UNSW Engineering and Spinout Club investor panel is eligible. The separately dated UNSW/CPA Australia Bill Birkett accounting lecture is monitored with explicit professional-eligibility and fee caveats; it expires automatically after 4 November 2026. The collector does not guarantee open registrations.

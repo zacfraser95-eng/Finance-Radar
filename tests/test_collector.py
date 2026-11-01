@@ -627,3 +627,71 @@ def test_completed_finsoc_workshops_not_presented_as_upcoming_registration_leads
         raise AssertionError('Past-event registration forms should never be rechecked')
     current,leads=collect.parse_social_hub(html,'social_finsoc',dt.date(2026,11,1),fetch_detail=no_fetch)
     assert current==[] and leads==[]
+
+
+UNSW_PUBLIC_FINANCE_INDEX='''<html><h1>Events</h1><p>1 - 14 of 31 Events</p>
+<a href="/event/engineering-future-entrepreneurship-paradox">Engineering the Future</a>
+<a href="/event/curating-now-ecological-practices">Curating Now</a>
+<a href="/event/oceans-of-hope">Oceans of Hope</a></html>'''
+
+UNSW_PUBLIC_FINANCE_DETAIL='''<html><section>
+<h1>Engineering the Future: The Entrepreneurship Paradox</h1>
+<p>10 November 2026</p><p>5.30pm – 8.30pm AEDT</p>
+<p>Australian Museum</p><a href="https://www.eventbrite.com.au/e/engineering-the-future-the-entrepreneurship-paradox-tickets-1996543386013">Register Now</a>
+<p>Free for everyone</p><h2>Overview</h2>
+<p>Australian investors assess risk, entrepreneurs need capital, funding, and venture investment to scale new ventures.</p>
+</section><section><h2>Speakers</h2><p>Research on 20 October 2026</p></section></html>'''
+
+BIRKETT_DETAIL='''<main><h1>Bill Birkett Memorial Lecture 2026</h1>
+<p>UNSW School of Accounting, Auditing and Taxation in partnership with CPA Australia.</p>
+<a href="https://www.eventbrite.com.au/e/bill-birkett-memorial-lecture-2026-tickets-1999953200861">Register now</a>
+<p>Date</p><p>Wednesday 4 November 2026</p>
+<p>Time</p><p>4:30 – 8:00 pm</p><p>Location 12-Micron Barangaroo</p></main>'''
+
+
+def test_official_unsw_investment_panel_discovery_verifies_registration():
+    urls=[]
+    def fetch(url):
+        urls.append(url)
+        return UNSW_PUBLIC_FINANCE_DETAIL
+    out=collect.parse_unsw_public_events(UNSW_PUBLIC_FINANCE_INDEX,dt.date(2026,11,1),fetch_detail=fetch)
+    assert len(out)==1 and len(urls)==1
+    e=out[0]
+    assert e['starts_at']=='2026-11-10T17:30:00+11:00'
+    assert e['ends_at']=='2026-11-10T20:30:00+11:00'
+    assert 'Free public event' in e['eligibility']
+    assert 'eventbrite.com.au' in e['registration_url']
+
+
+def test_unrelated_unsw_events_not_imported_as_finance():
+    index='<html><h1>Events</h1><a href="/event/finance-picnic-and-art-exhibition">Finance Picnic</a></html>'
+    page=UNSW_PUBLIC_FINANCE_DETAIL.replace('Engineering the Future: The Entrepreneurship Paradox','Finance Picnic and Art Exhibition').replace(
+        'Australian investors assess risk, entrepreneurs need capital, funding, and venture investment to scale new ventures.',
+        'Enjoy a student picnic with artists and bands.')
+    result=collect.parse_unsw_public_events(index,dt.date(2026,11,1),fetch_detail=lambda _:page)
+    assert result==[]
+
+
+def test_unsw_investment_calendar_rejects_unverified_dates_and_registration():
+    page=UNSW_PUBLIC_FINANCE_DETAIL.replace('10 November 2026','November date TBC')
+    url='https://events.unsw.edu.au/event/engineering-future-entrepreneurship-paradox'
+    assert collect.parse_unsw_public_event_detail(page,url,dt.date(2026,11,1)) is None
+    page=UNSW_PUBLIC_FINANCE_DETAIL.replace('www.eventbrite.com.au','www.eventbrite.com.au.attacker.net')
+    assert collect.parse_unsw_public_event_detail(page,url,dt.date(2026,11,1)) is None
+    assert collect.parse_unsw_public_event_detail(UNSW_PUBLIC_FINANCE_DETAIL,url,dt.date(2026,11,11)) is None
+
+
+def test_unsw_accounting_lecture_dated_professional_entry_caveat():
+    found=collect.parse_unsw_accounting_lecture(BIRKETT_DETAIL,dt.date(2026,11,1))
+    assert len(found)==1
+    rec=found[0]
+    assert rec['starts_at']=='2026-11-04T16:30:00+11:00'
+    assert rec['ends_at']=='2026-11-04T20:00:00+11:00'
+    assert 'student eligibility' in rec['eligibility']
+    assert rec['registration_url'].endswith('1999953200861')
+
+
+def test_unsw_accounting_lecture_expired_or_mismatched_not_added():
+    assert collect.parse_unsw_accounting_lecture(BIRKETT_DETAIL,dt.date(2026,11,5))==[]
+    assert collect.parse_unsw_accounting_lecture(BIRKETT_DETAIL.replace('Wednesday 4 November 2026','Date TBC'),
+                                             dt.date(2026,11,1))==[]
