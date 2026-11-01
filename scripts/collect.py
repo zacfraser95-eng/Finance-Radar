@@ -748,9 +748,12 @@ def parse_unsw_public_events(html: str, today: dt.date, fetch_detail=get) -> lis
         if panel not in urls:urls.insert(0,panel)
     for url in urls[:10]:
         try:
-            item=parse_unsw_public_event_detail(fetch_detail(url),url,today)
+            page=fetch_detail(url)
+            item=parse_unsw_public_event_detail(page,url,today)
             if item:found.append(item)
-        except (requests.RequestException,ValueError,RuntimeError):
+            else:print('UNSW public event not verified:',url,'page bytes:',len(page))
+        except (requests.RequestException,ValueError,RuntimeError) as exc:
+            print('UNSW public event fetch unavailable:',url,type(exc).__name__,str(exc)[:90])
             continue
     return unique(found)
 
