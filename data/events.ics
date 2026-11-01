@@ -9,7 +9,7 @@ X-WR-CALDESC:Currently confirmed UNSW and Sydney finance events. Check orga
  niser details.
 BEGIN:VEVENT
 UID:unsw-linkedin-20261102@finance-radar.unsw-student
-DTSTAMP:20261101T003740Z
+DTSTAMP:20261101T003959Z
 DTSTART:20261102T050000Z
 DTEND:20261102T060000Z
 SUMMARY:Leveraging LinkedIn workshop
@@ -22,7 +22,7 @@ URL:https://www.eventbrite.com.au/e/leveraging-linkedin-workshop-tickets-19
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-8265eeea6300@finance-radar.unsw-student
-DTSTAMP:20261101T003740Z
+DTSTAMP:20261101T003959Z
 DTSTART:20261105T070000Z
 DTEND:20261105T090000Z
 SUMMARY:Evening with Morgan Stanley
@@ -34,7 +34,7 @@ URL:https://forms.gle/eMBVpNogp4awX6Bp9
 END:VEVENT
 BEGIN:VEVENT
 UID:unsw-jobsearch-20261112@finance-radar.unsw-student
-DTSTAMP:20261101T003740Z
+DTSTAMP:20261101T003959Z
 DTSTART:20261112T020000Z
 DTEND:20261112T030000Z
 SUMMARY:Job Search Strategies workshop
@@ -47,7 +47,7 @@ URL:https://www.eventbrite.com.au/e/job-search-strategies-workshop-tickets-
 END:VEVENT
 BEGIN:VEVENT
 UID:unsw-interview-20261116@finance-radar.unsw-student
-DTSTAMP:20261101T003740Z
+DTSTAMP:20261101T003959Z
 DTSTART:20261116T010000Z
 DTEND:20261116T020000Z
 SUMMARY:Preparing for Interviews workshop
@@ -60,7 +60,7 @@ URL:https://www.eventbrite.com.au/e/preparing-for-interviews-workshop-ticke
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-4bcf2300ad11@finance-radar.unsw-student
-DTSTAMP:20261101T003740Z
+DTSTAMP:20261101T003959Z
 DTSTART:20261125T230000Z
 DTEND:20261126T040000Z
 SUMMARY:McKinsey & Company's 2026 AI and The Path to Progress Workshop
@@ -74,7 +74,7 @@ URL:https://www.fmaa.com.au/event/mckinsey-companys-2026-ai-and-the-path-to
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-21cc2d0a2a9b@finance-radar.unsw-student
-DTSTAMP:20261101T003740Z
+DTSTAMP:20261101T003959Z
 DTSTART:20261127T030000Z
 DTEND:20261127T060000Z
 SUMMARY:UNSW Fintech AI Innovation Consortium (FAIC) End of Year Event for 
