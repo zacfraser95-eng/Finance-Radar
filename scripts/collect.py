@@ -751,7 +751,16 @@ def parse_unsw_public_events(html: str, today: dt.date, fetch_detail=get) -> lis
             page=fetch_detail(url)
             item=parse_unsw_public_event_detail(page,url,today)
             if item:found.append(item)
-            else:print('UNSW public event not verified:',url,'page bytes:',len(page))
+            else:
+                probe=BeautifulSoup(page,'html.parser')
+                txt=probe.get_text(' ',strip=True)
+                h1s=[h.get_text(' ',strip=True)[:95] for h in probe.find_all('h1')[:3]]
+                print('UNSW public event not verified:',url,'bytes:',len(page),
+                      'headings:',h1s,'visible:',len(txt),
+                      'date:',bool(re.search(r'10\\s+November\\s+2026',txt,re.I)),
+                      'clock:',bool(re.search(r'5[.:]30\\s*pm',txt,re.I)),
+                      'register:',bool(re.search(r'1996543386013',page)),
+                      'investor:',bool(re.search(r'investor|capital|funding',txt,re.I)))
         except (requests.RequestException,ValueError,RuntimeError) as exc:
             print('UNSW public event fetch unavailable:',url,type(exc).__name__,str(exc)[:90])
             continue
