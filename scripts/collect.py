@@ -862,6 +862,7 @@ def parse_cafba_sydney_networking(html: str, today: dt.date) -> list[dict]:
     if not heading or not re.search(r'^CAFBA End of Year Networking\s*[–-]\s*Sydney$',heading.get_text(' ',strip=True),re.I):
         return []
     visible=soup.get_text(' ',strip=True)
+    print('CAFBA checks:',{'title':bool(heading),'date':bool(re.search(r'25 November 2026',visible,re.I)),'anyone':bool(re.search(r'Who Can Register',visible,re.I) and re.search(r'Anyone',visible,re.I)),'sydney':bool(re.search(r'Zeta Bar.*Sydney',visible,re.I)),'clock':bool(re.search(r'5:30\s*pm',visible,re.I)),'sector':bool(re.search(r'commercial and asset finance',visible,re.I))})
     if not (re.search(r'\b25 November 2026\b',visible,re.I)
             and re.search(r'\bWho Can Register\?\s*Anyone\b',visible,re.I)
             and re.search(r'\bZeta Bar\b.*\bSydney\b',visible,re.I | re.S)
@@ -961,6 +962,7 @@ def parse_mymoney_expo(html: str, today: dt.date, fetch_detail=get) -> list[dict
     visible=soup.get_text(' ',strip=True)
     if not heading:
         return []
+    print('EXPO checks:',{'heading':bool(heading),'dates':bool(re.search(r'28.*29 NOVEMBER 2026',visible,re.I)),'sector':bool(re.search(r'finance and investing|investors, finance professionals',visible,re.I)),'official_urls':[a.get('href','')[:130] for a in soup.select('a[href]') if 'mymoneyexpo' in a.get('href','').lower()][:3]})
     if not (re.search(r'\bSATURDAY 28\s*[–-]\s*SUNDAY 29 NOVEMBER 2026\b',visible,re.I)
             and re.search(r'finance and investing|investors, finance professionals',visible,re.I)):
         return []
@@ -970,13 +972,16 @@ def parse_mymoney_expo(html: str, today: dt.date, fetch_detail=get) -> list[dict
         if trusted_host(link,{'mymoneyexpo.com'}):
             official='https://mymoneyexpo.com/'
             break
-    if not official:return []
+    if not official:
+        print('EXPO no trusted organiser link')
+        return []
     try:
         page=fetch_detail(official)
     except (requests.RequestException,ValueError,RuntimeError):
         return []
     organiser=BeautifulSoup(page,'html.parser')
     copy_=organiser.get_text(' ',strip=True)
+    print('EXPO organiser checks:',{'chars':len(page),'title':bool(re.search(r'MyMoney Expo 2026',copy_,re.I)),'free':bool(re.search(r'FREE General Admission',copy_,re.I)),'sector':bool(re.search(r'investing|trading|wealth',copy_,re.I)),'ticket_links':len([a for a in organiser.select('a[href]') if 'lup.com.au' in a.get('href','')])})
     if not (re.search(r'MyMoney Expo 2026',copy_,re.I)
             and re.search(r'\bFREE General Admission\b',copy_,re.I)
             and re.search(r'investing|trading|wealth',copy_,re.I)):
