@@ -1,0 +1,44 @@
+name: Suggest an ongoing society event feed
+description: Help Finance Radar discover more official finance society events.
+title: "[Source request] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share an official public event feed or calendar. The project will review it for reliability.
+        No logins, private groups, subscriber lists, passwords or access tokens are needed.
+        This is a publicly visible issue and does not guarantee acceptance.
+  - type: input
+    id: organiser
+    attributes:
+      label: Society or organiser
+      placeholder: e.g. UNSW Capital Markets Association
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Public event page or feed URL
+      placeholder: https://...
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type of public source
+      options:
+        - Official events calendar
+        - RSS or Atom feed
+        - ICS calendar
+        - Event registration platform
+        - Public newsletter archive
+        - Other public page
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: What events can students expect from this source?
+      description: Include eligibility, frequency and whether dates are shown publicly.
+    validations:
+      required: false

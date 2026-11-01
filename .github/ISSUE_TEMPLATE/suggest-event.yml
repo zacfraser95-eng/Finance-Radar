@@ -1,34 +1,67 @@
 name: Suggest an event
-description: Submit a public student finance event we might have missed.
+description: Share an official finance, careers or professional-development event for editorial review.
 title: "[Event suggestion] "
 body:
   - type: markdown
     attributes:
-      value: "Please link to an official public listing. Never include private or personal details."
+      value: |
+        Thank you for improving Finance Radar. Events are checked before publication, not added automatically.
+        Supply an official publicly accessible organiser/registration link. Never include passwords, private social screenshots, member records or personal details.
+        This is a public GitHub issue.
   - type: input
     id: event
     attributes:
       label: Event name
+      placeholder: e.g. Investment Banking Careers Evening
     validations:
       required: true
   - type: input
     id: organiser
     attributes:
-      label: Organiser
+      label: Event organiser
+      placeholder: e.g. UNSW Finance Society
     validations:
       required: true
   - type: input
     id: url
     attributes:
-      label: Official event link
-      placeholder: "https://..."
+      label: Official public event or registration URL
+      placeholder: https://...
+      description: The listing must show an event title and date. Don't link to a private account.
     validations:
       required: true
   - type: input
     id: date
     attributes:
-      label: Event date (if confirmed)
-  - type: textarea
-    id: notes
+      label: Date, local start/end time and time zone
+      placeholder: e.g. 20 Nov 2026, 5:30-7pm Sydney time
+    validations:
+      required: true
+  - type: input
+    id: location
     attributes:
-      label: Additional public details
+      label: Venue or online event
+      placeholder: e.g. UNSW Kensington, Law Theatre
+    validations:
+      required: true
+  - type: input
+    id: cost
+    attributes:
+      label: Cost or membership requirement
+      placeholder: e.g. Free for members, $10 non-members
+    validations:
+      required: false
+  - type: textarea
+    id: eligibility
+    attributes:
+      label: Student eligibility and registration conditions
+      placeholder: e.g. Open to all first-year students. Registration closes 15 Nov.
+    validations:
+      required: false
+  - type: checkbox
+    id: publicly-listed
+    attributes:
+      label: Source requirements
+      options:
+        - label: The event details above are available on the official public link.
+          required: true

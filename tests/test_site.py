@@ -96,3 +96,27 @@ def test_delayed_feed_discloses_stale_information():
     assert 'renderSyncHealth();renderSpotlight()' in SITE
     assert "Last scan outdated" in SITE
     assert "Feed not recently verified" in SITE
+
+def test_society_onboarding_link_and_access_labels():
+    assert 'href="./organisers.html"' in SITE
+    assert 'function accessLabel(e)' in SITE
+    assert 'Professional event · fees may apply' in SITE
+    assert 'Free · students welcome' in SITE
+
+def test_onboarding_page_is_independent_and_requires_public_sources():
+    root=Path(__file__).resolve().parents[1]
+    page=(root/'organisers.html').read_text()
+    assert 'href="./editorial.css"' in page
+    assert 'Independent' in page or 'independent' in page
+    assert 'Submit an event' in page
+    assert 'source-request.yml' in page
+    assert 'requires a free GitHub account' in page
+
+def test_society_submission_requires_public_dates_and_source():
+    root=Path(__file__).resolve().parents[1]
+    template=(root/'.github/ISSUE_TEMPLATE/suggest-event.yml').read_text()
+    for s in ['Official public event','Date, local start/end time','Cost or membership','Student eligibility']:
+        assert s in template
+    source=(root/'.github/ISSUE_TEMPLATE/source-request.yml').read_text()
+    assert 'Public event page or feed URL' in source
+    assert 'No logins, private groups' in source

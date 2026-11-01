@@ -147,3 +147,7 @@ The hosted frontend checks the age and mode of the published feed. When its most
 ## Expanded Sydney finance industry event coverage
 
 The source monitor also checks CFA Society Australia's official calendar for future Sydney/online private-equity, institutional capital and investment-career events. It deliberately excludes interstate and generic CPD offerings, and explicitly flags non-member registration fees and professional eligibility requirements. It checks FINMA's officially published free Finance 101 student lecture on 10 November 2026, corroborated by a dated public organiser announcement. The latter has a hard expiry and never infers future dates from prior years. Neither source bypasses logins or assumes a registration is available.
+
+## Society partnership and accessibility intake
+
+The independent, public `/organisers.html` page invites finance societies to submit a dated public registration listing or ongoing event feed. GitHub issue forms capture source links, date, venue, cost, eligibility and public-source confirmation; a GitHub account is required. Nothing is auto-approved, no private messages or passwords are requested, and no member mailing lists are collected. The site now distinguishes professional sessions (potential non-member fees), free student opportunities and restricted events with plain-text access labels without falsely promising registration access. Organiser links remain in the footer and homepage feedback line so the events directory stays compact.
