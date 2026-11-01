@@ -32,3 +32,20 @@ def test_site_verification_is_clear_and_unconfirmed_hidden_by_default():
     assert 'include previously listed' in SITE.lower()
     assert 'id="verification-summary"' in SITE
     assert 'Confirmed in latest scan' in SITE
+
+def test_editorial_identity_is_used_without_decorative_graphics():
+    stylesheet=(Path(__file__).resolve().parents[1]/'editorial.css').read_text()
+    assert '<link rel="stylesheet" href="./editorial.css"' in SITE
+    assert 'What’s on<br><span>in finance.</span>' in SITE
+    assert '<div class="orbit">' not in SITE
+    assert 'background:radial-gradient' not in stylesheet
+    assert 'color-scheme:light' in stylesheet
+    assert "font:400 clamp(" in stylesheet
+
+def test_deployment_includes_editorial_css():
+    workflow=(Path(__file__).resolve().parents[1]/'.github/workflows/refresh-and-publish.yml').read_text()
+    assert 'cp index.html editorial.css _site/' in workflow
+
+def test_interactive_controls_preserved_in_redesign():
+    for key in ['id="events"','id="calendargrid"','id="search"','id="restricted"','id="lastknown"','id="email-updates"','id="modal"','id="saved-events"']:
+        assert key in SITE

@@ -72,7 +72,7 @@ jobs:
       - name: Package static website
         run: |
           mkdir -p _site/data
-          cp index.html _site/index.html
+          cp index.html editorial.css _site/
           cp data/feed.json data/live.js data/health.json data/signals.json _site/data/
           cp data/events.ics data/events.xml _site/
           touch _site/.nojekyll

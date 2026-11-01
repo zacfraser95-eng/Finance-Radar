@@ -119,3 +119,7 @@ The collector now maintains stable `first_seen_at` timestamps; RSS records inclu
 - FINSOC's Weekly Wrap archive is monitored as a public publication source; publication dates do **not** count as event dates.
 - The discovery feed now defaults to **currently confirmed events only**. Previously listed, unconfirmed records are hidden behind an explicit toggle and continue to be excluded from RSS/email/calendar feeds.
 - The RSS-to-email signup is GET (as required by Simple Newsletter's published OpenAPI), redirects to the provider confirmation response, and requires an explicit consent checkbox; the site does not collect emails itself.
+
+## Editorial redesign
+
+The website now loads a dedicated `editorial.css` design system: warm off-white backgrounds, dark green feature panels, restrained terracotta highlights, Georgia display typography, clean data-led event rows, and responsive navigation. No animated orbit graphics, gratuitous gradients or stock imagery. The existing event collector, accessibility labels, filters, bookmarks, newsletter consent form, calendar and RSS remain unchanged. GitHub Pages builds must copy the CSS file alongside `index.html`.
