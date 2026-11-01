@@ -755,3 +755,85 @@ def test_unsw_ticket_fallback_requires_date_time_organiser_and_not_expired():
 def test_unsw_ticket_fallback_rejects_event_ended():
     assert collect.parse_unsw_verified_investor_ticket(
         UNSW_INVESTOR_TICKET_HTML+' Event ended',dt.date(2026,11,1)) is None
+
+
+CAFBA_NSW_HTML='''<html><h2>CAFBA End of Year Networking – Sydney</h2>
+<dl><strong>Start Date</strong><dd>25 November 2026</dd><strong>Start Time</strong><dd>5:30</dd>
+<strong>Venue</strong><dd>Zeta Bar, Hilton Sydney</dd><strong>Who Can Register?</strong><dd>Anyone</dd></dl>
+<h3>Connect. Celebrate.</h3><p>Sydney event for the commercial and asset finance community.</p>
+<p>Wednesday, 25 November 2026 From 5:30pm Zeta Bar, Hilton Sydney</p></html>'''
+
+RMIA_FREE_HTML='''<html><h4>Event Details</h4><p>Time: 5:00pm AEDT - onwards</p>
+<p>Date: 11 November 2026</p><p>Venue: The Sussex Hotel, Rooftop</p>
+<p>Registration Fee: FREE</p><p>Enjoy drinks with the NSW risk community.</p>
+<a href="https://members.rmia.org.au/_events.registration/step1/eventid/42980">Register</a></html>'''
+
+STEP_EPN_HTML='''<html><section><h2>STEP NSW Emerging Professionals Network | Wednesday 25 November 2026</h2>
+<p>Wednesday 25 November 2026 at JustFund in Sydney</p>
+<p>The EPN is open to all professional advisors, educators and students with a trusts and estates focus.</p>
+<p>17:30 – 18:00 arrival and networking. 18:40 – 21:00 networking.</p>
+<p>JustFund | Level 9, 85 Castlereagh Street, Sydney.</p>
+<p>COST: STEP Members $25 | Non-Members $30</p>
+<a href="https://events.humanitix.com/step-nsw-emerging-professionals-network-or-wednesday-25-november-2026">REGISTER HERE</a></section></html>'''
+
+MYMONEY_ICC_HTML='''<html><h2>Exhibition Centre</h2><h3>SATURDAY 28 - SUNDAY 29 NOVEMBER 2026</h3>
+<h1>MyMoney Expo</h1><p>Investors, finance professionals and everyday Australians.
+Finance and investing education and networking.</p><a href="https://mymoneyexpo.com/?utm_source=venue">Learn More</a></html>'''
+
+MYMONEY_HOST_HTML='''<html><h1>MyMoney Expo 2026</h1>
+<p>Join thousands at MyMoney Expo Sydney – with FREE General Admission.</p>
+<p>Hear from finance professionals covering investing, trading, property and wealth.</p>
+<a href="https://tickets.lup.com.au/3a45f2ce-3748-4077-8b6f-e47a1987e1aa">Register for Free</a></html>'''
+
+
+def test_cafba_open_to_anyone_finance_networking_has_no_invented_end():
+    e=collect.parse_cafba_sydney_networking(CAFBA_NSW_HTML,dt.date(2026,11,1))
+    assert len(e)==1
+    assert e[0]['starts_at']=='2026-11-25T17:30:00+11:00'
+    assert e[0]['ends_at'] is None
+    assert 'Anyone can register' in e[0]['eligibility']
+    assert 'CAFBA' in e[0]['organiser']
+    assert collect.parse_cafba_sydney_networking(CAFBA_NSW_HTML,dt.date(2026,11,26))==[]
+
+
+def test_cafba_missing_public_registration_eligibility_not_confirmed():
+    assert collect.parse_cafba_sydney_networking(
+        CAFBA_NSW_HTML.replace('Anyone','Members only'),dt.date(2026,11,1))==[]
+
+
+def test_rmia_free_industry_networking_requires_registration_link():
+    ev=collect.parse_rmia_sydney_networking(RMIA_FREE_HTML,dt.date(2026,11,1))
+    assert len(ev)==1
+    assert ev[0]['starts_at']=='2026-11-11T17:00:00+11:00'
+    assert ev[0]['fit']=='restricted'
+    assert 'student attendance' in ev[0]['eligibility']
+    assert collect.parse_rmia_sydney_networking(RMIA_FREE_HTML.replace('members.rmia.org.au','evil.com'),dt.date(2026,11,1))==[]
+
+
+def test_step_student_eligible_paid_emerging_network():
+    ev=collect.parse_step_sydney_emerging_network(STEP_EPN_HTML,dt.date(2026,11,1))
+    assert len(ev)==1
+    assert ev[0]['starts_at']=='2026-11-25T17:30:00+11:00'
+    assert ev[0]['ends_at']=='2026-11-25T21:00:00+11:00'
+    assert '$30' in ev[0]['eligibility']
+    assert 'students' in ev[0]['eligibility']
+    assert collect.parse_step_sydney_emerging_network(STEP_EPN_HTML.replace('and students','only'),dt.date(2026,11,1))==[]
+
+
+def test_mymoney_requires_both_official_pages_and_free_registration():
+    ev=collect.parse_mymoney_expo(MYMONEY_ICC_HTML,dt.date(2026,11,1),
+        fetch_detail=lambda _:MYMONEY_HOST_HTML)
+    assert len(ev)==1
+    assert ev[0]['starts_at']=='2026-11-28'
+    assert ev[0]['ends_at'] is None
+    assert '28–29 November' in ev[0]['subtitle']
+    assert 'Free general admission' in ev[0]['eligibility']
+    assert ev[0]['registration_url'].startswith('https://tickets.lup.com.au/')
+    assert len(ev[0]['source_urls'])==2
+
+
+def test_mymoney_does_not_assume_free_when_organiser_page_unavailable():
+    assert collect.parse_mymoney_expo(MYMONEY_ICC_HTML,dt.date(2026,11,1),
+        fetch_detail=lambda _:MYMONEY_HOST_HTML.replace('FREE General Admission','Ticket price available on request'))==[]
+    assert collect.parse_mymoney_expo(MYMONEY_ICC_HTML,dt.date(2026,11,29),
+        fetch_detail=lambda _:MYMONEY_HOST_HTML)==[]

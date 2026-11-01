@@ -167,3 +167,7 @@ The UNSW public events calendar (events.unsw.edu.au) is checked for event links 
 ### Dynamic UNSW public events / independent Eventbrite registration
 
 UNSW's official investor-panel event page serves its title and registration URL but not date/time fields in the server-visible text. The collector cross-checks the linked public Eventbrite registration for the exact event title, organiser and 10 November 2026 5:30–8:30 pm time before including it. This event-specific fallback expires automatically after 10 November; unknown events cannot inherit its date. Tickets and eligibility remain controlled by the organiser.
+
+## Sydney-wide public finance source expansion
+
+Monitor four additional independent official sources rather than generic aggregator feeds: CAFBA's 25 Nov Sydney commercial/asset finance networking (explicitly open to anyone, entry cost unverified); RMIA NSW free risk-networking on 11 Nov (professional audience, student access unverified and hidden by default); STEP NSW Emerging Professionals Network 25 Nov (specifically welcomes students interested in trusts/estates, $25 members/$30 non-members); and the 28–29 Nov MyMoney Expo at ICC Sydney. Expo requires both ICC's verified dates and the organiser's current free general-admission ticket link; schedule times remain unknown, so calendar exports are date-only. Each parser fails closed if eligibility, date or official evidence disappears; events disappear naturally after their dates. No claim of ticket availability or booking.
