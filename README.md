@@ -111,3 +111,11 @@ Public Facebook event metadata is also inspected only for specific event links a
 The site embeds an HTML form that posts directly to **Simple Newsletter** (https://simple-newsletter.com/v1/subscriptions/), as documented on its website. Finance Radar does not process or store subscribers' email addresses. Visitors must explicitly consent and confirm by email; the independent provider sends daily digests and handles unsubscribing. Availability and delivery are not guaranteed by Finance Radar. The existing Resend script remains optional for a repository owner and is not a public mailing-list service.
 
 The collector now maintains stable `first_seen_at` timestamps; RSS records include a stable `pubDate` rather than appearing freshly published on every six-hour rescan. Previously-listed and unverified items never enter the published RSS feed.
+
+## FINSOC / QuantSoc verification expansion
+
+- QuantSoc's website is monitored and explicitly labelled **social-only**, because it points to Discord/Facebook rather than publishing an accessible dated calendar. No false event records are generated.
+- Public MathSoc event listings are monitored for future QuantSoc collaborations (e.g. trading competitions), distinguishing upcoming entries from the site's past-events archive.
+- FINSOC's Weekly Wrap archive is monitored as a public publication source; publication dates do **not** count as event dates.
+- The discovery feed now defaults to **currently confirmed events only**. Previously listed, unconfirmed records are hidden behind an explicit toggle and continue to be excluded from RSS/email/calendar feeds.
+- The RSS-to-email signup is GET (as required by Simple Newsletter's published OpenAPI), redirects to the provider confirmation response, and requires an explicit consent checkbox; the site does not collect emails itself.

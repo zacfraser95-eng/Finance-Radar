@@ -398,3 +398,34 @@ def test_first_seen_timestamp_is_preserved_between_rechecks(tmp_path):
     assert len(first['events'])==1
     second,_=collect.collect(today=TODAY,fetcher=fetch,source_keys=['unit'],folder=tmp_path)
     assert first['events'][0]['first_seen_at']==second['events'][0]['first_seen_at']
+
+
+
+MATHSOC_CROSSPOST='''<html><h1>Upcoming Events</h1><h3>MathSoc x QuantSoc Citadel Securities Trading Night</h3>
+<p>UNSW Kensington Campus</p><p>25/11/2026, 6:00:00 pm</p>
+<h3>MathSoc Pizza Night</h3><p>27/11/2026, 6:00:00 pm</p>
+<h1>Past Events</h1><h3>MathSoc x QuantSoc Jane Street Trading Game</h3>
+<p>29/10/2026, 3:00:00 pm</p></html>'''
+
+
+def test_mathsoc_quant_accepts_only_dated_future_quant_collaborations():
+    found=collect.parse_mathsoc_quant(MATHSOC_CROSSPOST,dt.date(2026,11,1))
+    assert len(found)==1
+    assert 'Citadel' in found[0]['title']
+    assert found[0]['starts_at'].startswith('2026-11-25T18:00')
+
+
+def test_mathsoc_quant_does_not_promote_past_events():
+    raw='<html><h1>Upcoming Events</h1><p>No upcoming events found.</p><h1>Past Events</h1><h3>MathSoc x QuantSoc Citadel Securities Trading Game</h3><p>29/10/2026, 3:00:00 pm</p></html>'
+    assert collect.parse_mathsoc_quant(raw,dt.date(2026,11,1))==[]
+
+
+def test_quantsoc_site_is_social_only_and_finsoc_archive_is_not_calendar(tmp_path):
+    (tmp_path/'snapshot.json').write_text(json.dumps({'events':[], 'sources':[]}))
+    pages={collect.SOURCES['quantsoc_site'][1]:'<h1>QuantSoc</h1><p>Check events on Discord and Facebook</p>',
+           collect.SOURCES['finsoc_publications'][1]:'<h1>FINSOC REVIEW</h1><p>Weekly Wrap Volume 39 22 July 2026</p>'}
+    feed,health=collect.collect(today=dt.date(2026,11,1),source_keys=['quantsoc_site','finsoc_publications'],
+                                fetcher=lambda url:pages[url],folder=tmp_path)
+    assert feed['events']==[]
+    assert health['sources']['quantsoc_site']['status']=='social_only'
+    assert health['sources']['finsoc_publications']['status']=='publications_only'

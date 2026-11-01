@@ -19,9 +19,16 @@ def test_feed_subscription_links_and_sydney_date_only_fix():
 
 def test_email_form_uses_independent_provider_and_clear_consent():
     assert 'action="https://simple-newsletter.com/v1/subscriptions/"' in SITE
-    assert 'method="post"' in SITE
+    assert 'method="get"' in SITE
     assert 'name="uri" value="https://zacfraser95-eng.github.io/Finance-Radar/events.xml"' in SITE
     assert 'name="email" type="email"' in SITE
     assert 'I agree to send my email address to Simple Newsletter' in SITE
     assert 'Email confirmation required' in SITE
     assert 'not to Finance Radar or GitHub' in SITE
+
+def test_site_verification_is_clear_and_unconfirmed_hidden_by_default():
+    assert 'id="lastknown"' in SITE
+    assert 'includeLastKnown=false' in SITE
+    assert 'include previously listed' in SITE.lower()
+    assert 'id="verification-summary"' in SITE
+    assert 'Confirmed in latest scan' in SITE

@@ -47,6 +47,9 @@ SOURCES = {
     'accsoc': ('UNSW Accounting and Taxation Society', 'https://www.unswaccsoc.com/upcoming-events'),
     'bsoc_calendar': ('UNSW Business Society events', 'https://www.unswbsoc.com/our-events'),
     'faic': ('UNSW Fintech AI Innovation Consortium', 'https://www.unsw.edu.au/research/faic/events'),
+    'mathsoc_quant': ('UNSW MathSoc · QuantSoc collaborations', 'https://www.unswmathsoc.org/events'),
+    'quantsoc_site': ('UNSW QuantSoc official website', 'https://quantsoc.org/'),
+    'finsoc_publications': ('FINSOC public publications', 'https://www.unswfinsoc.org.au/publications'),
 }
 MONTHS = ('January February March April May June July August September October November December').split()
 MONTH_RX = '|'.join(MONTHS+[m[:3] for m in MONTHS])
@@ -559,6 +562,59 @@ def registration_is_past(html: str, url: str, today: dt.date) -> bool:
 
 
 
+
+def parse_mathsoc_quant(html: str, today: dt.date) -> list[dict]:
+    """Only QuantSoc's FUTURE co-hosted events on MathSoc's official site.
+
+    Ignore every h3 after the Past Events heading. An old Citadel or Jane
+    Street listing must never become a newly discovered finance event.
+    """
+    soup=BeautifulSoup(html,'html.parser')
+    heading=next((h for h in soup.select('h1,h2') if h.get_text(' ',strip=True).lower()=='upcoming events'),None)
+    if heading is None:raise ValueError('MathSoc upcoming events section not found')
+    result=[]
+    for h in soup.select('h3'):
+        prior=h.find_previous(['h1','h2'])
+        if prior is None or prior is not heading:
+            continue
+        title=h.get_text(' ',strip=True)
+        if not re.search(r'quantsoc|quantitative|citadel|jane street|trading',title,re.I):
+            continue
+        texts=[]
+        for node in h.next_elements:
+            if getattr(node,'name',None) in ('h1','h2','h3'):
+                break
+            if isinstance(node,str):
+                if node.strip():texts.append(node.strip())
+            if len(' '.join(texts))>450:break
+        context=' '.join(texts)
+        match=re.search(r'\b([0-3]?\d)/([01]?\d)/(20\d{2})\b',context)
+        if not match:continue
+        try:date=dt.date(int(match.group(3)),int(match.group(2)),int(match.group(1)))
+        except ValueError:continue
+        if date<today:continue
+        clock=CLOCK_RX.search(context[match.end():match.end()+45])
+        time_text=clock.group(0) if clock else ''
+        rec=event('UNSW MathSoc × QuantSoc',title,date,time_text,SOURCES['mathsoc_quant'][1],
+                  today=today,summary='Publicly listed MathSoc and QuantSoc collaborative event.',time_known=bool(time_text))
+        if rec:result.append(rec)
+    return unique(result)
+
+
+def parse_society_coverage_page(html: str, key: str) -> None:
+    """Validate archives/homepages without pretending private social posts exist."""
+    soup=BeautifulSoup(html,'html.parser')
+    txt=soup.get_text(' ',strip=True)
+    if key=='quantsoc_site':
+        if not re.search(r'QuantSoc|Quantitative Finance and Trading Society',txt,re.I):
+            raise ValueError('QuantSoc official site unavailable')
+    elif key=='finsoc_publications':
+        if not re.search(r'FINSOC REVIEW|Weekly Wrap|Publications',txt,re.I):
+            raise ValueError('FINSOC publication archive unavailable')
+    else:
+        raise ValueError('Unknown coverage-only source')
+
+
 def parse_squarespace_society(html: str, key: str, today: dt.date) -> list[dict]:
     """Future event entries from the society's dated Squarespace events index.
 
@@ -814,6 +870,14 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
                              'checked_at':dt.datetime.now(TIMEZONE).isoformat(timespec='seconds'),'url':url}
                 print(f'{name}: {health[key]["status"]} ({len(signals)} recent publication leads)')
                 continue
+            if key in ('quantsoc_site','finsoc_publications'):
+                parse_society_coverage_page(raw,key)
+                status='social_only' if key=='quantsoc_site' else 'publications_only'
+                health[key]={'status':status,'count':0,
+                             'checked_at':dt.datetime.now(TIMEZONE).isoformat(timespec='seconds'),'url':url,
+                             'note':'Official page accessible; it does not expose a dated upcoming-event feed.'}
+                print(f'{name}: {status} (no dated future events exposed)')
+                continue
             if key in BIO_SOCIAL_NAMES:
                 found,signals=parse_social_hub(raw,key,today,fetch_detail=fetcher)
                 social_signals.extend(signals)
@@ -833,6 +897,7 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
                 elif key=='cma':found=parse_cma(raw,today)
                 elif key=='bsoc_calendar':found=parse_bsoc_events(raw,today)
                 elif key=='faic':found=parse_faic(raw,today)
+                elif key=='mathsoc_quant':found=parse_mathsoc_quant(raw,today)
                 else:found=parse_unsw(raw,today)
             except Exception:
                 if not structured:raise
@@ -890,6 +955,16 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
             sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],
                 'method':'Official public events page','coverage':'public' if key!='bsoc_calendar' else 'limited',
                 'note':'Date-backed career events only; old recaps and unrelated social listings are excluded.'})
+    for key in ('mathsoc_quant','quantsoc_site','finsoc_publications'):
+        if key not in by_id:
+            notes={
+                'mathsoc_quant':'Only dated future QuantSoc collaborations; past trading competitions are ignored.',
+                'quantsoc_site':'QuantSoc directs students to Discord/Facebook; this site has no publicly dated event feed.',
+                'finsoc_publications':'Public FINSOC Weekly Wrap archives are published; these are not upcoming event listings.'
+            }
+            sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],
+                'method':'Official public website / cross-society listing',
+                'coverage':'limited' if key!='mathsoc_quant' else 'public','note':notes[key]})
     for source in sources:
         if source['id'] in health:source['last_check']=health[source['id']]
     generated=dt.datetime.now(TIMEZONE).isoformat(timespec='seconds')
