@@ -61,7 +61,7 @@ DATE_MONTH_DAY = re.compile(rf'\b(?P<month>{MONTH_RX})\s+(?P<day>\d{{1,2}})(?:st
 RANGE_RX = re.compile(r'\b(?P<start>\d{1,2}(?::\d{2})?\s*(?:am|pm)?)\s*(?:-|–|—|to)\s*(?P<end>\d{1,2}(?::\d{2})?\s*(?:am|pm))\b',re.I)
 CLOCK_RX = re.compile(r'\b\d{1,2}(?::\d{2})?\s*(?:am|pm)\b', re.I)
 ELIGIBILITY_RX = re.compile(r'penultimate[\s-]*year|final[\s-]*year\s+(?:undergrad|students)|postgraduate\s+only|master.s\s+students\s+only',re.I)
-CAREER_RX = re.compile(r'fintech|financial technolog|finance|bank|capital|trading|asset management|markets?|invest|portfolio|equity|recruit|intern|network|linkedin|job search|interview|consult|mckinsey|bain|careers?|corporate strategy|accounting',re.I)
+CAREER_RX = re.compile(r'fintech|financial technolog|financial modell?ing|finance|bank|capital|trading|asset management|markets?|invest|portfolio|equity|recruit|intern|network|linkedin|job search|interview|consult|mckinsey|bain|careers?|corporate strategy|accounting',re.I)
 
 
 def get(url: str) -> str:
@@ -124,7 +124,7 @@ def fit_from(title: str, context: str) -> tuple[str,str]:
     if re.search(r'investment bank|morgan stanley|goldman sachs|m&a',t): category='Investment banking'
     elif re.search(r'equity research|markets?|trading|asset manage|portfolio',t): category='Markets & asset management'
     elif re.search(r'mckinsey|consulting|bain|bcg',t): category='Consulting'
-    elif re.search(r'fintech|finance|invest|bank|strategy',t): category='Finance & strategy'
+    elif re.search(r'fintech|financial modell?ing|finance|invest|bank|strategy',t): category='Finance & strategy'
     else: category='Career skills'
     return category, 'restricted' if restricted else ('high' if category!='Career skills' else 'medium')
 
@@ -944,7 +944,7 @@ def parse_public_form_registration(html: str, title: str, url: str, organiser: s
         return []
     if not trusted_host(url, {'docs.google.com'}):
         return []
-    if not re.fullmatch(r'/forms/d/e/[A-Za-z0-9_-]+/viewform/?',u.path):
+    if not re.fullmatch(r'/forms/d/e/1FAIpQL[A-Za-z0-9_-]{25,}/viewform/?',u.path):
         return []
     soup=BeautifulSoup(html,'html.parser')
     visible=soup.get_text(' ',strip=True)[:6000]
@@ -1069,7 +1069,9 @@ def parse_social_hub(html: str, source_key: str, today: dt.date, fetch_detail=ge
         confirmed=[]
         expired=False
         note='Public bio link only; date, availability and eligibility not confirmed.'
-        if trusted_host(link, LINK_EVENT_HOSTS | {'form.jotform.com','docs.google.com'}):
+        if trusted_host(link, LINK_EVENT_HOSTS | {'form.jotform.com'}) or (
+                trusted_host(link, {'docs.google.com'}) and
+                re.fullmatch(r'/forms/d/e/1FAIpQL[A-Za-z0-9_-]{25,}/viewform/?',urlsplit(link).path)):
             try:
                 content=fetch_detail(link)
                 expired=registration_is_past(content,link,today)
