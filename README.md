@@ -135,3 +135,7 @@ The editorial homepage now focuses on a shorter hero and verified event listings
 - Events have shareable direct hash links (event IDs); the drawer has a Copy event link action, focus containment and focus restoration.
 - Calendar downloads use only actual published start and end times. Date-only events export an all-day placeholder with a clear notice; a missing end time is not invented.
 - Events with known expired end times are not labelled upcoming. Obsolete bookmark IDs are excluded from the visible saved list.
+
+## November 2026 UNSW workshop fallback
+
+The UNSW Employability site can hide dated event cards behind browser rendering. The collector checks official linked Eventbrite registrations for a verified UNSW Employability organiser, explicit offset-aware event start time, relevant workshop title and future date. A time-limited list of three university-published November 2026 registrations provides a backstop, but cannot fabricate events if those registration pages are unavailable. Existing matching IDs are preserved for saved events and feed subscribers.

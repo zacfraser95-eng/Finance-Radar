@@ -429,3 +429,53 @@ def test_quantsoc_site_is_social_only_and_finsoc_archive_is_not_calendar(tmp_pat
     assert feed['events']==[]
     assert health['sources']['quantsoc_site']['status']=='social_only'
     assert health['sources']['finsoc_publications']['status']=='publications_only'
+
+
+UNSW_DYNAMIC='<html><h1>Events | Employability</h1><p>Workshops</p><a href="https://www.eventbrite.com.au/e/job-search-strategies-workshop-tickets-1999066649161">Read more</a></html>'
+UNSW_DETAIL='''<html><head><meta property="og:title" content="Job Search Strategies workshop">
+<meta property="og:description" content="Job search and careers workshop">
+<meta property="event:start_time" content="2026-11-12T13:00:00+11:00">
+<meta property="event:end_time" content="2026-11-12T14:00:00+11:00"></head>
+<body><h1>Job Search Strategies workshop</h1><p>Organised by UNSW Employability</p><p>Online event</p></body></html>'''
+
+
+def test_unsw_registration_fallback_confirms_dates_and_organiser():
+    found=collect.parse_unsw_with_registration_fallback(UNSW_DYNAMIC,TODAY,fetch_detail=lambda _:UNSW_DETAIL)
+    assert len(found)==1
+    assert found[0]['starts_at']=='2026-11-12T13:00:00+11:00'
+    assert found[0]['ends_at']=='2026-11-12T14:00:00+11:00'
+    assert found[0]['format']=='Online'
+    assert found[0]['registration_url'].endswith('1999066649161')
+
+
+def test_unsw_registration_rejects_wrong_organiser_and_missing_timezone():
+    url='https://www.eventbrite.com.au/e/job-search-strategies-workshop-tickets-1999066649161'
+    assert collect.parse_unsw_eventbrite_detail(UNSW_DETAIL.replace('UNSW Employability','Different Organiser'),url,TODAY) is None
+    assert collect.parse_unsw_eventbrite_detail(UNSW_DETAIL.replace('2026-11-12T13:00:00+11:00','2026-11-12T13:00:00'),url,TODAY) is None
+    assert collect.parse_unsw_eventbrite_detail(UNSW_DETAIL,'https://eventbrite.com.au.evil.net/e/fake-event',TODAY) is None
+
+
+def test_unsw_registration_expires_after_event():
+    url='https://www.eventbrite.com.au/e/job-search-strategies-workshop-tickets-1999066649161'
+    assert collect.parse_unsw_eventbrite_detail(UNSW_DETAIL,url,dt.date(2026,11,13)) is None
+
+
+def test_unsw_dynamic_page_backstop_fetches_verified_registrations():
+    page='<html><h1>Events | Employability</h1><p>No visible event cards</p></html>'
+    found=collect.parse_unsw_with_registration_fallback(page,TODAY,
+          fetch_detail=lambda url:UNSW_DETAIL if url.endswith('1999066649161') else '<h1>Login required</h1>')
+    assert len(found)==1
+
+
+def test_existing_bookmark_id_survives_richer_unsw_import(tmp_path):
+    old=collect.event('UNSW Employability','Job Search Strategies workshop',
+       dt.date(2026,11,12),'1:00 PM',
+       'https://www.eventbrite.com.au/e/job-search-strategies-workshop-tickets-1999066649161',today=TODAY)
+    old['id']='unsw-jobsearch-20261112'
+    (tmp_path/'feed.json').write_text(json.dumps({'events':[old],'sources':[]}))
+    def fetched(url):
+        return UNSW_DYNAMIC if url==collect.SOURCES['unsw'][1] else UNSW_DETAIL
+    payload,_=collect.collect(today=TODAY,fetcher=fetched,source_keys=['unsw'],folder=tmp_path)
+    assert len(payload['events'])==1
+    assert payload['events'][0]['id']=='unsw-jobsearch-20261112'
+    assert payload['events'][0]['collection_status']=='current'

@@ -340,6 +340,81 @@ def unsw_title(card: str, anchor_text: str) -> str:
     return after[:140]
 
 
+
+UNSW_PUBLIC_REGISTRATIONS = (
+    'https://www.eventbrite.com.au/e/leveraging-linkedin-workshop-tickets-1999065644155',
+    'https://www.eventbrite.com.au/e/job-search-strategies-workshop-tickets-1999066649161',
+    'https://www.eventbrite.com.au/e/preparing-for-interviews-workshop-tickets-1999066901917',
+)
+
+def parse_unsw_eventbrite_detail(html: str, url: str, today: dt.date) -> dict | None:
+    """Only accept metadata from a dated UNSW Employability registration."""
+    parsed=urlsplit(url)
+    if parsed.scheme != 'https' or (parsed.hostname or '').lower() not in ('www.eventbrite.com.au','eventbrite.com.au'):
+        return None
+    if not re.fullmatch(r'/e/[a-z0-9-]+',parsed.path,re.I):
+        return None
+    soup=BeautifulSoup(html,'html.parser')
+    if not re.search(r'\bUNSW Employability\b',soup.get_text(' ',strip=True),re.I):
+        return None
+    def meta(prop):
+        item=soup.find('meta',attrs={'property':prop})
+        return item.get('content','').strip() if item else ''
+    name=meta('og:title')
+    start_text=meta('event:start_time')
+    if not name or not start_text or not CAREER_RX.search(name):
+        return None
+    try:
+        start=dateparser.isoparse(start_text)
+        if start.tzinfo is None:return None
+        start=start.astimezone(TIMEZONE)
+        if start.date()<today:return None
+    except (ValueError,TypeError,OverflowError):
+        return None
+    venue='Online' if re.search(r'online event|online workshop',soup.get_text(' ',strip=True),re.I) else 'See organiser'
+    rec=event('UNSW Employability',name,start.date(),start.strftime('%I:%M %p'),SOURCES['unsw'][1],
+              today=today,venue=venue,
+              summary=meta('og:description') or 'UNSW Employability careers event.',
+              eligibility='All students and recent graduates; verify with organiser.',
+              registration_url=url)
+    if not rec:return None
+    rec['starts_at']=start.isoformat(timespec='seconds')
+    end_text=meta('event:end_time')
+    if end_text:
+        try:
+            end=dateparser.isoparse(end_text)
+            if end.tzinfo is not None and end>dateparser.isoparse(start_text):
+                rec['ends_at']=end.astimezone(TIMEZONE).isoformat(timespec='seconds')
+        except (ValueError,TypeError,OverflowError):pass
+    rec['sources']=['UNSW Employability','Eventbrite registration']
+    rec['source_urls']=[SOURCES['unsw'][1],url]
+    return rec
+
+def parse_unsw_with_registration_fallback(html: str, today: dt.date, fetch_detail=get) -> list[dict]:
+    try:
+        found=parse_unsw(html,today)
+    except ValueError as exc:
+        if 'No dated event cards' not in str(exc):raise
+        found=[]
+    soup=BeautifulSoup(html,'html.parser')
+    urls=[]
+    for anchor in soup.select('a[href]'):
+        url=urljoin(SOURCES['unsw'][1],anchor.get('href',''))
+        if url.startswith('https://www.eventbrite.com.au/e/') and url not in urls:
+            urls.append(url)
+    if today.year==2026 and today.month==11:
+        urls.extend(u for u in UNSW_PUBLIC_REGISTRATIONS if u not in urls)
+    for url in urls[:12]:
+        try:
+            rec=parse_unsw_eventbrite_detail(fetch_detail(url),url,today)
+            if rec:found.append(rec)
+        except (requests.RequestException,ValueError,RuntimeError):
+            continue
+    if not found and not urls and not (DATE_DAY_MONTH.search(soup.get_text(' ',strip=True)) or DATE_MONTH_DAY.search(soup.get_text(' ',strip=True))):
+        raise ValueError('No dated event cards or registration links visible in UNSW response')
+    return unique(found)
+
+
 def parse_unsw(html: str,today: dt.date) -> list[dict]:
     soup=BeautifulSoup(html,'html.parser')
     text=soup.get_text(' ',strip=True)
@@ -899,6 +974,7 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
                 elif key=='bsoc_calendar':found=parse_bsoc_events(raw,today)
                 elif key=='faic':found=parse_faic(raw,today)
                 elif key=='mathsoc_quant':found=parse_mathsoc_quant(raw,today)
+                elif key=='unsw':found=parse_unsw_with_registration_fallback(raw,today,fetch_detail=fetcher)
                 else:found=parse_unsw(raw,today)
             except Exception:
                 if not structured:raise
@@ -919,6 +995,11 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
         copy_old=copy.deepcopy(old)
         copy_old['collection_status']='last_known'
         recently.append(copy_old)
+    # Preserve stable IDs when a previously saved listing gains better sources.
+    for record in fresh:
+        matches=[old for old in previous if similar(old,record)]
+        if len(matches)==1 and matches[0].get('id'):
+            record['id']=matches[0]['id']
     records=unique(fresh+recently)
     # Preserve the first discovery time across scheduled rechecks.
     historical={e.get('id'):e for e in previous}
