@@ -139,3 +139,7 @@ The editorial homepage now focuses on a shorter hero and verified event listings
 ## November 2026 UNSW workshop fallback
 
 The UNSW Employability site can hide dated event cards behind browser rendering. The collector checks official linked Eventbrite registrations for a verified UNSW Employability organiser, explicit offset-aware event start time, relevant workshop title and future date. A time-limited list of three university-published November 2026 registrations provides a backstop, but cannot fabricate events if those registration pages are unavailable. Existing matching IDs are preserved for saved events and feed subscribers.
+
+## Staleness safeguards
+
+The hosted frontend checks the age and mode of the published feed. When its most recent scan is more than 36 hours old, the homepage conditionally displays a restrained alert linking to workflow status, marks source-confirmed listings as last-scan-outdated and asks visitors to reconfirm directly with organisers. A static seed snapshot is never falsely presented as a recent scheduled sync. The normal page remains uncluttered when scheduled scans are recent.

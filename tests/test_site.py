@@ -88,3 +88,11 @@ def test_no_fabricated_end_times_or_disabled_date_only():
 def test_known_finished_events_and_orphan_bookmarks():
     assert 'if(Number.isFinite(end)&&end<=clock)return false;' in SITE
     assert 'validSavedIds' in SITE
+
+def test_delayed_feed_discloses_stale_information():
+    assert 'id="sync-alert"' in SITE
+    assert "Date.now()-feedTimestamp>36*60*60*1000" in SITE
+    assert "DATA.mode!=='scheduled_sync'" in SITE
+    assert 'renderSyncHealth();renderSpotlight()' in SITE
+    assert "Last scan outdated" in SITE
+    assert "Feed not recently verified" in SITE
