@@ -402,7 +402,7 @@ def parse_unsw_with_registration_fallback(html: str, today: dt.date, fetch_detai
         url=urljoin(SOURCES['unsw'][1],anchor.get('href',''))
         if url.startswith('https://www.eventbrite.com.au/e/') and url not in urls:
             urls.append(url)
-    if today.year==2026 and today.month==11:
+    if dt.date(2026,10,25)<=today<=dt.date(2026,11,16):
         urls.extend(u for u in UNSW_PUBLIC_REGISTRATIONS if u not in urls)
     for url in urls[:12]:
         try:
