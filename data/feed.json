@@ -1,6 +1,6 @@
 {
   "schema": 3,
-  "generated_at": "2026-11-01T23:54:54+11:00",
+  "generated_at": "2026-11-02T05:50:01+11:00",
   "mode": "scheduled_sync",
   "notice": "Public event listings and society bio links only; Instagram and Facebook post feeds are not connected.",
   "sources": [
@@ -14,7 +14,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T23:54:31+11:00",
+        "checked_at": "2026-11-02T05:49:35+11:00",
         "url": "https://www.unit.org.au/"
       }
     },
@@ -28,7 +28,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T23:54:31+11:00",
+        "checked_at": "2026-11-02T05:49:36+11:00",
         "url": "https://www.fmaa.com.au/events"
       }
     },
@@ -42,7 +42,7 @@
       "last_check": {
         "status": "ok",
         "count": 3,
-        "checked_at": "2026-11-01T23:54:33+11:00",
+        "checked_at": "2026-11-02T05:49:38+11:00",
         "url": "https://www.unsw.edu.au/employability/events-news/events"
       }
     },
@@ -56,7 +56,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T23:54:35+11:00",
+        "checked_at": "2026-11-02T05:49:40+11:00",
         "url": "https://www.unswfinsoc.org.au/"
       }
     },
@@ -70,7 +70,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T23:54:31+11:00",
+        "checked_at": "2026-11-02T05:49:35+11:00",
         "url": "https://www.unit.org.au/upcoming-events"
       }
     },
@@ -85,7 +85,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T23:54:35+11:00",
+        "checked_at": "2026-11-02T05:49:40+11:00",
         "url": "https://linktr.ee/finsocunsw"
       }
     },
@@ -100,7 +100,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T23:54:36+11:00",
+        "checked_at": "2026-11-02T05:49:41+11:00",
         "url": "https://linktr.ee/unit_unsw"
       }
     },
@@ -115,7 +115,7 @@
         "status": "links_only",
         "count": 0,
         "signals": 1,
-        "checked_at": "2026-11-01T23:54:37+11:00",
+        "checked_at": "2026-11-02T05:49:41+11:00",
         "url": "https://linktr.ee/unswfintechsoc"
       }
     },
@@ -130,7 +130,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T23:54:37+11:00",
+        "checked_at": "2026-11-02T05:49:42+11:00",
         "url": "https://linktr.ee/unswquantsoc"
       }
     },
@@ -145,7 +145,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T23:54:37+11:00",
+        "checked_at": "2026-11-02T05:49:42+11:00",
         "url": "https://linktr.ee/unswbsoc"
       }
     },
@@ -160,7 +160,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T23:54:37+11:00",
+        "checked_at": "2026-11-02T05:49:42+11:00",
         "url": "https://linktr.ee/fmaaunsw"
       }
     },
@@ -175,7 +175,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T23:54:38+11:00",
+        "checked_at": "2026-11-02T05:49:43+11:00",
         "url": "https://unswbsocnewsletter.beehiiv.com/"
       }
     },
@@ -190,7 +190,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T23:54:39+11:00",
+        "checked_at": "2026-11-02T05:49:44+11:00",
         "url": "https://www.unit.org.au/market-wrap?format=rss"
       }
     },
@@ -204,7 +204,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T23:54:39+11:00",
+        "checked_at": "2026-11-02T05:49:44+11:00",
         "url": "https://capitalw.org/events"
       }
     },
@@ -218,7 +218,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T23:54:40+11:00",
+        "checked_at": "2026-11-02T05:49:45+11:00",
         "url": "https://www.cmaunsw.com/"
       }
     },
@@ -232,7 +232,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T23:54:41+11:00",
+        "checked_at": "2026-11-02T05:49:46+11:00",
         "url": "https://www.unswaccsoc.com/upcoming-events"
       }
     },
@@ -246,7 +246,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T23:54:41+11:00",
+        "checked_at": "2026-11-02T05:49:46+11:00",
         "url": "https://www.unswbsoc.com/our-events"
       }
     },
@@ -260,7 +260,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T23:54:42+11:00",
+        "checked_at": "2026-11-02T05:49:47+11:00",
         "url": "https://www.unsw.edu.au/research/faic/events"
       }
     },
@@ -274,7 +274,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T23:54:43+11:00",
+        "checked_at": "2026-11-02T05:49:47+11:00",
         "url": "https://www.unswmathsoc.org/events"
       }
     },
@@ -288,7 +288,7 @@
       "last_check": {
         "status": "social_only",
         "count": 0,
-        "checked_at": "2026-11-01T23:54:43+11:00",
+        "checked_at": "2026-11-02T05:49:48+11:00",
         "url": "https://quantsoc.org/",
         "note": "Official page accessible; it does not expose a dated upcoming-event feed."
       }
@@ -303,7 +303,7 @@
       "last_check": {
         "status": "publications_only",
         "count": 0,
-        "checked_at": "2026-11-01T23:54:43+11:00",
+        "checked_at": "2026-11-02T05:49:48+11:00",
         "url": "https://www.unswfinsoc.org.au/publications",
         "note": "Official page accessible; it does not expose a dated upcoming-event feed."
       }
@@ -318,7 +318,7 @@
       "last_check": {
         "status": "ok",
         "count": 4,
-        "checked_at": "2026-11-01T23:54:46+11:00",
+        "checked_at": "2026-11-02T05:49:51+11:00",
         "url": "https://cfas.org.au/Events/"
       }
     },
@@ -332,7 +332,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T23:54:46+11:00",
+        "checked_at": "2026-11-02T05:49:51+11:00",
         "url": "https://www.finma.au/events-1"
       }
     },
@@ -346,7 +346,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T23:54:44+11:00",
+        "checked_at": "2026-11-02T05:49:49+11:00",
         "url": "https://events.humanitix.com/host/unsw-finance-and-banking-society"
       }
     },
@@ -360,7 +360,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T23:54:54+11:00",
+        "checked_at": "2026-11-02T05:50:01+11:00",
         "url": "https://events.unsw.edu.au/"
       }
     },
@@ -374,7 +374,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T23:54:54+11:00",
+        "checked_at": "2026-11-02T05:50:01+11:00",
         "url": "https://www.unsw.edu.au/business/our-schools/accounting-auditing-taxation/news-events/birkett-memorial-lecture/bill-birkett-lecture-series-2026"
       }
     },
@@ -388,7 +388,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T23:54:47+11:00",
+        "checked_at": "2026-11-02T05:49:53+11:00",
         "url": "https://www.cafba.com.au/eventdetails/41443/cafba-end-of-year-networking-sydney"
       }
     },
@@ -402,7 +402,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T23:54:48+11:00",
+        "checked_at": "2026-11-02T05:49:55+11:00",
         "url": "https://www.rmia.org.au/risk-management-events/rmia-nsw-post-ro-networking-event"
       }
     },
@@ -416,7 +416,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T23:54:49+11:00",
+        "checked_at": "2026-11-02T05:49:56+11:00",
         "url": "https://stepaustralia.com/events/step-nsw-emerging-professionals-network-wednesday-25-november-2026/"
       }
     },
@@ -430,7 +430,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T23:54:51+11:00",
+        "checked_at": "2026-11-02T05:49:58+11:00",
         "url": "https://iccsydney.com.au/events/mymoney-expo/"
       }
     }
@@ -461,9 +461,9 @@
       "eligibility": "All students and recent graduates; verify with organiser.",
       "fit": "medium",
       "relevance_reason": "Public organiser listing; confirm registration, changes and eligibility at the source.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-10-31T00:00:00+11:00"
     },
@@ -490,9 +490,9 @@
       "eligibility": "Professional event — check non-member registration fees and student eligibility. Listed audience: Members, Candidates, Industry professionals.",
       "fit": "high",
       "relevance_reason": "Dated CFA Society Australia listing; non-member pricing and student eligibility must be checked with organiser.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T11:43:54+11:00"
     },
@@ -519,9 +519,9 @@
       "eligibility": "Professional event — confirm student eligibility and any registration fee with organiser.",
       "fit": "high",
       "relevance_reason": "Dated UNSW and CPA Australia accounting lecture with a public registration link.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T12:39:55+11:00"
     },
@@ -548,9 +548,9 @@
       "eligibility": "Pre-penultimate students encouraged; check organiser eligibility.",
       "fit": "high",
       "relevance_reason": "Public organiser listing; confirm registration, changes and eligibility at the source.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T00:00:00+11:00"
     },
@@ -577,9 +577,9 @@
       "eligibility": "Professional event — check non-member registration fees and student eligibility. Listed audience: Members, Candidates, Industry professionals.",
       "fit": "high",
       "relevance_reason": "Dated CFA Society Australia listing; non-member pricing and student eligibility must be checked with organiser.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T11:43:54+11:00"
     },
@@ -606,9 +606,9 @@
       "eligibility": "Free, open to university students; registration required with FINMA.",
       "fit": "high",
       "relevance_reason": "Official FINMA upcoming-event listing; date independently corroborated by FINMA public announcement. Registration is required; confirm availability.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T11:43:54+11:00"
     },
@@ -637,9 +637,9 @@
       "eligibility": "Free public event; register via the official ticket page.",
       "fit": "high",
       "relevance_reason": "UNSW organiser listing cross-checked with the public ticket date and time.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T12:46:15+11:00"
     },
@@ -666,9 +666,9 @@
       "eligibility": "Free industry networking; student eligibility is not confirmed. Check with RMIA before attending.",
       "fit": "restricted",
       "relevance_reason": "Verified public risk-management association event; student eligibility not explicitly guaranteed.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T13:01:20+11:00"
     },
@@ -697,9 +697,9 @@
       "eligibility": "All students and recent graduates; verify with organiser.",
       "fit": "medium",
       "relevance_reason": "Public organiser listing; confirm registration, changes and eligibility at the source.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-10-31T00:00:00+11:00"
     },
@@ -728,9 +728,9 @@
       "eligibility": "All students and recent graduates; verify with organiser.",
       "fit": "medium",
       "relevance_reason": "Public organiser listing; confirm registration, changes and eligibility at the source.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-10-31T00:00:00+11:00"
     },
@@ -757,9 +757,9 @@
       "eligibility": "Professional event — check non-member registration fees and student eligibility. Listed audience: Members, Candidates, Industry professionals.",
       "fit": "high",
       "relevance_reason": "Dated CFA Society Australia listing; non-member pricing and student eligibility must be checked with organiser.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T11:43:54+11:00"
     },
@@ -786,9 +786,9 @@
       "eligibility": "Professional event — check non-member registration fees and student eligibility. Listed audience: Members, Candidates.",
       "fit": "restricted",
       "relevance_reason": "Dated CFA Society Australia listing; non-member pricing and student eligibility must be checked with organiser.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T11:43:54+11:00"
     },
@@ -815,9 +815,9 @@
       "eligibility": "Anyone can register; confirm ticket availability and any fees with CAFBA. Registration essential.",
       "fit": "high",
       "relevance_reason": "Official Sydney commercial and asset-finance industry association event, open to anyone.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T13:01:20+11:00"
     },
@@ -844,9 +844,9 @@
       "eligibility": "Students interested in trusts and estates welcome. Tickets $25 for members or $30 for non-members; sales close 19 November.",
       "fit": "medium",
       "relevance_reason": "Trusts, private-wealth and advisory networking. Organiser explicitly includes students; paid tickets.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T13:01:20+11:00"
     },
@@ -875,9 +875,9 @@
       "eligibility": "Penultimate-year undergraduates and master's students. Not suitable for most first-year students.",
       "fit": "restricted",
       "relevance_reason": "Public organiser listing; confirm registration, changes and eligibility at the source.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T00:00:00+11:00"
     },
@@ -904,9 +904,9 @@
       "eligibility": "Confirm eligibility with organiser.",
       "fit": "high",
       "relevance_reason": "Public organiser listing; confirm registration, changes and eligibility at the source.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T00:00:00+11:00"
     },
@@ -935,9 +935,9 @@
       "eligibility": "Free general admission advertised by organiser; confirm ticket conditions and daily opening times.",
       "fit": "high",
       "relevance_reason": "ICC Sydney confirms dates; organiser independently confirms free general admission and registration link.",
-      "verified_on": "2026-11-01",
+      "verified_on": "2026-11-02",
       "confidence": "source-backed",
-      "last_seen_on": "2026-11-01",
+      "last_seen_on": "2026-11-02",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T13:01:20+11:00"
     },
@@ -981,7 +981,7 @@
       "source_url": "https://linktr.ee/unswfintechsoc",
       "status": "date_unverified",
       "note": "Public Google Form accessible but the event date and time are not confirmed.",
-      "checked_on": "2026-11-01"
+      "checked_on": "2026-11-02"
     }
   ]
 }
