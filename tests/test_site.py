@@ -120,3 +120,9 @@ def test_society_submission_requires_public_dates_and_source():
     source=(root/'.github/ISSUE_TEMPLATE/source-request.yml').read_text()
     assert 'Public event page or feed URL' in source
     assert 'No logins, private groups' in source
+
+def test_access_and_price_labels_cover_industry_expansion():
+    assert 'Free general admission' in SITE
+    assert 'Tickets $25–30' in SITE
+    assert 'Free · professional event' in SITE
+    assert 'Open registration' in SITE

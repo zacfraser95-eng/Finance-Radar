@@ -837,3 +837,27 @@ def test_mymoney_does_not_assume_free_when_organiser_page_unavailable():
         fetch_detail=lambda _:MYMONEY_HOST_HTML.replace('FREE General Admission','Ticket price available on request'))==[]
     assert collect.parse_mymoney_expo(MYMONEY_ICC_HTML,dt.date(2026,11,29),
         fetch_detail=lambda _:MYMONEY_HOST_HTML)==[]
+
+
+
+def test_schema_fallback_rmia_does_not_imply_student_eligibility():
+    rec={'title':'RMIA NSW Chapter | Networking Event — Risk Management Institute of Australasia (RMIA)',
+         'starts_at':'2026-11-11T17:00:00+11:00','fit':'high','eligibility':'Confirm eligibility with organiser.'}
+    out=collect.enrich_official_industry_listing(rec,'rmia_sydney')
+    assert out['fit']=='restricted'
+    assert 'not confirmed' in out['eligibility']
+
+
+def test_schema_fallback_step_retains_published_ticket_costs():
+    rec={'title':'STEP NSW Emerging Professionals Network | Wednesday 25 November 2026',
+         'starts_at':'2026-11-25T17:30:00+11:00','eligibility':'Confirm eligibility with organiser.'}
+    out=collect.enrich_official_industry_listing(rec,'step_emerging')
+    assert 'students' in out['eligibility'].lower()
+    assert '$25' in out['eligibility'] and '$30' in out['eligibility']
+    assert '19 November' in out['eligibility']
+
+
+def test_unrelated_schema_entries_are_not_relabelled():
+    rec={'title':'General Industry Meeting','starts_at':'2026-11-11T10:00:00+11:00',
+         'fit':'high','eligibility':'Unknown'}
+    assert collect.enrich_official_industry_listing(rec,'rmia_sydney')==rec

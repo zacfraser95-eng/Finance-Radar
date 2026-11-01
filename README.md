@@ -171,3 +171,7 @@ UNSW's official investor-panel event page serves its title and registration URL 
 ## Sydney-wide public finance source expansion
 
 Monitor four additional independent official sources rather than generic aggregator feeds: CAFBA's 25 Nov Sydney commercial/asset finance networking (explicitly open to anyone, entry cost unverified); RMIA NSW free risk-networking on 11 Nov (professional audience, student access unverified and hidden by default); STEP NSW Emerging Professionals Network 25 Nov (specifically welcomes students interested in trusts/estates, $25 members/$30 non-members); and the 28–29 Nov MyMoney Expo at ICC Sydney. Expo requires both ICC's verified dates and the organiser's current free general-admission ticket link; schedule times remain unknown, so calendar exports are date-only. Each parser fails closed if eligibility, date or official evidence disappears; events disappear naturally after their dates. No claim of ticket availability or booking.
+
+### Industry source fallback details
+
+When an official page exposes only Schema.org markup to plain HTTP, Finance Radar preserves verified attendance restrictions and fees for the exact dated RMIA and STEP events. Risk networking with unconfirmed student eligibility is hidden by default; STEP retains its student eligibility and $25/$30 ticket cost. Visible event access labels now distinguish free admission, paid tickets, and professional networking. Generic, mismatched and undated events are never reclassified.

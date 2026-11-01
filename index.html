@@ -103,6 +103,11 @@ function datePart(e){const d=localDate(e),month=localMonth.format(d).toUpperCase
 function renderSyncHealth(){const box=$('#sync-alert');box.hidden=!isFeedStale();if(!box.hidden){const when=Number.isFinite(feedTimestamp)?new Date(feedTimestamp).toLocaleString('en-AU',{timeZone:'Australia/Sydney',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):'unknown';$('#sync-alert-detail').textContent='Last successful feed: '+when+' Sydney time. Event details may have changed; check with organisers.';}}
 function accessLabel(e){
   const eligibility=String(e.eligibility||'').toLowerCase();
+  if(/free general admission/.test(eligibility))return 'Free general admission';
+  if(/anyone can register/.test(eligibility))return 'Open registration';
+  if(/\$25.*\$30|\$30.*\$25/.test(eligibility))return 'Tickets $25–30';
+  if(/free industry networking/.test(eligibility))return 'Free · professional event';
+  if(/free public event/.test(eligibility))return 'Free public event';
   if(/professional event|non-member registration fees/.test(eligibility))return 'Professional event · fees may apply';
   if(/free, open to university students/.test(eligibility))return 'Free · students welcome';
   if(/all students and recent graduates/.test(eligibility))return 'Open to students';

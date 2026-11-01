@@ -835,10 +835,30 @@ def parse_unsw_accounting_lecture(html: str, today: dt.date) -> list[dict]:
 
 
 
+
+def enrich_official_industry_listing(rec: dict, key: str) -> dict:
+    """Preserve organiser-verified attendance and fees in schema.org fallback.
+
+    Strictly match named 2026 events and their exact dates. Generic JSON-LD
+    parsers otherwise replace explicit source eligibility with 'confirm
+    eligibility', potentially hiding material event restrictions.
+    """
+    name=rec.get('title','')
+    day=str(rec.get('starts_at',''))[:10]
+    if key=='rmia_sydney' and day=='2026-11-11' and 'RMIA NSW Chapter' in name and 'Networking' in name:
+        rec['fit']='restricted'
+        rec['eligibility']='Free industry networking; student eligibility is not confirmed. Check with RMIA before attending.'
+        rec['relevance_reason']='Professional risk-management event; free registration, but not advertised specifically to students.'
+    if key=='step_emerging' and day=='2026-11-25' and 'STEP NSW Emerging Professionals Network' in name:
+        rec['eligibility']='Students interested in trusts and estates welcome. Tickets $25 for members or $30 for non-members; sales close 19 November.'
+        rec['relevance_reason']='Trusts, private-wealth and advisory networking. Organiser explicitly includes students; paid tickets.'
+    return rec
+
+
 def parse_cafba_sydney_networking(html: str, today: dt.date) -> list[dict]:
     """Verify Sydney commercial-finance networking and public access conditions."""
     soup=BeautifulSoup(html,'html.parser')
-    heading=soup.find('h2')
+    heading=next((h for h in soup.find_all(['h1','h2','h3']) if re.search(r'CAFBA End of Year Networking',h.get_text(' ',strip=True),re.I)),None)
     if not heading or not re.search(r'^CAFBA End of Year Networking\s*[–-]\s*Sydney$',heading.get_text(' ',strip=True),re.I):
         return []
     visible=soup.get_text(' ',strip=True)
@@ -937,9 +957,9 @@ def parse_mymoney_expo(html: str, today: dt.date, fetch_detail=get) -> list[dict
     store an explicit date-only listing and make the schedule caveat visible.
     """
     soup=BeautifulSoup(html,'html.parser')
-    heading=soup.find('h1')
+    heading=next((h for h in soup.find_all(['h1','h2','h3']) if h.get_text(' ',strip=True)=='MyMoney Expo'),None)
     visible=soup.get_text(' ',strip=True)
-    if not heading or heading.get_text(' ',strip=True)!='MyMoney Expo':
+    if not heading:
         return []
     if not (re.search(r'\bSATURDAY 28\s*[–-]\s*SUNDAY 29 NOVEMBER 2026\b',visible,re.I)
             and re.search(r'finance and investing|investors, finance professionals',visible,re.I)):
@@ -1493,7 +1513,13 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
         name,url=SOURCES[key]
         try:
             raw=fetcher(url)
-
+            if key in ('cafba_sydney','mymoney_expo'):
+                txt=BeautifulSoup(raw,'html.parser').get_text(' ',strip=True)
+                print('Industry source structure:',key,'chars=',len(raw),
+                      'headings=',[x.get_text(' ',strip=True)[:75] for x in BeautifulSoup(raw,'html.parser').find_all(['h1','h2','h3'])[:8]],
+                      'has_event_date=',bool(re.search(r'25 November 2026|28.*29 NOVEMBER 2026',txt,re.I)),
+                      'has_venue=',bool(re.search(r'Zeta Bar|MyMoney Expo',txt,re.I)))
+            
             if key in ('bsoc_publications','unit_publications'):
                 signals=parse_newsletter_mentions(raw,key,today,fetch_detail=fetcher)
                 social_signals.extend(signals)
@@ -1541,6 +1567,7 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
                 if not structured:raise
                 found=[] # Valid Schema.org events are evidence even if card markup changed.
             found=unique(found+structured)
+            found=[enrich_official_industry_listing(rec,key) for rec in found]
             health[key]={'status':'ok' if found else 'accessible_empty','count':len(found), 'checked_at':dt.datetime.now(TIMEZONE).isoformat(timespec='seconds'), 'url':url}
             fresh.extend(found)
         except Exception as exc:
