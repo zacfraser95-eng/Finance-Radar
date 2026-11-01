@@ -44,7 +44,7 @@ def test_editorial_identity_is_used_without_decorative_graphics():
 
 def test_deployment_includes_editorial_css():
     workflow=(Path(__file__).resolve().parents[1]/'.github/workflows/refresh-and-publish.yml').read_text()
-    assert 'cp index.html editorial.css _site/' in workflow
+    assert 'cp index.html organisers.html editorial.css _site/' in workflow
 
 def test_interactive_controls_preserved_in_redesign():
     for key in ['id="events"','id="calendargrid"','id="search"','id="restricted"','id="lastknown"','id="email-updates"','id="modal"','id="saved-events"']:
