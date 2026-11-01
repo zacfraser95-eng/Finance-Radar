@@ -698,8 +698,8 @@ def parse_unsw_public_event_detail(html: str, url: str, today: dt.date) -> dict 
     times=timer.group(0)
     # Guard against broad "Innovation" events that mention finance only
     # as a page taxonomy tag: require substantive financial themes.
-    overview=visible[dm.end():min(len(visible),3300)]
-    if not UNSW_FINANCE_SUBJECT_RX.search(title+' '+overview):
+    overview=visible.split('Overview',1)[1][:2200] if 'Overview' in visible else ''
+    if not overview or not UNSW_FINANCE_SUBJECT_RX.search(overview):
         return None
     registration=None
     for a in section.select('a[href]'):
@@ -711,8 +711,7 @@ def parse_unsw_public_event_detail(html: str, url: str, today: dt.date) -> dict 
     venue='See organiser'
     m=re.search(r'\b(Australian Museum|UNSW Kensington|UNSW Sydney|The Roundhouse)\b',heading_context,re.I)
     if m:venue=m.group(1)
-    summary=(soup.find(string=re.compile(r'From world-changing research|investors assess risk|investment|funding',re.I)))
-    summary=summary.strip()[:220] if isinstance(summary,str) else overview[:220]
+    summary=overview.strip()[:220]
     rec=event('UNSW public events',title,date,times,url,today=today,
         venue=venue,summary=summary,
         eligibility=('Free public event; register with organiser.' if re.search(r'Free for everyone',heading_context,re.I)
