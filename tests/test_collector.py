@@ -695,3 +695,23 @@ def test_unsw_accounting_lecture_expired_or_mismatched_not_added():
     assert collect.parse_unsw_accounting_lecture(BIRKETT_DETAIL,dt.date(2026,11,5))==[]
     assert collect.parse_unsw_accounting_lecture(BIRKETT_DETAIL.replace('Wednesday 4 November 2026','Date TBC'),
                                              dt.date(2026,11,1))==[]
+
+
+def test_unsw_public_events_dynamic_index_fallback_still_verifies_details():
+    landing='<html><h1>Events</h1><p>1 - 14 of 31 Events</p></html>'
+    checked=[]
+    def fetch(url):
+        checked.append(url)
+        return UNSW_PUBLIC_FINANCE_DETAIL
+    found=collect.parse_unsw_public_events(landing,dt.date(2026,11,1),fetch_detail=fetch)
+    assert len(found)==1
+    assert found[0]['starts_at']=='2026-11-10T17:30:00+11:00'
+    assert checked==['https://events.unsw.edu.au/event/engineering-future-entrepreneurship-paradox']
+
+
+def test_unsw_public_events_explicit_fallback_expires_after_event():
+    landing='<html><h1>Events</h1><p>1 - 14 of 31 Events</p></html>'
+    seen=[]
+    assert collect.parse_unsw_public_events(landing,dt.date(2026,11,11),
+         fetch_detail=lambda url:seen.append(url) or UNSW_PUBLIC_FINANCE_DETAIL)==[]
+    assert seen==[]

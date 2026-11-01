@@ -680,10 +680,11 @@ def parse_unsw_public_event_detail(html: str, url: str, today: dt.date) -> dict 
     title=heading.get_text(' ',strip=True)
     if not title or not UNSW_FINANCE_PUBLIC_LINK_RX.search(title):
         return None
-    section=heading.find_parent('section')
-    if section is None:
-        return None
+    section=heading.find_parent('section') or heading.find_parent('main') or soup
+    # Anchor date/time scanning to the event heading, not the site navbar.
     visible=section.get_text(' ',strip=True)
+    at=visible.find(title)
+    if at>=0:visible=visible[at:]
     # Date and time must be in the official detail header, not in bios or
     # a later unrelated speaker section with an old publication year.
     heading_context=visible[:510]
@@ -739,6 +740,12 @@ def parse_unsw_public_events(html: str, today: dt.date, fetch_detail=get) -> lis
             continue
         if candidate not in urls:urls.append(candidate)
     found=[]
+    # UNSW's events index is sometimes JS-rendered. The currently verified
+    # investor panel has a canonical public detail URL; continue checking that
+    # detail until the date expires even when no links appear in the index.
+    if dt.date(2026,10,30)<=today<=dt.date(2026,11,10):
+        panel='https://events.unsw.edu.au/event/engineering-future-entrepreneurship-paradox'
+        if panel not in urls:urls.insert(0,panel)
     for url in urls[:10]:
         try:
             item=parse_unsw_public_event_detail(fetch_detail(url),url,today)
