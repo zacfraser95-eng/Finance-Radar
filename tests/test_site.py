@@ -49,3 +49,19 @@ def test_deployment_includes_editorial_css():
 def test_interactive_controls_preserved_in_redesign():
     for key in ['id="events"','id="calendargrid"','id="search"','id="restricted"','id="lastknown"','id="email-updates"','id="modal"','id="saved-events"']:
         assert key in SITE
+
+def test_compact_layout_keeps_actions():
+    assert '<div class="quicklinks"' in SITE
+    assert 'id="savedcount"' in SITE
+    assert 'class="more-filters"' in SITE
+    assert '<details class="mail-section" id="email-updates">' in SITE
+    assert 'class="feedbackline"' in SITE
+    assert '<div class="under">' not in SITE
+
+def test_verified_calendar_and_category_filters():
+    assert 'data-filter="other"' in SITE
+    assert 'includeLastKnown=false' in SITE
+    assert "eligibleEvents().filter(e=>e.collection_status==='current')" in SITE
+
+def test_clickable_event_titles():
+    assert 'class="event-name event-title"' in SITE

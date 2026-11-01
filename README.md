@@ -123,3 +123,7 @@ The collector now maintains stable `first_seen_at` timestamps; RSS records inclu
 ## Editorial redesign
 
 The website now loads a dedicated `editorial.css` design system: warm off-white backgrounds, dark green feature panels, restrained terracotta highlights, Georgia display typography, clean data-led event rows, and responsive navigation. No animated orbit graphics, gratuitous gradients or stock imagery. The existing event collector, accessibility labels, filters, bookmarks, newsletter consent form, calendar and RSS remain unchanged. GitHub Pages builds must copy the CSS file alongside `index.html`.
+
+## Compact homepage
+
+The editorial homepage now focuses on a shorter hero and verified event listings, four main category filters, a collapsed advanced filter, one practical shortcuts strip, an expandable email digest and optional unverified social leads. The calendar shows confirmed events only. Source details and feedback links remain accessible.
