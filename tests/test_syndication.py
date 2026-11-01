@@ -68,3 +68,14 @@ def test_syndication_is_in_public_artifact_package():
     workflow=(Path(__file__).resolve().parents[1]/'.github/workflows/refresh-and-publish.yml').read_text()
     assert 'cp data/events.ics data/events.xml _site/' in workflow
     assert 'data/events.ics data/events.xml' in workflow
+
+def test_rss_first_seen_is_stable_when_feed_regenerated():
+    e=dict(CURRENT,first_seen_at='2026-11-01T10:05:00+11:00')
+    a=ET.fromstring(events_rss([e],D,dt.datetime(2026,11,1,tzinfo=dt.timezone.utc)))
+    b=ET.fromstring(events_rss([e],D,dt.datetime(2026,11,2,tzinfo=dt.timezone.utc)))
+    first=a.find('./channel/item/pubDate').text
+    assert first==b.find('./channel/item/pubDate').text
+    assert 'Oct' in first
+
+def test_rss_legacy_event_still_has_pubdate():
+    assert ET.fromstring(events_rss([CURRENT],D)).find('./channel/item/pubDate') is not None

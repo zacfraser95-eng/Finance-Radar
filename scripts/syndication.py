@@ -133,10 +133,19 @@ def events_rss(events: list[dict], today: dt.date, now: dt.datetime | None = Non
         link = e.get('registration_url') or e['source_urls'][0]
         text = e['starts_at'][:10] + ' | ' + e.get('organiser', '')
         text += ' | ' + e.get('eligibility', 'Confirm eligibility with organiser')
+        first=e.get('first_seen_at')
+        try:
+            published=dt.datetime.fromisoformat(first) if first else None
+            if published and not published.tzinfo:published=None
+        except (TypeError,ValueError):
+            published=None
+        if published is None:
+            published=dt.datetime.combine(today,dt.time.min,SYDNEY)
         for name, value in (
             ('title', e['title']),
             ('link', link),
             ('guid', SITE + '#'+str(e['id'])),
+            ('pubDate', format_datetime(published.astimezone(dt.timezone.utc),usegmt=True)),
             ('description', text)
         ):
             child = ET.SubElement(item, name)

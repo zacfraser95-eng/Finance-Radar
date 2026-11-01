@@ -105,3 +105,9 @@ Public Facebook event metadata is also inspected only for specific event links a
 - Official event indexes: UNSW Capital W, Capital Markets Association (CMA), Accounting and Taxation Society, Business Society event recaps, and UNSW Fintech AI Innovation Consortium (FAIC).
 - Each listed event needs a source-backed future date. BSOC recap posts are **not** upcoming events; social-only, undated entries never enter the verified calendar.
 - FAIC's published November 2026 industry showcase is collected with its official date and registration link, subject to the organiser's published eligibility.
+
+## Opt-in email updates without a public subscriber database
+
+The site embeds an HTML form that posts directly to **Simple Newsletter** (https://simple-newsletter.com/v1/subscriptions/), as documented on its website. Finance Radar does not process or store subscribers' email addresses. Visitors must explicitly consent and confirm by email; the independent provider sends daily digests and handles unsubscribing. Availability and delivery are not guaranteed by Finance Radar. The existing Resend script remains optional for a repository owner and is not a public mailing-list service.
+
+The collector now maintains stable `first_seen_at` timestamps; RSS records include a stable `pubDate` rather than appearing freshly published on every six-hour rescan. Previously-listed and unverified items never enter the published RSS feed.

@@ -16,3 +16,12 @@ def test_feed_subscription_links_and_sydney_date_only_fix():
     assert 'webcal://zacfraser95-eng.github.io/Finance-Radar/events.ics' in SITE
     assert 'href="./events.xml"' in SITE
     assert "e.starts_at+'T00:00:00Z'" in SITE
+
+def test_email_form_uses_independent_provider_and_clear_consent():
+    assert 'action="https://simple-newsletter.com/v1/subscriptions/"' in SITE
+    assert 'method="post"' in SITE
+    assert 'name="uri" value="https://zacfraser95-eng.github.io/Finance-Radar/events.xml"' in SITE
+    assert 'name="email" type="email"' in SITE
+    assert 'I agree to send my email address to Simple Newsletter' in SITE
+    assert 'Email confirmation required' in SITE
+    assert 'not to Finance Radar or GitHub' in SITE

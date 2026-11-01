@@ -389,3 +389,12 @@ def test_new_sources_are_monitored_not_made_up(tmp_path):
                             fetcher=lambda u:lookup[u],folder=tmp_path)
     assert health['event_count']==0
     assert health['sources']['accsoc']['status']=='accessible_empty'
+
+def test_first_seen_timestamp_is_preserved_between_rechecks(tmp_path):
+    (tmp_path/'snapshot.json').write_text(json.dumps({'events':[], 'sources': []}))
+    def fetch(url):
+        return UNIT_HOME
+    first,_=collect.collect(today=TODAY,fetcher=fetch,source_keys=['unit'],folder=tmp_path)
+    assert len(first['events'])==1
+    second,_=collect.collect(today=TODAY,fetcher=fetch,source_keys=['unit'],folder=tmp_path)
+    assert first['events'][0]['first_seen_at']==second['events'][0]['first_seen_at']

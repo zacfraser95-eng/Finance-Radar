@@ -854,6 +854,19 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
         copy_old['collection_status']='last_known'
         recently.append(copy_old)
     records=unique(fresh+recently)
+    # Preserve the first discovery time across scheduled rechecks.
+    historical={e.get('id'):e for e in previous}
+    seen_clock=dt.datetime.now(TIMEZONE).isoformat(timespec='seconds')
+    for rec in records:
+        past=historical.get(rec.get('id'),{})
+        first=past.get('first_seen_at') or rec.get('first_seen_at')
+        if not first and past.get('verified_on'):
+            try:
+                day=dt.date.fromisoformat(past['verified_on'][:10])
+                first=dt.datetime.combine(day,dt.time.min,TIMEZONE).isoformat(timespec='seconds')
+            except ValueError:
+                pass
+        rec['first_seen_at']=first or seen_clock
     # Explicitly exclude the legacy seed from "new" notifications.
     previous_keys={e.get('id') for e in previous}
     newly=[e['id'] for e in records if old_path.exists() and e['id'] not in previous_keys and e.get('collection_status')=='current']
