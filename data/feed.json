@@ -1,6 +1,6 @@
 {
   "schema": 3,
-  "generated_at": "2026-11-01T12:59:32+11:00",
+  "generated_at": "2026-11-01T13:01:20+11:00",
   "mode": "scheduled_sync",
   "notice": "Public event listings and society bio links only; Instagram and Facebook post feeds are not connected.",
   "sources": [
@@ -14,7 +14,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T12:59:15+11:00",
+        "checked_at": "2026-11-01T13:01:01+11:00",
         "url": "https://www.unit.org.au/"
       }
     },
@@ -28,7 +28,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T12:59:15+11:00",
+        "checked_at": "2026-11-01T13:01:01+11:00",
         "url": "https://www.fmaa.com.au/events"
       }
     },
@@ -42,7 +42,7 @@
       "last_check": {
         "status": "ok",
         "count": 3,
-        "checked_at": "2026-11-01T12:59:16+11:00",
+        "checked_at": "2026-11-01T13:01:02+11:00",
         "url": "https://www.unsw.edu.au/employability/events-news/events"
       }
     },
@@ -56,7 +56,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T12:59:17+11:00",
+        "checked_at": "2026-11-01T13:01:03+11:00",
         "url": "https://www.unswfinsoc.org.au/"
       }
     },
@@ -70,7 +70,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T12:59:15+11:00",
+        "checked_at": "2026-11-01T13:01:01+11:00",
         "url": "https://www.unit.org.au/upcoming-events"
       }
     },
@@ -85,7 +85,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T12:59:18+11:00",
+        "checked_at": "2026-11-01T13:01:03+11:00",
         "url": "https://linktr.ee/finsocunsw"
       }
     },
@@ -100,7 +100,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T12:59:19+11:00",
+        "checked_at": "2026-11-01T13:01:03+11:00",
         "url": "https://linktr.ee/unit_unsw"
       }
     },
@@ -115,7 +115,7 @@
         "status": "links_only",
         "count": 0,
         "signals": 1,
-        "checked_at": "2026-11-01T12:59:19+11:00",
+        "checked_at": "2026-11-01T13:01:04+11:00",
         "url": "https://linktr.ee/unswfintechsoc"
       }
     },
@@ -130,7 +130,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T12:59:19+11:00",
+        "checked_at": "2026-11-01T13:01:04+11:00",
         "url": "https://linktr.ee/unswquantsoc"
       }
     },
@@ -145,7 +145,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T12:59:20+11:00",
+        "checked_at": "2026-11-01T13:01:05+11:00",
         "url": "https://linktr.ee/unswbsoc"
       }
     },
@@ -160,7 +160,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T12:59:20+11:00",
+        "checked_at": "2026-11-01T13:01:05+11:00",
         "url": "https://linktr.ee/fmaaunsw"
       }
     },
@@ -175,7 +175,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T12:59:20+11:00",
+        "checked_at": "2026-11-01T13:01:05+11:00",
         "url": "https://unswbsocnewsletter.beehiiv.com/"
       }
     },
@@ -190,7 +190,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T12:59:20+11:00",
+        "checked_at": "2026-11-01T13:01:05+11:00",
         "url": "https://www.unit.org.au/market-wrap?format=rss"
       }
     },
@@ -204,7 +204,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T12:59:21+11:00",
+        "checked_at": "2026-11-01T13:01:06+11:00",
         "url": "https://capitalw.org/events"
       }
     },
@@ -218,7 +218,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T12:59:21+11:00",
+        "checked_at": "2026-11-01T13:01:06+11:00",
         "url": "https://www.cmaunsw.com/"
       }
     },
@@ -232,7 +232,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T12:59:21+11:00",
+        "checked_at": "2026-11-01T13:01:07+11:00",
         "url": "https://www.unswaccsoc.com/upcoming-events"
       }
     },
@@ -246,7 +246,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T12:59:22+11:00",
+        "checked_at": "2026-11-01T13:01:07+11:00",
         "url": "https://www.unswbsoc.com/our-events"
       }
     },
@@ -260,7 +260,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T12:59:22+11:00",
+        "checked_at": "2026-11-01T13:01:07+11:00",
         "url": "https://www.unsw.edu.au/research/faic/events"
       }
     },
@@ -274,7 +274,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T12:59:22+11:00",
+        "checked_at": "2026-11-01T13:01:08+11:00",
         "url": "https://www.unswmathsoc.org/events"
       }
     },
@@ -288,7 +288,7 @@
       "last_check": {
         "status": "social_only",
         "count": 0,
-        "checked_at": "2026-11-01T12:59:22+11:00",
+        "checked_at": "2026-11-01T13:01:08+11:00",
         "url": "https://quantsoc.org/",
         "note": "Official page accessible; it does not expose a dated upcoming-event feed."
       }
@@ -303,7 +303,7 @@
       "last_check": {
         "status": "publications_only",
         "count": 0,
-        "checked_at": "2026-11-01T12:59:22+11:00",
+        "checked_at": "2026-11-01T13:01:08+11:00",
         "url": "https://www.unswfinsoc.org.au/publications",
         "note": "Official page accessible; it does not expose a dated upcoming-event feed."
       }
@@ -318,7 +318,7 @@
       "last_check": {
         "status": "ok",
         "count": 4,
-        "checked_at": "2026-11-01T12:59:26+11:00",
+        "checked_at": "2026-11-01T13:01:13+11:00",
         "url": "https://cfas.org.au/Events/"
       }
     },
@@ -332,7 +332,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T12:59:26+11:00",
+        "checked_at": "2026-11-01T13:01:13+11:00",
         "url": "https://www.finma.au/events-1"
       }
     },
@@ -346,7 +346,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T12:59:23+11:00",
+        "checked_at": "2026-11-01T13:01:09+11:00",
         "url": "https://events.humanitix.com/host/unsw-finance-and-banking-society"
       }
     },
@@ -360,7 +360,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T12:59:32+11:00",
+        "checked_at": "2026-11-01T13:01:20+11:00",
         "url": "https://events.unsw.edu.au/"
       }
     },
@@ -374,8 +374,64 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T12:59:32+11:00",
+        "checked_at": "2026-11-01T13:01:20+11:00",
         "url": "https://www.unsw.edu.au/business/our-schools/accounting-auditing-taxation/news-events/birkett-memorial-lecture/bill-birkett-lecture-series-2026"
+      }
+    },
+    {
+      "id": "cafba_sydney",
+      "name": "CAFBA Commercial Finance Networking · Sydney",
+      "url": "https://www.cafba.com.au/eventdetails/41443/cafba-end-of-year-networking-sydney",
+      "method": "Official Sydney finance events listing",
+      "coverage": "public",
+      "note": "Eligibility, ticket price, registration availability and dates remain controlled by organiser. Only individually verified public records are published.",
+      "last_check": {
+        "status": "ok",
+        "count": 1,
+        "checked_at": "2026-11-01T13:01:14+11:00",
+        "url": "https://www.cafba.com.au/eventdetails/41443/cafba-end-of-year-networking-sydney"
+      }
+    },
+    {
+      "id": "rmia_sydney",
+      "name": "RMIA NSW Risk Professionals Networking",
+      "url": "https://www.rmia.org.au/risk-management-events/rmia-nsw-post-ro-networking-event",
+      "method": "Official Sydney finance events listing",
+      "coverage": "public",
+      "note": "Eligibility, ticket price, registration availability and dates remain controlled by organiser. Only individually verified public records are published.",
+      "last_check": {
+        "status": "ok",
+        "count": 2,
+        "checked_at": "2026-11-01T13:01:14+11:00",
+        "url": "https://www.rmia.org.au/risk-management-events/rmia-nsw-post-ro-networking-event"
+      }
+    },
+    {
+      "id": "step_emerging",
+      "name": "STEP NSW Emerging Professionals Network",
+      "url": "https://stepaustralia.com/events/step-nsw-emerging-professionals-network-wednesday-25-november-2026/",
+      "method": "Official Sydney finance events listing",
+      "coverage": "public",
+      "note": "Eligibility, ticket price, registration availability and dates remain controlled by organiser. Only individually verified public records are published.",
+      "last_check": {
+        "status": "ok",
+        "count": 2,
+        "checked_at": "2026-11-01T13:01:16+11:00",
+        "url": "https://stepaustralia.com/events/step-nsw-emerging-professionals-network-wednesday-25-november-2026/"
+      }
+    },
+    {
+      "id": "mymoney_expo",
+      "name": "MyMoney Expo Sydney",
+      "url": "https://iccsydney.com.au/events/mymoney-expo/",
+      "method": "Official Sydney finance events listing",
+      "coverage": "public",
+      "note": "Eligibility, ticket price, registration availability and dates remain controlled by organiser. Only individually verified public records are published.",
+      "last_check": {
+        "status": "ok",
+        "count": 1,
+        "checked_at": "2026-11-01T13:01:17+11:00",
+        "url": "https://iccsydney.com.au/events/mymoney-expo/"
       }
     }
   ],
@@ -588,6 +644,35 @@
       "first_seen_at": "2026-11-01T12:46:15+11:00"
     },
     {
+      "id": "evt-9f9c5b1dd8ec",
+      "title": "RMIA NSW Risk Management Networking Night",
+      "subtitle": "Free networking with professionals in the NSW risk-management community, including adjacent banking and financial-risk careers.",
+      "starts_at": "2026-11-11T17:00:00+11:00",
+      "ends_at": null,
+      "location": "The Sussex Hotel, Rooftop, 20 Sussex Street, Sydney",
+      "format": "In person",
+      "organiser": "Risk Management Institute of Australasia",
+      "sources": [
+        "Risk Management Institute of Australasia"
+      ],
+      "source_urls": [
+        "https://www.rmia.org.au/risk-management-events/rmia-nsw-post-ro-networking-event"
+      ],
+      "registration_url": "https://members.rmia.org.au/_events.registration/step1/eventid/42980",
+      "category": "Finance & strategy",
+      "tags": [
+        "Finance & strategy"
+      ],
+      "eligibility": "Free; primarily an industry networking event. Confirm student attendance with RMIA.",
+      "fit": "restricted",
+      "relevance_reason": "Verified public risk-management association event; student eligibility not explicitly guaranteed.",
+      "verified_on": "2026-11-01",
+      "confidence": "source-backed",
+      "last_seen_on": "2026-11-01",
+      "collection_status": "current",
+      "first_seen_at": "2026-11-01T13:01:20+11:00"
+    },
+    {
       "id": "evt-a84fdb22cf3e",
       "title": "RMIA NSW Chapter | Networking Event — Risk Management Institute of Australasia (RMIA)",
       "subtitle": "Details on organiser website.",
@@ -737,6 +822,64 @@
       "first_seen_at": "2026-11-01T11:43:54+11:00"
     },
     {
+      "id": "evt-3046d875a399",
+      "title": "CAFBA Sydney Commercial & Asset Finance Networking",
+      "subtitle": "Meet commercial finance brokers, lenders and asset-finance professionals at an industry networking evening.",
+      "starts_at": "2026-11-25T17:30:00+11:00",
+      "ends_at": null,
+      "location": "Zeta Bar, Hilton Sydney, 488 George St",
+      "format": "In person",
+      "organiser": "CAFBA",
+      "sources": [
+        "CAFBA"
+      ],
+      "source_urls": [
+        "https://www.cafba.com.au/eventdetails/41443/cafba-end-of-year-networking-sydney"
+      ],
+      "registration_url": "https://www.cafba.com.au/eventdetails/41443/cafba-end-of-year-networking-sydney",
+      "category": "Finance & strategy",
+      "tags": [
+        "Finance & strategy"
+      ],
+      "eligibility": "Anyone can register; confirm ticket availability and any fees with CAFBA. Registration essential.",
+      "fit": "high",
+      "relevance_reason": "Official Sydney commercial and asset-finance industry association event, open to anyone.",
+      "verified_on": "2026-11-01",
+      "confidence": "source-backed",
+      "last_seen_on": "2026-11-01",
+      "collection_status": "current",
+      "first_seen_at": "2026-11-01T13:01:20+11:00"
+    },
+    {
+      "id": "evt-e879fefb87dc",
+      "title": "STEP NSW Emerging Professionals Networking",
+      "subtitle": "Networking for emerging accounting, financial advisory and private-wealth professionals, including students focused on trusts and estates.",
+      "starts_at": "2026-11-25T17:30:00+11:00",
+      "ends_at": "2026-11-25T21:00:00+11:00",
+      "location": "JustFund, Level 9, 85 Castlereagh Street, Sydney",
+      "format": "In person",
+      "organiser": "STEP Australia",
+      "sources": [
+        "STEP Australia"
+      ],
+      "source_urls": [
+        "https://stepaustralia.com/events/step-nsw-emerging-professionals-network-wednesday-25-november-2026/"
+      ],
+      "registration_url": "https://events.humanitix.com/step-nsw-emerging-professionals-network-or-wednesday-25-november-2026",
+      "category": "Career skills",
+      "tags": [
+        "Career skills"
+      ],
+      "eligibility": "Students interested in trusts and estates welcome. Tickets $25 for members or $30 for non-members; sales close 19 November.",
+      "fit": "medium",
+      "relevance_reason": "Trusts, private-wealth and advisory networking. Organiser explicitly includes students; paid tickets.",
+      "verified_on": "2026-11-01",
+      "confidence": "source-backed",
+      "last_seen_on": "2026-11-01",
+      "collection_status": "current",
+      "first_seen_at": "2026-11-01T13:01:20+11:00"
+    },
+    {
       "id": "evt-f809e4003ef4",
       "title": "STEP NSW Emerging Professionals Network | Wednesday 25 November 2026",
       "subtitle": "<p>STEP NSW Emerging Professionals Network | Wednesday 25 November 2026 STEP NSW Branch invites you to the next Emerging Professionals Network event, to be held on Wednesday 25 November 2026 at ...</p>\\n",
@@ -824,6 +967,37 @@
       "last_seen_on": "2026-11-01",
       "collection_status": "current",
       "first_seen_at": "2026-11-01T00:00:00+11:00"
+    },
+    {
+      "id": "evt-b6ebcdb7a9e4",
+      "title": "MyMoney Expo 2026 · Sydney",
+      "subtitle": "28–29 November. Public investing and finance expo covering shares, trading, private wealth and fintech. Opening times to be checked.",
+      "starts_at": "2026-11-28",
+      "ends_at": null,
+      "location": "ICC Sydney, Darling Harbour",
+      "format": "In person",
+      "organiser": "MyMoney Expo",
+      "sources": [
+        "ICC Sydney venue",
+        "MyMoney Expo organiser"
+      ],
+      "source_urls": [
+        "https://iccsydney.com.au/events/mymoney-expo/",
+        "https://mymoneyexpo.com/"
+      ],
+      "registration_url": "https://tickets.lup.com.au/3a45f2ce-3748-4077-8b6f-e47a1987e1aa?cat=cat-other&s=mymoney-2026",
+      "category": "Markets & asset management",
+      "tags": [
+        "Markets & asset management"
+      ],
+      "eligibility": "Free general admission advertised by organiser; confirm ticket conditions and daily opening times.",
+      "fit": "high",
+      "relevance_reason": "ICC Sydney confirms dates; organiser independently confirms free general admission and registration link.",
+      "verified_on": "2026-11-01",
+      "confidence": "source-backed",
+      "last_seen_on": "2026-11-01",
+      "collection_status": "current",
+      "first_seen_at": "2026-11-01T13:01:20+11:00"
     },
     {
       "id": "unsw-skills-exchange-20270303",
