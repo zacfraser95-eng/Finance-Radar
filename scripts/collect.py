@@ -593,7 +593,8 @@ def parse_mathsoc_quant(html: str, today: dt.date) -> list[dict]:
         try:date=dt.date(int(match.group(3)),int(match.group(2)),int(match.group(1)))
         except ValueError:continue
         if date<today:continue
-        clock=CLOCK_RX.search(context[match.end():match.end()+45])
+        clock_context=re.sub(r'\b(\d{1,2}:\d{2}):\d{2}\s*(am|pm)\b',r'\1 \2',context[match.end():match.end()+55],flags=re.I)
+        clock=CLOCK_RX.search(clock_context)
         time_text=clock.group(0) if clock else ''
         rec=event('UNSW MathSoc × QuantSoc',title,date,time_text,SOURCES['mathsoc_quant'][1],
                   today=today,summary='Publicly listed MathSoc and QuantSoc collaborative event.',time_known=bool(time_text))
