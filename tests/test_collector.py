@@ -861,3 +861,11 @@ def test_unrelated_schema_entries_are_not_relabelled():
     rec={'title':'General Industry Meeting','starts_at':'2026-11-11T10:00:00+11:00',
          'fit':'high','eligibility':'Unknown'}
     assert collect.enrich_official_industry_listing(rec,'rmia_sydney')==rec
+
+
+def test_sydney_industry_parsers_are_dispatched_and_sources_visible():
+    code=Path(collect.__file__).read_text()
+    for key in ('cafba_sydney','rmia_sydney','step_emerging','mymoney_expo'):
+        assert f"elif key=='{key}':found=" in code
+        assert key in collect.SOURCES
+    assert "for key in ('cafba_sydney','rmia_sydney','step_emerging','mymoney_expo')" in code

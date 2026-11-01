@@ -1563,6 +1563,10 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
                 elif key=='mathsoc_quant':found=parse_mathsoc_quant(raw,today)
                 elif key=='cfa':found=parse_cfa_australia(raw,today)
                 elif key=='finma':found=parse_finma_student_events(raw,today)
+                elif key=='cafba_sydney':found=parse_cafba_sydney_networking(raw,today)
+                elif key=='rmia_sydney':found=parse_rmia_sydney_networking(raw,today)
+                elif key=='step_emerging':found=parse_step_sydney_emerging_network(raw,today)
+                elif key=='mymoney_expo':found=parse_mymoney_expo(raw,today,fetch_detail=fetcher)
                 elif key=='unsw_public_events':found=parse_unsw_public_events(raw,today,fetch_detail=fetcher)
                 elif key=='unsw_accounting_lecture':found=parse_unsw_accounting_lecture(raw,today)
                 elif key=='finsoc_humanitix':found=parse_finsoc_humanitix(raw,today,fetch_detail=fetcher)
@@ -1650,6 +1654,11 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
             sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],
                 'method':'Official dated UNSW event listings','coverage':'public',
                 'note':'UNSW public calendar scans only investment/finance-themed event pages with verified dates and registration links; professional lecture may have eligibility or cost restrictions.'})
+    for key in ('cafba_sydney','rmia_sydney','step_emerging','mymoney_expo'):
+        if key not in by_id:
+            sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],
+                'method':'Official Sydney finance events listing','coverage':'public',
+                'note':'Eligibility, ticket price, registration availability and dates remain controlled by organiser. Only individually verified public records are published.'})
     for key in ('cfa','finma'):
         if key not in by_id:
             sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],
