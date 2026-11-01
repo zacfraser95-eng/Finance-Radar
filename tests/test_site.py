@@ -31,7 +31,7 @@ def test_site_verification_is_clear_and_unconfirmed_hidden_by_default():
     assert 'includeLastKnown=false' in SITE
     assert 'include previously listed' in SITE.lower()
     assert 'id="verification-summary"' in SITE
-    assert 'Confirmed in latest scan' in SITE
+    assert 'Verified on source' in SITE
 
 def test_editorial_identity_is_used_without_decorative_graphics():
     stylesheet=(Path(__file__).resolve().parents[1]/'editorial.css').read_text()
