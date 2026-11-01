@@ -1,6 +1,6 @@
 {
   "schema": 3,
-  "generated_at": "2026-11-01T10:57:10+11:00",
+  "generated_at": "2026-11-01T11:01:32+11:00",
   "mode": "scheduled_sync",
   "notice": "Public event listings and society bio links only; Instagram and Facebook post feeds are not connected.",
   "sources": [
@@ -14,7 +14,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T10:57:03+11:00",
+        "checked_at": "2026-11-01T11:01:25+11:00",
         "url": "https://www.unit.org.au/"
       }
     },
@@ -28,7 +28,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T10:57:04+11:00",
+        "checked_at": "2026-11-01T11:01:26+11:00",
         "url": "https://www.fmaa.com.au/events"
       }
     },
@@ -42,7 +42,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T10:57:05+11:00",
+        "checked_at": "2026-11-01T11:01:27+11:00",
         "url": "https://www.unsw.edu.au/employability/events-news/events"
       }
     },
@@ -56,7 +56,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T10:57:05+11:00",
+        "checked_at": "2026-11-01T11:01:27+11:00",
         "url": "https://www.unswfinsoc.org.au/"
       }
     },
@@ -70,7 +70,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T10:57:04+11:00",
+        "checked_at": "2026-11-01T11:01:26+11:00",
         "url": "https://www.unit.org.au/upcoming-events"
       }
     },
@@ -85,7 +85,7 @@
         "status": "links_only",
         "count": 0,
         "signals": 2,
-        "checked_at": "2026-11-01T10:57:06+11:00",
+        "checked_at": "2026-11-01T11:01:28+11:00",
         "url": "https://linktr.ee/finsocunsw"
       }
     },
@@ -100,7 +100,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T10:57:06+11:00",
+        "checked_at": "2026-11-01T11:01:29+11:00",
         "url": "https://linktr.ee/unit_unsw"
       }
     },
@@ -115,7 +115,7 @@
         "status": "links_only",
         "count": 0,
         "signals": 1,
-        "checked_at": "2026-11-01T10:57:06+11:00",
+        "checked_at": "2026-11-01T11:01:29+11:00",
         "url": "https://linktr.ee/unswfintechsoc"
       }
     },
@@ -130,7 +130,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T10:57:06+11:00",
+        "checked_at": "2026-11-01T11:01:29+11:00",
         "url": "https://linktr.ee/unswquantsoc"
       }
     },
@@ -145,7 +145,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T10:57:06+11:00",
+        "checked_at": "2026-11-01T11:01:29+11:00",
         "url": "https://linktr.ee/unswbsoc"
       }
     },
@@ -160,7 +160,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T10:57:07+11:00",
+        "checked_at": "2026-11-01T11:01:30+11:00",
         "url": "https://linktr.ee/fmaaunsw"
       }
     },
@@ -175,7 +175,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T10:57:07+11:00",
+        "checked_at": "2026-11-01T11:01:30+11:00",
         "url": "https://unswbsocnewsletter.beehiiv.com/"
       }
     },
@@ -190,7 +190,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-01T10:57:07+11:00",
+        "checked_at": "2026-11-01T11:01:30+11:00",
         "url": "https://www.unit.org.au/market-wrap?format=rss"
       }
     },
@@ -204,7 +204,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T10:57:08+11:00",
+        "checked_at": "2026-11-01T11:01:31+11:00",
         "url": "https://capitalw.org/events"
       }
     },
@@ -218,7 +218,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T10:57:09+11:00",
+        "checked_at": "2026-11-01T11:01:31+11:00",
         "url": "https://www.cmaunsw.com/"
       }
     },
@@ -232,7 +232,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T10:57:09+11:00",
+        "checked_at": "2026-11-01T11:01:32+11:00",
         "url": "https://www.unswaccsoc.com/upcoming-events"
       }
     },
@@ -246,7 +246,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-01T10:57:10+11:00",
+        "checked_at": "2026-11-01T11:01:32+11:00",
         "url": "https://www.unswbsoc.com/our-events"
       }
     },
@@ -260,7 +260,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-01T10:57:10+11:00",
+        "checked_at": "2026-11-01T11:01:32+11:00",
         "url": "https://www.unsw.edu.au/research/faic/events"
       }
     }
@@ -292,7 +292,8 @@
       "relevance_reason": "Useful for researching employers and finding contacts for internships.",
       "verified_on": "2026-10-31",
       "confidence": "source-backed",
-      "collection_status": "last_known"
+      "collection_status": "last_known",
+      "first_seen_at": "2026-10-31T00:00:00+11:00"
     },
     {
       "id": "evt-8265eeea6300",
@@ -320,7 +321,8 @@
       "verified_on": "2026-11-01",
       "confidence": "source-backed",
       "last_seen_on": "2026-11-01",
-      "collection_status": "current"
+      "collection_status": "current",
+      "first_seen_at": "2026-11-01T00:00:00+11:00"
     },
     {
       "id": "unsw-jobsearch-20261112",
@@ -348,7 +350,8 @@
       "relevance_reason": "Broadly useful for internship applications and proactive networking.",
       "verified_on": "2026-10-31",
       "confidence": "source-backed",
-      "collection_status": "last_known"
+      "collection_status": "last_known",
+      "first_seen_at": "2026-10-31T00:00:00+11:00"
     },
     {
       "id": "unsw-interview-20261116",
@@ -376,7 +379,8 @@
       "relevance_reason": "Relevant preparation for behavioural and competency interviews.",
       "verified_on": "2026-10-31",
       "confidence": "source-backed",
-      "collection_status": "last_known"
+      "collection_status": "last_known",
+      "first_seen_at": "2026-10-31T00:00:00+11:00"
     },
     {
       "id": "evt-4bcf2300ad11",
@@ -406,7 +410,8 @@
       "verified_on": "2026-11-01",
       "confidence": "source-backed",
       "last_seen_on": "2026-11-01",
-      "collection_status": "current"
+      "collection_status": "current",
+      "first_seen_at": "2026-11-01T00:00:00+11:00"
     },
     {
       "id": "evt-21cc2d0a2a9b",
@@ -434,7 +439,8 @@
       "verified_on": "2026-11-01",
       "confidence": "source-backed",
       "last_seen_on": "2026-11-01",
-      "collection_status": "current"
+      "collection_status": "current",
+      "first_seen_at": "2026-11-01T00:00:00+11:00"
     },
     {
       "id": "unsw-skills-exchange-20270303",
@@ -463,7 +469,8 @@
       "relevance_reason": "Finance-and-strategy employer networking. Time and venue not yet advertised.",
       "verified_on": "2026-10-31",
       "confidence": "details-incomplete",
-      "collection_status": "last_known"
+      "collection_status": "last_known",
+      "first_seen_at": "2026-10-31T00:00:00+11:00"
     }
   ],
   "signals": [

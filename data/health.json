@@ -1,128 +1,126 @@
 {
-  "generated_at": "2026-11-01T10:57:10+11:00",
+  "generated_at": "2026-11-01T11:01:32+11:00",
   "sources": {
     "unit": {
       "status": "ok",
       "count": 1,
-      "checked_at": "2026-11-01T10:57:03+11:00",
+      "checked_at": "2026-11-01T11:01:25+11:00",
       "url": "https://www.unit.org.au/"
     },
     "unit_calendar": {
       "status": "accessible_empty",
       "count": 0,
-      "checked_at": "2026-11-01T10:57:04+11:00",
+      "checked_at": "2026-11-01T11:01:26+11:00",
       "url": "https://www.unit.org.au/upcoming-events"
     },
     "fmaa": {
       "status": "ok",
       "count": 1,
-      "checked_at": "2026-11-01T10:57:04+11:00",
+      "checked_at": "2026-11-01T11:01:26+11:00",
       "url": "https://www.fmaa.com.au/events"
     },
     "unsw": {
       "status": "accessible_empty",
       "count": 0,
-      "checked_at": "2026-11-01T10:57:05+11:00",
+      "checked_at": "2026-11-01T11:01:27+11:00",
       "url": "https://www.unsw.edu.au/employability/events-news/events"
     },
     "finsoc": {
       "status": "accessible_empty",
       "count": 0,
-      "checked_at": "2026-11-01T10:57:05+11:00",
+      "checked_at": "2026-11-01T11:01:27+11:00",
       "url": "https://www.unswfinsoc.org.au/"
     },
     "social_finsoc": {
       "status": "links_only",
       "count": 0,
       "signals": 2,
-      "checked_at": "2026-11-01T10:57:06+11:00",
+      "checked_at": "2026-11-01T11:01:28+11:00",
       "url": "https://linktr.ee/finsocunsw"
     },
     "social_unit": {
       "status": "accessible_empty",
       "count": 0,
       "signals": 0,
-      "checked_at": "2026-11-01T10:57:06+11:00",
+      "checked_at": "2026-11-01T11:01:29+11:00",
       "url": "https://linktr.ee/unit_unsw"
     },
     "social_fintech": {
       "status": "links_only",
       "count": 0,
       "signals": 1,
-      "checked_at": "2026-11-01T10:57:06+11:00",
+      "checked_at": "2026-11-01T11:01:29+11:00",
       "url": "https://linktr.ee/unswfintechsoc"
     },
     "social_quant": {
       "status": "accessible_empty",
       "count": 0,
       "signals": 0,
-      "checked_at": "2026-11-01T10:57:06+11:00",
+      "checked_at": "2026-11-01T11:01:29+11:00",
       "url": "https://linktr.ee/unswquantsoc"
     },
     "social_bsoc": {
       "status": "accessible_empty",
       "count": 0,
       "signals": 0,
-      "checked_at": "2026-11-01T10:57:06+11:00",
+      "checked_at": "2026-11-01T11:01:29+11:00",
       "url": "https://linktr.ee/unswbsoc"
     },
     "social_fmaa": {
       "status": "accessible_empty",
       "count": 0,
       "signals": 0,
-      "checked_at": "2026-11-01T10:57:07+11:00",
+      "checked_at": "2026-11-01T11:01:30+11:00",
       "url": "https://linktr.ee/fmaaunsw"
     },
     "bsoc_publications": {
       "status": "accessible_empty",
       "count": 0,
       "signals": 0,
-      "checked_at": "2026-11-01T10:57:07+11:00",
+      "checked_at": "2026-11-01T11:01:30+11:00",
       "url": "https://unswbsocnewsletter.beehiiv.com/"
     },
     "unit_publications": {
       "status": "accessible_empty",
       "count": 0,
       "signals": 0,
-      "checked_at": "2026-11-01T10:57:07+11:00",
+      "checked_at": "2026-11-01T11:01:30+11:00",
       "url": "https://www.unit.org.au/market-wrap?format=rss"
     },
     "capitalw": {
       "status": "accessible_empty",
       "count": 0,
-      "checked_at": "2026-11-01T10:57:08+11:00",
+      "checked_at": "2026-11-01T11:01:31+11:00",
       "url": "https://capitalw.org/events"
     },
     "cma": {
       "status": "accessible_empty",
       "count": 0,
-      "checked_at": "2026-11-01T10:57:09+11:00",
+      "checked_at": "2026-11-01T11:01:31+11:00",
       "url": "https://www.cmaunsw.com/"
     },
     "accsoc": {
       "status": "accessible_empty",
       "count": 0,
-      "checked_at": "2026-11-01T10:57:09+11:00",
+      "checked_at": "2026-11-01T11:01:32+11:00",
       "url": "https://www.unswaccsoc.com/upcoming-events"
     },
     "bsoc_calendar": {
       "status": "accessible_empty",
       "count": 0,
-      "checked_at": "2026-11-01T10:57:10+11:00",
+      "checked_at": "2026-11-01T11:01:32+11:00",
       "url": "https://www.unswbsoc.com/our-events"
     },
     "faic": {
       "status": "ok",
       "count": 1,
-      "checked_at": "2026-11-01T10:57:10+11:00",
+      "checked_at": "2026-11-01T11:01:32+11:00",
       "url": "https://www.unsw.edu.au/research/faic/events"
     }
   },
   "event_count": 7,
   "unverified_bio_links": 3,
-  "new_event_ids": [
-    "evt-21cc2d0a2a9b"
-  ],
+  "new_event_ids": [],
   "current_event_count": 3,
   "last_known_event_count": 4
 }
