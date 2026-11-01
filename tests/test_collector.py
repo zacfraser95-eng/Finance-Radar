@@ -545,3 +545,74 @@ def test_finma_rejects_missing_open_lecture_or_old_past_event():
     assert collect.parse_finma_student_events(fake,dt.date(2026,11,1))==[]
     fake=FINMA_LECTURE.replace('5:00 PM – 6:30 PM','6:00 PM – 7:30 PM').replace('5:00–6:30 PM','6:00–7:30 PM')
     assert collect.parse_finma_student_events(fake,dt.date(2026,11,1))==[]
+
+
+GOOGLE_PUBLIC_REGISTRATION='''<html><head><meta property="og:title"
+content="FINSOC x Goliath Academy Financial Modelling Masterclass 2026" /></head>
+<body><h1>FINSOC x Goliath Academy Financial Modelling Masterclass 2026</h1>
+<p>Event Date: Friday 20 November 2026</p>
+<p>Time: 5:30 PM - 7:00 PM</p>
+<p>UNSW Kensington</p></body></html>'''
+FINSOC_FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSeEBaqZLF8FAxmg6dWWZuf3lqZyBrCvpY8aatl4812AtGvauQ/viewform'
+
+def test_official_google_form_date_and_time_can_be_confirmed():
+    events=collect.parse_public_form_registration(
+        GOOGLE_PUBLIC_REGISTRATION,'FINSOC x Goliath Academy Financial Modelling Masterclass 2026',
+        FINSOC_FORM_URL,'FINSOC',dt.date(2026,11,1))
+    assert len(events)==1
+    assert events[0]['starts_at']=='2026-11-20T17:30:00+11:00'
+    assert events[0]['ends_at']=='2026-11-20T19:00:00+11:00'
+    assert events[0]['registration_url']==FINSOC_FORM_URL
+
+
+def test_google_form_title_year_alone_does_not_invent_event_date():
+    html=GOOGLE_PUBLIC_REGISTRATION.replace('Event Date: Friday 20 November 2026',
+       'Stage of degree: First year, Second year')
+    assert collect.parse_public_form_registration(html,'FINSOC x Goliath Academy Financial Modelling Masterclass 2026',
+       FINSOC_FORM_URL,'FINSOC',dt.date(2026,11,1))==[]
+
+
+def test_closed_form_and_private_form_are_not_confirmed():
+    for body in ('This form is no longer accepting responses','Sign in to continue'):
+        assert collect.parse_public_form_registration(
+            GOOGLE_PUBLIC_REGISTRATION+body,'FINSOC x Goliath Academy Financial Modelling Masterclass 2026',
+            FINSOC_FORM_URL,'FINSOC',dt.date(2026,11,1))==[]
+
+
+def test_form_without_event_time_does_not_become_fabricated_date():
+    html=GOOGLE_PUBLIC_REGISTRATION.replace('Time: 5:30 PM - 7:00 PM','Time: To be announced')
+    assert collect.parse_public_form_registration(html,'FINSOC x Goliath Academy Financial Modelling Masterclass 2026',
+       FINSOC_FORM_URL,'FINSOC',dt.date(2026,11,1))==[]
+
+
+def test_finsoc_public_humanitix_host_no_live_events():
+    html='<main><h1>UNSW Finance and Banking Society</h1><p>There are no live events.</p></main>'
+    assert collect.parse_finsoc_humanitix(html,dt.date(2026,11,1),
+                                          fetch_detail=lambda u: (_ for _ in ()).throw(AssertionError('no event'))) == []
+
+
+def test_finsoc_humanitix_host_requires_organiser_attribution():
+    host='<h1>UNSW Finance and Banking Society</h1><a href="https://events.humanitix.com/finsoc-finance-workshop-2026">Workshop</a>'
+    page='''<p>Organised by another society</p><script type="application/ld+json">{
+        "@type":"Event","name":"Investment Banking Careers Night","startDate":"2026-11-19T18:00:00+11:00",
+        "location":{"name":"UNSW"},"url":"https://events.humanitix.com/finsoc-finance-workshop-2026"}</script>'''
+    assert collect.parse_finsoc_humanitix(host,dt.date(2026,11,1),
+                                          fetch_detail=lambda _:page)==[]
+
+
+def test_official_bio_form_without_date_stays_unverified():
+    linktree=f'<html><main><a href="{FINSOC_FORM_URL}">FINSOC x Goliath Academy Financial Modelling Masterclass 2026</a></main></html>'
+    html='<h1>FINSOC x Goliath Academy Financial Modelling Masterclass 2026</h1><p>Stage of degree: 1st year</p>'
+    confirmed,leads=collect.parse_social_hub(linktree,'social_finsoc',dt.date(2026,11,1),
+                                              fetch_detail=lambda _:html)
+    assert confirmed==[]
+    assert len(leads)==1
+    assert 'date and time are not confirmed' in leads[0]['note']
+
+
+def test_bio_public_form_is_upgraded_only_with_verified_date():
+    linktree=f'<html><main><a href="{FINSOC_FORM_URL}">FINSOC x Goliath Academy Financial Modelling Masterclass 2026</a></main></html>'
+    confirmed,leads=collect.parse_social_hub(linktree,'social_finsoc',dt.date(2026,11,1),
+                                              fetch_detail=lambda _:GOOGLE_PUBLIC_REGISTRATION)
+    assert len(confirmed)==1
+    assert leads==[]

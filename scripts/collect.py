@@ -50,6 +50,7 @@ SOURCES = {
     'mathsoc_quant': ('UNSW MathSoc · QuantSoc collaborations', 'https://www.unswmathsoc.org/events'),
     'quantsoc_site': ('UNSW QuantSoc official website', 'https://quantsoc.org/'),
     'finsoc_publications': ('FINSOC public publications', 'https://www.unswfinsoc.org.au/publications'),
+    'finsoc_humanitix': ('FINSOC official Humanitix organiser', 'https://events.humanitix.com/host/unsw-finance-and-banking-society'),
     'cfa': ('CFA Society Australia', 'https://cfas.org.au/Events/'),
     'finma': ('FINMA Financial Markets Academy', 'https://www.finma.au/events-1'),
 }
@@ -928,6 +929,113 @@ def parse_faic(html: str, today: dt.date) -> list[dict]:
     return unique(result)
 
 
+
+def parse_public_form_registration(html: str, title: str, url: str, organiser: str,
+                                   today: dt.date) -> list[dict]:
+    """Verify an explicitly dated public Google Form linked by an official bio.
+
+    Does not load Google accounts or interpret form submission fields as
+    invitations. A title or event year alone is never enough. Explicit
+    date AND time near an 'Event date' label are required.
+    """
+    try:
+        u=urlsplit(url)
+    except ValueError:
+        return []
+    if not trusted_host(url, {'docs.google.com'}):
+        return []
+    if not re.fullmatch(r'/forms/d/e/[A-Za-z0-9_-]+/viewform/?',u.path):
+        return []
+    soup=BeautifulSoup(html,'html.parser')
+    visible=soup.get_text(' ',strip=True)[:6000]
+    if not visible or re.search(r'(?:sign in to continue|you need permission|this form is no longer accepting responses|form is closed)',visible,re.I):
+        return []
+    # The form itself must refer to the society event advertised by its bio.
+    description=soup.find('meta',attrs={'property':'og:title'})
+    public_title=description.get('content','').strip() if description else ''
+    start=visible[:1500]
+    if not public_title:
+        public_title=start[:220]
+    if not (HUB_KEYWORDS.search(title) and
+            re.search(r'FINSOC|FinTechSoc|Finance|Trading|QuantSoc|Modelling|Workshop|Career|Investment',
+                      public_title,re.I)):
+        return []
+    # 'Date of birth' fields and event titles containing only '2026' are
+    # insufficient. Date and clock must be on the explicitly labelled line.
+    date_tag=re.search(r'(?:Event\s+Date|Workshop\s+Date|When)\s*[:\-]\s*'
+                       r'(.{0,100}?\b20\d{2}\b)',start,re.I)
+    if not date_tag:
+        return []
+    match=DATE_DAY_MONTH.search(date_tag.group(1)) or DATE_MONTH_DAY.search(date_tag.group(1))
+    if not match or not match.group('year'):
+        return []
+    day=parse_date(match.group(0),today)
+    if not day or day<today:
+        return []
+    context=start[date_tag.end():date_tag.end()+240]
+    time_match=re.search(r'\b(?:Time|Start\s+time)\s*[:\-]\s*(.{0,85})',context,re.I)
+    if not time_match or not CLOCK_RX.search(time_match.group(1)):
+        return []
+    rec=event(organiser,title,day,time_match.group(1),SOURCES[next(k for k,v in BIO_SOCIAL_NAMES.items()
+              if v==organiser)][1],today=today,venue='See organiser',
+              summary='Public registration form linked from the organiser official bio.',
+              eligibility='Check membership, registration availability and event details with organiser.',
+              registration_url=url,time_known=True)
+    if not rec or len(rec['starts_at'])==10:
+        return []
+    rec['source_urls']=[SOURCES[next(k for k,v in BIO_SOCIAL_NAMES.items()
+              if v==organiser)][1],url]
+    rec['sources']=[organiser,'Public form with explicit event date and time']
+    rec['relevance_reason']='Public date and time verified in a registration form linked from the society official bio.'
+    return [rec]
+
+
+def parse_finsoc_humanitix(html: str, today: dt.date, fetch_detail=get) -> list[dict]:
+    """Monitor FINSOC's official public Humanitix host for upcoming events.
+
+    A host landing page cannot prove event eligibility or dates. Only linked
+    future Event schema with on-page FINSOC host attribution qualifies.
+    """
+    soup=BeautifulSoup(html,'html.parser')
+    visible=soup.get_text(' ',strip=True)
+    if not re.search(r'UNSW Finance and Banking Society',visible,re.I):
+        raise ValueError('FINSOC Humanitix official host unavailable')
+    if re.search(r'\bThere are no live events\b',visible,re.I):
+        return []
+    host=SOURCES['finsoc_humanitix'][1]
+    discovered=[]
+    for a in soup.select('a[href]'):
+        url=urljoin(host,a['href'])
+        if not trusted_host(url,{'events.humanitix.com'}):
+            continue
+        path=urlsplit(url).path.rstrip('/')
+        if path.startswith('/host/') or path in ('','/'):
+            continue
+        if not re.fullmatch(r'/[a-z0-9][a-z0-9-]{5,120}',path,re.I):
+            continue
+        if url not in discovered:
+            discovered.append(url)
+    results=[]
+    for url in discovered[:8]:
+        try:
+            raw=fetch_detail(url)
+            detail=BeautifulSoup(raw,'html.parser')
+            if not re.search(r'UNSW Finance and Banking Society|FINSOC',
+                             detail.get_text(' ',strip=True),re.I):
+                continue
+            records=jsonld_events(raw,'FINSOC',url,today)
+            for rec in records:
+                rec['organiser']='FINSOC'
+                rec['registration_url']=url
+                rec['sources']=['FINSOC Humanitix host','Dated official registration']
+                rec['source_urls']=[host,url]
+                rec['relevance_reason']='Verified future registration with FINSOC attribution on its public Humanitix host.'
+            results.extend(records)
+        except (requests.RequestException,ValueError,RuntimeError):
+            continue
+    return unique(results)
+
+
 def parse_social_hub(html: str, source_key: str, today: dt.date, fetch_detail=get) -> tuple[list[dict],list[dict]]:
     """Inspect the society's public bio links, not its social-media posts.
 
@@ -960,13 +1068,20 @@ def parse_social_hub(html: str, source_key: str, today: dt.date, fetch_detail=ge
         host=(urlsplit(link).hostname or '').lower()
         confirmed=[]
         expired=False
-        if trusted_host(link, LINK_EVENT_HOSTS | {'form.jotform.com'}):
+        note='Public bio link only; date, availability and eligibility not confirmed.'
+        if trusted_host(link, LINK_EVENT_HOSTS | {'form.jotform.com','docs.google.com'}):
             try:
                 content=fetch_detail(link)
                 expired=registration_is_past(content,link,today)
                 if not expired and trusted_host(link,LINK_EVENT_HOSTS):
                     confirmed=jsonld_events(content,BIO_SOCIAL_NAMES[source_key],link,today)
+                elif not expired and trusted_host(link,{'docs.google.com'}):
+                    confirmed=parse_public_form_registration(
+                        content,title,link,BIO_SOCIAL_NAMES[source_key],today)
+                    if not confirmed:
+                        note='Public Google Form accessible but the event date and time are not confirmed.'
             except (requests.RequestException,ValueError,RuntimeError):
+                note='Public registration unavailable without access; do not assume event details.'
                 pass
         if expired:
             continue
@@ -984,7 +1099,7 @@ def parse_social_hub(html: str, source_key: str, today: dt.date, fetch_detail=ge
         sid=hashlib.sha1((source_key+'|'+link.split('?')[0]).encode()).hexdigest()[:12]
         signals.append({'id':'signal-'+sid,'title':title,'organiser':BIO_SOCIAL_NAMES[source_key],
                         'url':link,'source_url':SOURCES[source_key][1],
-                        'status':'date_unverified','note':'Public bio link only; date, availability and eligibility not confirmed.',
+                        'status':'date_unverified','note':note,
                         'checked_on':today.isoformat()})
     return unique(results),signals
 
@@ -1071,6 +1186,7 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
                 elif key=='mathsoc_quant':found=parse_mathsoc_quant(raw,today)
                 elif key=='cfa':found=parse_cfa_australia(raw,today)
                 elif key=='finma':found=parse_finma_student_events(raw,today)
+                elif key=='finsoc_humanitix':found=parse_finsoc_humanitix(raw,today,fetch_detail=fetcher)
                 elif key=='unsw':found=parse_unsw_with_registration_fallback(raw,today,fetch_detail=fetcher)
                 else:found=parse_unsw(raw,today)
             except Exception:
@@ -1144,6 +1260,11 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
             sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],
                 'method':'Official public website / cross-society listing',
                 'coverage':'limited' if key!='mathsoc_quant' else 'public','note':notes[key]})
+    for key in ('finsoc_humanitix',):
+        if key not in by_id:
+            sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],
+                'method':'Public Humanitix organiser host','coverage':'limited',
+                'note':'Only official upcoming ticket pages with explicit dated event schema and FINSOC attribution; does not access private events.'})
     for key in ('cfa','finma'):
         if key not in by_id:
             sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],

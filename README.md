@@ -151,3 +151,7 @@ The source monitor also checks CFA Society Australia's official calendar for fut
 ## Society partnership and accessibility intake
 
 The independent, public `/organisers.html` page invites finance societies to submit a dated public registration listing or ongoing event feed. GitHub issue forms capture source links, date, venue, cost, eligibility and public-source confirmation; a GitHub account is required. Nothing is auto-approved, no private messages or passwords are requested, and no member mailing lists are collected. The site now distinguishes professional sessions (potential non-member fees), free student opportunities and restricted events with plain-text access labels without falsely promising registration access. Organiser links remain in the footer and homepage feedback line so the events directory stays compact.
+
+## Public society-registration discovery upgrade
+
+Finance Radar now rechecks public Google Forms linked directly by official FINSOC/FinTechSoc/QuantSoc Linktree profiles. It only promotes a form to a confirmed calendar event when the form publicly states an explicit future event date, local time and finance-relevant title. A year in a form title without a day/month or a login-required/closed form remains a clearly labelled **unverified lead**, not a booked or confirmed event. The official UNSW FINSOC Humanitix organiser host is also monitored for any future public dated events with FINSOC attribution. It currently shows no live events; this does **not** grant access to private groups, social posts or restricted tickets.
