@@ -61,7 +61,30 @@ def test_compact_layout_keeps_actions():
 def test_verified_calendar_and_category_filters():
     assert 'data-filter="other"' in SITE
     assert 'includeLastKnown=false' in SITE
-    assert "eligibleEvents().filter(e=>e.collection_status==='current')" in SITE
+    assert "calendarIncludeRestricted||e.fit!=='restricted'" in SITE
 
 def test_clickable_event_titles():
     assert 'class="event-name event-title"' in SITE
+
+def test_calendar_shows_matching_eligibility_and_month_agenda():
+    assert 'id="calendar-restricted"' in SITE
+    assert 'id="calendar-agenda"' in SITE
+    assert 'calendarIncludeRestricted=false' in SITE
+    assert 'Events this month' in SITE
+
+def test_event_links_and_focus_restoration():
+    assert "window.location.pathname+'#event='+encodeURIComponent(e.id)" in SITE
+    assert "location.hash.match(/^#event=(.+)$/)" in SITE
+    assert 'data-share="' in SITE
+    assert 'previousEventFocus.focus()' in SITE
+    assert "e.key==='Tab'" in SITE
+
+def test_no_fabricated_end_times_or_disabled_date_only():
+    assert 'DTSTART;VALUE=DATE:' in SITE
+    assert 'DTEND;VALUE=DATE:' in SITE
+    assert "if(e.ends_at&&Date.parse(e.ends_at)>Date.parse(e.starts_at))" in SITE
+    assert "e.ends_at||new Date(localDate(e).getTime()+3600000)" not in SITE
+
+def test_known_finished_events_and_orphan_bookmarks():
+    assert 'if(Number.isFinite(end)&&end<=clock)return false;' in SITE
+    assert 'validSavedIds' in SITE

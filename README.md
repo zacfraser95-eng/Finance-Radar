@@ -127,3 +127,11 @@ The website now loads a dedicated `editorial.css` design system: warm off-white 
 ## Compact homepage
 
 The editorial homepage now focuses on a shorter hero and verified event listings, four main category filters, a collapsed advanced filter, one practical shortcuts strip, an expandable email digest and optional unverified social leads. The calendar shows confirmed events only. Source details and feedback links remain accessible.
+
+## Event sharing, calendar accuracy and accessible event details
+
+- Desktop browser QA verified search, event detail dialogs, bookmarks, calendar navigation, and modal close behaviour. It identified inconsistent visibility of eligibility-restricted events between the list and calendar, which is fixed with an explicit calendar toggle.
+- The calendar defaults to confirmed unrestricted listings and has an accessible agenda list for smaller screens.
+- Events have shareable direct hash links (event IDs); the drawer has a Copy event link action, focus containment and focus restoration.
+- Calendar downloads use only actual published start and end times. Date-only events export an all-day placeholder with a clear notice; a missing end time is not invented.
+- Events with known expired end times are not labelled upcoming. Obsolete bookmark IDs are excluded from the visible saved list.

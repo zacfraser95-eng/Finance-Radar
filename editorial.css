@@ -34,3 +34,21 @@ main{max-width:1240px;margin:auto;padding:0 40px 48px}.page{display:none}.page.a
 .feedbackline{border-top:1px solid var(--rule);padding:17px 0;font-size:12px}.feedbackline strong{font-weight:700}
 .fineprint{font-size:10px;line-height:1.7;color:var(--muted);margin:22px 0 0}.fineprint button,.footerlink{padding:0;border:0;background:transparent;color:var(--brick);font-size:10px;text-decoration:underline}
 @media(max-width:760px){.hero{padding:40px 0 27px;gap:25px}.next{min-height:215px}.quicklinks,.feedbackline{align-items:flex-start;flex-direction:column;gap:14px}.quick-actions{gap:14px}.mail-summary{padding:20px}.mail-expanded{padding:0 20px 20px}.mail-expanded .mail-grid{grid-template-columns:1fr}.sectiontop{margin-top:35px}}
+
+/* Calendar agenda, event sharing and accessible details */
+.calendar-controls{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:17px 0;border-bottom:1px solid var(--rule);color:var(--muted);font-size:11px;flex-wrap:wrap}
+.calendar-controls label{display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:var(--ink);font-weight:650}
+.calendar-controls input{accent-color:var(--brick);width:16px;height:16px}
+.calendar-agenda{margin:23px 0 12px}
+.calendar-agenda h2{font:400 25px Georgia,"Times New Roman",serif;margin:0 0 14px;letter-spacing:-.5px}
+.agenda-item{width:100%;border:0;border-top:1px solid var(--rule);background:transparent;display:grid;grid-template-columns:70px minmax(0,1fr) minmax(110px,170px) 22px;gap:15px;align-items:center;text-align:left;padding:15px 0;color:var(--ink)}
+.agenda-item:last-child{border-bottom:1px solid var(--rule)}
+.agenda-item:hover{background:var(--soft)}
+.agenda-item>span:first-child{font-size:12px;font-weight:700;color:var(--brick)}
+.agenda-item strong{font-size:13px;font-weight:650;line-height:1.4}
+.agenda-item small{font-size:11px;color:var(--muted);line-height:1.5}
+.agenda-item>span:last-child{text-align:right;color:var(--brick)}
+.agenda-empty{font-size:12px;color:var(--muted);padding:14px 0;border-top:1px solid var(--rule);line-height:1.7}
+.drawer-actions button,.drawer-actions a{min-height:42px}
+.drawerclose{min-height:42px;min-width:42px}
+@media(max-width:760px){.calendar-controls{align-items:flex-start;flex-direction:column;gap:9px}.agenda-item{grid-template-columns:49px minmax(0,1fr) 18px;gap:11px}.agenda-item small{grid-column:2;grid-row:2}.agenda-item>span:last-child{grid-column:3;grid-row:1}.drawer-actions{gap:9px}}
