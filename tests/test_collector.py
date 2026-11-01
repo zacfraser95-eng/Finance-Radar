@@ -479,3 +479,69 @@ def test_existing_bookmark_id_survives_richer_unsw_import(tmp_path):
     assert len(payload['events'])==1
     assert payload['events'][0]['id']=='unsw-jobsearch-20261112'
     assert payload['events'][0]['collection_status']=='current'
+
+
+CFA_ROWS='''<html><h1>CFA Society Australia Upcoming Events</h1><table><tbody>
+<tr><td><strong>NSW Chapter | Private equity through the cycle: Investment, value creation and exit</strong>
+<p>Explore private equity capital deployment and exits.</p>
+<p>Format: In-person</p><p>Open to: Members, Candidates, Industry professionals</p>
+<p>Speaker(s): Analysts</p></td><td>BDO Sydney</td>
+<td>November 17, 2026 12:15pm - 1:30pm</td>
+<td><a href="https://web.cvent.com/event/1a2b3c/summary">Learn More & Register</a></td></tr>
+<tr><td><strong>QLD Chapter | Private equity networking</strong>
+<p>Open to: Members, Candidates</p></td><td>Riverland, Brisbane</td>
+<td>November 19, 2026 5:30pm - 7:30pm</td>
+<td><a href="https://web.cvent.com/event/brisbane/summary">Register</a></td></tr>
+<tr><td><strong>Online training I Copilot for finance professionals</strong></td>
+<td>Online</td><td>November 20, 2026 9:00am - 12:00pm</td>
+<td><a href="https://web.cvent.com/event/copilot/summary">Register</a></td></tr>
+<tr><td><strong>NSW Chapter | Women in investment: Career stories</strong>
+<p>Open to: Members, Candidates</p></td>
+<td>Perpetual, Sydney</td><td>November 18, 2026 12:00pm - 2:00pm</td>
+<td><a href="https://web.cvent.com/event/women/summary">Register</a></td></tr>
+</tbody></table></html>'''
+
+FINMA_LECTURE='''<html><h1>EVENTS</h1><section><h2>Upcoming Events</h2>
+<h2>Open Lecture: Finance 101</h2><p>FINMA is holding an introductory finance lecture on 10 November from 5:00–6:30 PM.</p>
+<p>The session is free to attend and open to all students, including university students.</p>
+<p>Event Details Date: Tuesday, 10 November Time: 5:00 PM – 6:30 PM</p></section>
+<h1>PAST EVENTS</h1><p>2025 UBS networking night</p></html>'''
+
+
+def test_cfa_sydney_private_equity_event_included_with_price_caveat():
+    found=collect.parse_cfa_australia(CFA_ROWS,dt.date(2026,11,1))
+    assert len(found)==2
+    pe=next(e for e in found if 'Private equity' in e['title'])
+    assert pe['starts_at']=='2026-11-17T12:15:00+11:00'
+    assert pe['ends_at']=='2026-11-17T13:30:00+11:00'
+    assert 'non-member' in pe['eligibility']
+    assert pe['registration_url']=='https://web.cvent.com/event/1a2b3c/summary'
+    women=next(e for e in found if 'Women in investment' in e['title'])
+    assert women['fit']=='restricted'
+
+
+def test_cfa_filters_out_interstate_and_generic_cpd():
+    out=collect.parse_cfa_australia(CFA_ROWS,dt.date(2026,11,1))
+    assert not any('Brisbane' in e['location'] or 'Copilot' in e['title'] for e in out)
+
+
+def test_cfa_rejects_injected_registration_domains_and_past():
+    bad=CFA_ROWS.replace('https://web.cvent.com/event/1a2b3c/summary','https://web.cvent.com.attacker.net/event/a')
+    assert not any('Private equity' in e['title'] for e in collect.parse_cfa_australia(bad,dt.date(2026,11,1)))
+    assert collect.parse_cfa_australia(CFA_ROWS,dt.date(2026,12,1))==[]
+
+
+def test_finma_open_finance_lecture_and_expiry():
+    out=collect.parse_finma_student_events(FINMA_LECTURE,dt.date(2026,11,1))
+    assert len(out)==1
+    assert out[0]['starts_at']=='2026-11-10T17:00:00+11:00'
+    assert out[0]['ends_at']=='2026-11-10T18:30:00+11:00'
+    assert 'university students' in out[0]['eligibility']
+    assert collect.parse_finma_student_events(FINMA_LECTURE,dt.date(2026,11,11))==[]
+
+
+def test_finma_rejects_missing_open_lecture_or_old_past_event():
+    fake=FINMA_LECTURE.replace('Open Lecture: Finance 101','2025 NAB networking evening')
+    assert collect.parse_finma_student_events(fake,dt.date(2026,11,1))==[]
+    fake=FINMA_LECTURE.replace('5:00 PM – 6:30 PM','6:00 PM – 7:30 PM').replace('5:00–6:30 PM','6:00–7:30 PM')
+    assert collect.parse_finma_student_events(fake,dt.date(2026,11,1))==[]

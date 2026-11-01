@@ -143,3 +143,7 @@ The UNSW Employability site can hide dated event cards behind browser rendering.
 ## Staleness safeguards
 
 The hosted frontend checks the age and mode of the published feed. When its most recent scan is more than 36 hours old, the homepage conditionally displays a restrained alert linking to workflow status, marks source-confirmed listings as last-scan-outdated and asks visitors to reconfirm directly with organisers. A static seed snapshot is never falsely presented as a recent scheduled sync. The normal page remains uncluttered when scheduled scans are recent.
+
+## Expanded Sydney finance industry event coverage
+
+The source monitor also checks CFA Society Australia's official calendar for future Sydney/online private-equity, institutional capital and investment-career events. It deliberately excludes interstate and generic CPD offerings, and explicitly flags non-member registration fees and professional eligibility requirements. It checks FINMA's officially published free Finance 101 student lecture on 10 November 2026, corroborated by a dated public organiser announcement. The latter has a hard expiry and never infers future dates from prior years. Neither source bypasses logins or assumes a registration is available.

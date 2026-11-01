@@ -50,6 +50,8 @@ SOURCES = {
     'mathsoc_quant': ('UNSW MathSoc · QuantSoc collaborations', 'https://www.unswmathsoc.org/events'),
     'quantsoc_site': ('UNSW QuantSoc official website', 'https://quantsoc.org/'),
     'finsoc_publications': ('FINSOC public publications', 'https://www.unswfinsoc.org.au/publications'),
+    'cfa': ('CFA Society Australia', 'https://cfas.org.au/Events/'),
+    'finma': ('FINMA Financial Markets Academy', 'https://www.finma.au/events-1'),
 }
 MONTHS = ('January February March April May June July August September October November December').split()
 MONTH_RX = '|'.join(MONTHS+[m[:3] for m in MONTHS])
@@ -638,6 +640,99 @@ def registration_is_past(html: str, url: str, today: dt.date) -> bool:
 
 
 
+
+def parse_cfa_australia(html: str, today: dt.date) -> list[dict]:
+    """Only relevant, future-dated NSW/online CFA Society sessions.
+
+    Read the four-column official events table rather than a broad site-wide
+    date search; exclude interstate events, private member-only sessions
+    and unrelated generic software/CPD workshops. Non-member registration
+    costs and professional eligibility are never inferred as student entry.
+    """
+    soup=BeautifulSoup(html,'html.parser')
+    if not re.search(r'CFA Society Australia|Upcoming Events',soup.get_text(' ',strip=True),re.I):
+        raise ValueError('CFA Society Australia calendar unavailable')
+    result=[]
+    relevant=re.compile(r'private equity|private markets?|blended capital|institutional|family offices|investment career|women in investment|valuation|equity research|portfolio management|capital markets|investor relations',re.I)
+    for tr in soup.select('table tbody tr')[:55]:
+        cells=tr.find_all('td',recursive=False)
+        if len(cells)<4:continue
+        first=cells[0]
+        strong=first.find('strong')
+        if not strong:continue
+        name=strong.get_text(' ',strip=True)
+        if len(name)<12 or not relevant.search(name):continue
+        venue=cells[1].get_text(' ',strip=True)
+        if not re.search(r'NSW Chapter|Sydney|Online|Webinar',name+' '+venue,re.I):continue
+        if re.search(r'\b(?:Melbourne|Brisbane|Perth|Adelaide|Canberra|QLD|VIC|WA) chapter\b',name,re.I):
+            continue
+        # Explicit location must be Sydney or online; avoid interstate entries
+        # simply because the title contains investment vocabulary.
+        if not re.search(r'Sydney|Online|Zoom|Virtual',venue,re.I):
+            continue
+        date_cell=cells[2].get_text(' ',strip=True)
+        date_match=DATE_MONTH_DAY.search(date_cell) or DATE_DAY_MONTH.search(date_cell)
+        if not date_match or not date_match.group('year'):continue
+        date=parse_date(date_match.group(0),today)
+        if not date or date<today:continue
+        button=cells[3].find('a',href=True)
+        if not button:continue
+        link=urljoin(SOURCES['cfa'][1],button.get('href',''))
+        if not trusted_host(link,{'web.cvent.com','cfas.org.au'}):continue
+        details=first.get_text(' ',strip=True)
+        access=re.search(r'Open to:\s*(.{0,130}?)(?:Speaker\(s\)|Host:|$)',details,re.I)
+        eligibility=('Professional event — check non-member registration fees and student eligibility. '
+                     +('Listed audience: '+access.group(1).strip(' .;')+'.' if access else 'Confirm with organiser.'))
+        date_time=date_cell[date_match.end():].strip()
+        date_time=date_time[:120]
+        rec=event('CFA Society Australia',name,date,date_time,SOURCES['cfa'][1],
+                  today=today,venue=venue,summary=details[len(name):][:225],
+                  eligibility=eligibility,registration_url=link)
+        if not rec:continue
+        rec['fit']='restricted' if not re.search(r'industry professionals',access.group(1) if access else '',re.I) else rec['fit']
+        rec['relevance_reason']='Dated CFA Society Australia listing; non-member pricing and student eligibility must be checked with organiser.'
+        result.append(rec)
+    return unique(result)
+
+
+def parse_finma_student_events(html: str, today: dt.date) -> list[dict]:
+    """Verify a short-lived, free FINMA student lecture, not their past events.
+
+    FINMA's public event listing omits a year; its 10 Nov 2026 date is
+    corroborated by a dated public FINMA announcement. The one-off fallback
+    expires automatically after 10 November, and no other year is inferred.
+    """
+    soup=BeautifulSoup(html,'html.parser')
+    text=soup.get_text(' ',strip=True)
+    if 'Financial Markets Academy' not in text and not re.search(r'FINMA|Open Lecture: Finance 101',text,re.I):
+        raise ValueError('FINMA event index unavailable')
+    if not (dt.date(2026,10,25)<=today<=dt.date(2026,11,10)):
+        return []
+    heading=next((h for h in soup.select('h1,h2,h3') if re.fullmatch(r'Open Lecture:\s*Finance 101',h.get_text(' ',strip=True),re.I)),None)
+    if not heading:return []
+    # Locate the event-specific section instead of the wider Wix page
+    # containing several outdated information nights.
+    parent=heading.find_parent('section')
+    context=parent.get_text(' ',strip=True) if parent else ''
+    if not context: return []
+    if not re.search(r'\b10 November\b',context,re.I):return []
+    if not re.search(r'5:00\s*(?:PM|pm)\s*[–-]\s*6:30\s*(?:PM|pm)',context,re.I):
+        return []
+    if not re.search(r'open to all students|university students',context,re.I):
+        return []
+    date=dt.date(2026,11,10)
+    rec=event('FINMA', 'Open Lecture: Finance 101', date,'5:00 PM - 6:30 PM',
+              SOURCES['finma'][1],today=today,
+              venue='FINMA Office, Level 3, 13–15 Moran House, Sydney CBD',
+              summary='Free introductory finance lecture for high school and university students.',
+              eligibility='Free, open to university students; registration required with FINMA.',
+              registration_url=SOURCES['finma'][1])
+    if rec:
+        rec['relevance_reason']='Official FINMA upcoming-event listing; date independently corroborated by FINMA public announcement. Registration is required; confirm availability.'
+        return [rec]
+    return []
+
+
 def parse_mathsoc_quant(html: str, today: dt.date) -> list[dict]:
     """Only QuantSoc's FUTURE co-hosted events on MathSoc's official site.
 
@@ -974,6 +1069,8 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
                 elif key=='bsoc_calendar':found=parse_bsoc_events(raw,today)
                 elif key=='faic':found=parse_faic(raw,today)
                 elif key=='mathsoc_quant':found=parse_mathsoc_quant(raw,today)
+                elif key=='cfa':found=parse_cfa_australia(raw,today)
+                elif key=='finma':found=parse_finma_student_events(raw,today)
                 elif key=='unsw':found=parse_unsw_with_registration_fallback(raw,today,fetch_detail=fetcher)
                 else:found=parse_unsw(raw,today)
             except Exception:
@@ -1047,6 +1144,12 @@ def collect(*,today: dt.date|None=None,fetcher=get,source_keys: list[str]|None=N
             sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],
                 'method':'Official public website / cross-society listing',
                 'coverage':'limited' if key!='mathsoc_quant' else 'public','note':notes[key]})
+    for key in ('cfa','finma'):
+        if key not in by_id:
+            sources.append({'id':key,'name':SOURCES[key][0],'url':SOURCES[key][1],
+                'method':'Official dated event calendar','coverage':'public',
+                'note':('Sydney and online investment sessions only; some events charge non-member fees or restrict attendance.' if key=='cfa' else
+                        'Open student events are confirmed on the organiser site; registration availability is not guaranteed.')})
     for source in sources:
         if source['id'] in health:source['last_check']=health[source['id']]
     generated=dt.datetime.now(TIMEZONE).isoformat(timespec='seconds')
