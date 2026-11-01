@@ -175,3 +175,7 @@ Monitor four additional independent official sources rather than generic aggrega
 ### Industry source fallback details
 
 When an official page exposes only Schema.org markup to plain HTTP, Finance Radar preserves verified attendance restrictions and fees for the exact dated RMIA and STEP events. Risk networking with unconfirmed student eligibility is hidden by default; STEP retains its student eligibility and $25/$30 ticket cost. Visible event access labels now distinguish free admission, paid tickets, and professional networking. Generic, mismatched and undated events are never reclassified.
+
+### Duplicate event identity guard
+
+When a single official Sydney RMIA or STEP event appears both through bespoke HTML parsing and Schema.org records, Finance Radar merges the two title variants into one event on the same day. This rule is event-specific rather than merging all events from the same organisation and date. Diagnostic prints used during the first integration have been removed.

@@ -869,3 +869,25 @@ def test_sydney_industry_parsers_are_dispatched_and_sources_visible():
         assert f"elif key=='{key}':found=" in code
         assert key in collect.SOURCES
     assert "for key in ('cafba_sydney','rmia_sydney','step_emerging','mymoney_expo')" in code
+
+
+
+def test_same_industry_event_with_schema_variant_is_deduplicated():
+    rmia=collect.parse_rmia_sydney_networking(RMIA_FREE_HTML,dt.date(2026,11,1))[0]
+    rmia_schema=dict(rmia,title='RMIA NSW Chapter | Networking Event — Risk Management Institute of Australasia (RMIA)',
+                     registration_url=collect.SOURCES['rmia_sydney'][1])
+    assert collect.similar(rmia,rmia_schema)
+    assert len(collect.unique([rmia,rmia_schema]))==1
+    step=collect.parse_step_sydney_emerging_network(STEP_EPN_HTML,dt.date(2026,11,1))[0]
+    step_schema=dict(step,title='STEP NSW Emerging Professionals Network | Wednesday 25 November 2026',
+                     registration_url=collect.SOURCES['step_emerging'][1])
+    assert collect.similar(step,step_schema)
+    assert len(collect.unique([step,step_schema]))==1
+
+
+def test_industry_specific_dedupe_does_not_merge_unrelated_events():
+    left={'title':'STEP NSW Emerging Professionals Network | Wednesday 25 November 2026',
+          'starts_at':'2026-11-25T17:30:00+11:00','registration_url':'https://stepaustralia.com/events/first'}
+    other={'title':'STEP NSW Annual Member Lunch','starts_at':'2026-11-25T12:30:00+11:00',
+           'registration_url':'https://stepaustralia.com/events/second'}
+    assert not collect.similar(left,other)
