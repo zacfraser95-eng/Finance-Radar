@@ -663,6 +663,39 @@ UNSW_FINANCE_SUBJECT_RX = re.compile(
     r'equity|entrepreneur|fintech|asset.pricing|banking',re.I)
 
 
+
+UNSW_INVESTOR_PANEL_TICKET = 'https://www.eventbrite.com.au/e/engineering-the-future-the-entrepreneurship-paradox-tickets-1996543386013'
+UNSW_INVESTOR_PANEL_PAGE = 'https://events.unsw.edu.au/event/engineering-future-entrepreneurship-paradox'
+
+def parse_unsw_verified_investor_ticket(html: str, today: dt.date) -> dict | None:
+    """Validate official date/time on a public UNSW Engineering registration."""
+    if not dt.date(2026,10,30)<=today<=dt.date(2026,11,10):return None
+    soup=BeautifulSoup(html,'html.parser')
+    visible=soup.get_text(' ',strip=True)
+    heading=soup.find('h1')
+    name=heading.get_text(' ',strip=True) if heading else ''
+    if not re.fullmatch(r'Engineering the Future:\s*The Entrepreneurship Paradox',name,re.I):
+        return None
+    if re.search(r'\bEvent ended\b|\bRegistration closed\b',visible,re.I):return None
+    if not re.search(r'\bUNSW Engineering\b',visible,re.I):return None
+    if not re.search(r'\b(?:10\s+November|November\s+10)\b',visible,re.I):return None
+    match=RANGE_RX.search(visible)
+    if not match:return None
+    times=match.group(0)
+    if not (re.search(r'5:30\s*pm',times,re.I) and re.search(r'8:30\s*pm',times,re.I)):
+        return None
+    record=event('UNSW Engineering & Spinout Club',name,dt.date(2026,11,10),times,
+        UNSW_INVESTOR_PANEL_PAGE,today=today,venue='Australian Museum, Sydney',
+        summary='Free panel for investors and founders on innovation, capital raising, investment risk and Australian startups.',
+        eligibility='Free public event; register via the official ticket page.',
+        registration_url=UNSW_INVESTOR_PANEL_TICKET)
+    if record:
+        record['source_urls']=[UNSW_INVESTOR_PANEL_PAGE,UNSW_INVESTOR_PANEL_TICKET]
+        record['sources']=['UNSW official events','Organiser registration']
+        record['relevance_reason']='UNSW organiser listing cross-checked with the public ticket date and time.'
+    return record
+
+
 def parse_unsw_public_event_detail(html: str, url: str, today: dt.date) -> dict | None:
     """Event details from UNSW's public calendar, not category-based guesses.
 
@@ -750,19 +783,17 @@ def parse_unsw_public_events(html: str, today: dt.date, fetch_detail=get) -> lis
         try:
             page=fetch_detail(url)
             item=parse_unsw_public_event_detail(page,url,today)
-            if item:found.append(item)
-            else:
-                probe=BeautifulSoup(page,'html.parser')
-                txt=probe.get_text(' ',strip=True)
-                h1s=[h.get_text(' ',strip=True)[:95] for h in probe.find_all('h1')[:3]]
-                print('UNSW public event not verified:',url,'bytes:',len(page),
-                      'headings:',h1s,'visible:',len(txt),
-                      'date:',bool(re.search(r'10\\s+November\\s+2026',txt,re.I)),
-                      'clock:',bool(re.search(r'5[.:]30\\s*pm',txt,re.I)),
-                      'register:',bool(re.search(r'1996543386013',page)),
-                      'investor:',bool(re.search(r'investor|capital|funding',txt,re.I)))
+            if item:
+                found.append(item)
+            elif url==UNSW_INVESTOR_PANEL_PAGE and today<=dt.date(2026,11,10):
+                try:
+                    ticket=fetch_detail(UNSW_INVESTOR_PANEL_TICKET)
+                    confirmed=parse_unsw_verified_investor_ticket(ticket,today)
+                    if confirmed:found.append(confirmed)
+                except (requests.RequestException,ValueError,RuntimeError) as exc:
+                    print('UNSW investor ticket verification unavailable:',type(exc).__name__,str(exc)[:70])
         except (requests.RequestException,ValueError,RuntimeError) as exc:
-            print('UNSW public event fetch unavailable:',url,type(exc).__name__,str(exc)[:90])
+            print('UNSW public event fetch unavailable:',type(exc).__name__,str(exc)[:70])
             continue
     return unique(found)
 

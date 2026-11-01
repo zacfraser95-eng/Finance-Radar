@@ -715,3 +715,43 @@ def test_unsw_public_events_explicit_fallback_expires_after_event():
     assert collect.parse_unsw_public_events(landing,dt.date(2026,11,11),
          fetch_detail=lambda url:seen.append(url) or UNSW_PUBLIC_FINANCE_DETAIL)==[]
     assert seen==[]
+
+
+UNSW_INVESTOR_TICKET_HTML='''<html><main><h1>Engineering the Future: The Entrepreneurship Paradox</h1>
+<p>Top Organiser By UNSW Engineering</p>
+<time>Tuesday 10 November • 5:30 PM - 8:30 PM</time>
+<h2>Overview</h2><p>Founders and investors discuss capital, entrepreneurial funding and startup growth.</p>
+</main></html>'''
+
+
+def test_dynamic_unsw_investor_panel_verified_by_official_ticket():
+    landing='<html><h1>Events</h1><p>Upcoming Events</p></html>'
+    fetched=[]
+    def fetch(url):
+        fetched.append(url)
+        if 'events.unsw.edu.au' in url:
+            return UNSW_PUBLIC_FINANCE_DETAIL.replace('10 November 2026','Date loaded dynamically').replace(
+                '5.30pm – 8.30pm AEDT','Time loaded dynamically')
+        return UNSW_INVESTOR_TICKET_HTML
+    out=collect.parse_unsw_public_events(landing,dt.date(2026,11,1),fetch_detail=fetch)
+    assert len(out)==1
+    assert out[0]['starts_at']=='2026-11-10T17:30:00+11:00'
+    assert out[0]['ends_at']=='2026-11-10T20:30:00+11:00'
+    assert out[0]['registration_url']==collect.UNSW_INVESTOR_PANEL_TICKET
+    assert len(fetched)==2
+
+
+def test_unsw_ticket_fallback_requires_date_time_organiser_and_not_expired():
+    assert collect.parse_unsw_verified_investor_ticket(
+        UNSW_INVESTOR_TICKET_HTML.replace('UNSW Engineering','Unknown Organiser'),dt.date(2026,11,1)) is None
+    assert collect.parse_unsw_verified_investor_ticket(
+        UNSW_INVESTOR_TICKET_HTML.replace('5:30 PM - 8:30 PM','Time TBC'),dt.date(2026,11,1)) is None
+    assert collect.parse_unsw_verified_investor_ticket(
+        UNSW_INVESTOR_TICKET_HTML.replace('10 November','11 November'),dt.date(2026,11,1)) is None
+    assert collect.parse_unsw_verified_investor_ticket(
+        UNSW_INVESTOR_TICKET_HTML,dt.date(2026,11,11)) is None
+
+
+def test_unsw_ticket_fallback_rejects_event_ended():
+    assert collect.parse_unsw_verified_investor_ticket(
+        UNSW_INVESTOR_TICKET_HTML+' Event ended',dt.date(2026,11,1)) is None

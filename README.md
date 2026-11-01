@@ -163,3 +163,7 @@ FINSOC's publicly visible LinkedIn company updates contain recaps of its October
 ## Finance-relevant official UNSW event discovery
 
 The UNSW public events calendar (events.unsw.edu.au) is checked for event links with investment, capital-raising, venture, banking, entrepreneurship, financial markets or finance keywords. We inspect only the organiser's own detail page and require a future dated event, explicit start/end range, substantive finance/investment relevance, and a trusted public booking URL; generic innovation or science conferences aren't promoted merely for carrying a Business & Economics tag. A public UNSW Engineering and Spinout Club investor panel is eligible. The separately dated UNSW/CPA Australia Bill Birkett accounting lecture is monitored with explicit professional-eligibility and fee caveats; it expires automatically after 4 November 2026. The collector does not guarantee open registrations.
+
+### Dynamic UNSW public events / independent Eventbrite registration
+
+UNSW's official investor-panel event page serves its title and registration URL but not date/time fields in the server-visible text. The collector cross-checks the linked public Eventbrite registration for the exact event title, organiser and 10 November 2026 5:30–8:30 pm time before including it. This event-specific fallback expires automatically after 10 November; unknown events cannot inherit its date. Tickets and eligibility remain controlled by the organiser.
