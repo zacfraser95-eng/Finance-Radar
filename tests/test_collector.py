@@ -600,8 +600,10 @@ def test_finsoc_humanitix_host_requires_organiser_attribution():
                                           fetch_detail=lambda _:page)==[]
 
 
+FUTURE_TEST_FORM_URL='https://docs.google.com/forms/d/e/1FAIpQL'+'X'*56+'/viewform'
+
 def test_official_bio_form_without_date_stays_unverified():
-    linktree=f'<html><main><a href="{FINSOC_FORM_URL}">FINSOC x Goliath Academy Financial Modelling Masterclass 2026</a></main></html>'
+    linktree=f'<html><main><a href="{FUTURE_TEST_FORM_URL}">FINSOC x Goliath Academy Financial Modelling Masterclass 2026</a></main></html>'
     html='<h1>FINSOC x Goliath Academy Financial Modelling Masterclass 2026</h1><p>Stage of degree: 1st year</p>'
     confirmed,leads=collect.parse_social_hub(linktree,'social_finsoc',dt.date(2026,11,1),
                                               fetch_detail=lambda _:html)
@@ -611,8 +613,17 @@ def test_official_bio_form_without_date_stays_unverified():
 
 
 def test_bio_public_form_is_upgraded_only_with_verified_date():
-    linktree=f'<html><main><a href="{FINSOC_FORM_URL}">FINSOC x Goliath Academy Financial Modelling Masterclass 2026</a></main></html>'
+    linktree=f'<html><main><a href="{FUTURE_TEST_FORM_URL}">FINSOC x Goliath Academy Financial Modelling Masterclass 2026</a></main></html>'
     confirmed,leads=collect.parse_social_hub(linktree,'social_finsoc',dt.date(2026,11,1),
                                               fetch_detail=lambda _:GOOGLE_PUBLIC_REGISTRATION)
     assert len(confirmed)==1
     assert leads==[]
+
+
+def test_completed_finsoc_workshops_not_presented_as_upcoming_registration_leads():
+    html='''<html><main><a href="https://docs.google.com/forms/d/e/1FAIpQLSdb-zYvAi7xwbM6zvzl149UEdKEP6iv_GDPDVdK5syqps-Znw/viewform">FINSOC x Credit Analyst: Commercial Banking & Credit Analysis Workshop</a>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeEBaqZLF8FAxmg6dWWZuf3lqZyBrCvpY8aatl4812AtGvauQ/viewform">FINSOC x Goliath Academy: Financial Modelling Masterclass</a></main></html>'''
+    def no_fetch(_):
+        raise AssertionError('Past-event registration forms should never be rechecked')
+    current,leads=collect.parse_social_hub(html,'social_finsoc',dt.date(2026,11,1),fetch_detail=no_fetch)
+    assert current==[] and leads==[]

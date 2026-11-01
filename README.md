@@ -155,3 +155,7 @@ The independent, public `/organisers.html` page invites finance societies to sub
 ## Public society-registration discovery upgrade
 
 Finance Radar now rechecks public Google Forms linked directly by official FINSOC/FinTechSoc/QuantSoc Linktree profiles. It only promotes a form to a confirmed calendar event when the form publicly states an explicit future event date, local time and finance-relevant title. A year in a form title without a day/month or a login-required/closed form remains a clearly labelled **unverified lead**, not a booked or confirmed event. The official UNSW FINSOC Humanitix organiser host is also monitored for any future public dated events with FINSOC attribution. It currently shows no live events; this does **not** grant access to private groups, social posts or restricted tickets.
+
+### Completed workshop registration cleanup
+
+FINSOC's publicly visible LinkedIn company updates contain recaps of its October 2026 Commercial Banking & Credit Analysis Workshop and Financial Modelling Masterclass. Although old Google Forms remain linked in the FINSOC Linktree, the collector removes those two event-specific registration URLs from current event leads. A different upcoming form is unaffected. https://au.linkedin.com/company/unsw-finsoc

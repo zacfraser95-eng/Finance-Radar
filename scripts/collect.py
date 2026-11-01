@@ -529,6 +529,15 @@ BIO_SOCIAL_NAMES = {
 LINK_EVENT_HOSTS = {'eventbrite.com', 'eventbrite.com.au', 'humanitix.com', 'events.humanitix.com', 'luma.com'}
 LINK_FORM_HOSTS = {'docs.google.com', 'forms.gle', 'form.jotform.com', 'forms.office.com', 'events.humanitix.com', 'app.tribespot.co'}
 HUB_KEYWORDS = re.compile(r'ESG|workshop|networking|case competition|careers? (?:fair|panel|night|evening|event)|finance|investment|credit analysis|financial modelling|banking|equity|trading|quant|seminar|webinar|internship|industry insights|mentoring|which major', re.I)
+
+# Official FINSOC LinkedIn posts show these October 2026 events have finished,
+# although their registration forms remain linked from the public society bio.
+# https://au.linkedin.com/company/unsw-finsoc
+COMPLETED_SOCIAL_REGISTRATIONS = {
+    'https://docs.google.com/forms/d/e/1FAIpQLSdb-zYvAi7xwbM6zvzl149UEdKEP6iv_GDPDVdK5syqps-Znw/viewform',
+    'https://docs.google.com/forms/d/e/1FAIpQLSeEBaqZLF8FAxmg6dWWZuf3lqZyBrCvpY8aatl4812AtGvauQ/viewform',
+}
+
 HUB_EXCLUDE = re.compile(r'director recruitment|subcommittee|membership|subscribe|rubric sign.?up|first year.?s guide|careers? guide|join us|giveaway|pub ?crawl|cruise|hallocrawl|ball 2026|agm|alumni directory|summer analyst.*application', re.I)
 
 def trusted_host(link: str, hosts: set[str]) -> bool:
@@ -1052,6 +1061,8 @@ def parse_social_hub(html: str, source_key: str, today: dt.date, fetch_detail=ge
     candidates=[]; seen=set()
     for a in main.select('a[href]'):
         link=unwrap_public_registration_url(urljoin(SOURCES[source_key][1],a.get('href','')))
+        if link.split('?')[0].rstrip('/') in COMPLETED_SOCIAL_REGISTRATIONS:
+            continue
         title=re.sub(r'\s+', ' ', a.get_text(' ',strip=True)).strip()[:160]
         if not title or len(title)<7 or len(title)>160 or HUB_EXCLUDE.search(title):continue
         # Do not repeatedly advertise an explicitly labelled prior-year link.
