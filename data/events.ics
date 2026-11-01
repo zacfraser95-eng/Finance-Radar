@@ -9,7 +9,7 @@ X-WR-CALDESC:Currently confirmed UNSW and Sydney finance events. Check orga
  niser details.
 BEGIN:VEVENT
 UID:unsw-linkedin-20261102@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261102T050000Z
 DTEND:20261102T060000Z
 SUMMARY:Leveraging LinkedIn workshop
@@ -22,7 +22,7 @@ URL:https://www.eventbrite.com.au/e/leveraging-linkedin-workshop-tickets-19
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-adf383734e99@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261104T010000Z
 DTEND:20261104T020000Z
 SUMMARY:Webinar I Beyond investment advice: The evolving needs of family of
@@ -37,7 +37,7 @@ URL:https://web.cvent.com/event/b46d94d3-a39e-4782-9bea-bc6bccd00a70/summar
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-8e84ac291359@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261104T053000Z
 DTEND:20261104T090000Z
 SUMMARY:Bill Birkett Memorial Lecture 2026
@@ -51,7 +51,7 @@ URL:https://www.eventbrite.com.au/e/bill-birkett-memorial-lecture-2026-tick
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-8265eeea6300@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261105T070000Z
 DTEND:20261105T090000Z
 SUMMARY:Evening with Morgan Stanley
@@ -63,7 +63,7 @@ URL:https://forms.gle/eMBVpNogp4awX6Bp9
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-60f788dc77c5@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261110T011500Z
 DTEND:20261110T023000Z
 SUMMARY:NSW Chapter | Bridging the missing middle: Blended capital at insti
@@ -78,7 +78,7 @@ URL:https://web.cvent.com/event/180d40ac-4017-45e8-937e-e6fb0a4cc093/summar
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-cc7dfd74af51@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261110T060000Z
 DTEND:20261110T073000Z
 SUMMARY:Open Lecture: Finance 101
@@ -90,7 +90,7 @@ URL:https://www.finma.au/events-1
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-233bc700ac74@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261110T063000Z
 DTEND:20261110T093000Z
 SUMMARY:Engineering the Future: The Entrepreneurship Paradox
@@ -104,21 +104,22 @@ URL:https://www.eventbrite.com.au/e/engineering-the-future-the-entrepreneur
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-a84fdb22cf3e@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261111T060000Z
 DTEND:20261111T083000Z
 SUMMARY:RMIA NSW Chapter | Networking Event — Risk Management Institute o
  f Australasia (RMIA)
 DESCRIPTION:Organiser: RMIA NSW Risk Professionals Networking\nEligibility:
-  Confirm eligibility with organiser.\nOriginal listing: https://www.rmia.o
- rg.au/risk-management-events/rmia-nsw-post-ro-networking-event
+  Free industry networking\; student eligibility is not confirmed. Check wi
+ th RMIA before attending.\nOriginal listing: https://www.rmia.org.au/risk-
+ management-events/rmia-nsw-post-ro-networking-event
 LOCATION:The Sussex Hotel\, Rooftop
 URL:https://www.rmia.org.au/risk-management-events/rmia-nsw-post-ro-network
  ing-event
 END:VEVENT
 BEGIN:VEVENT
 UID:unsw-jobsearch-20261112@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261112T020000Z
 DTEND:20261112T030000Z
 SUMMARY:Job Search Strategies workshop
@@ -131,7 +132,7 @@ URL:https://www.eventbrite.com.au/e/job-search-strategies-workshop-tickets-
 END:VEVENT
 BEGIN:VEVENT
 UID:unsw-interview-20261116@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261116T010000Z
 DTEND:20261116T020000Z
 SUMMARY:Preparing for Interviews workshop
@@ -144,7 +145,7 @@ URL:https://www.eventbrite.com.au/e/preparing-for-interviews-workshop-ticke
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-06e7cab8cb13@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261117T011500Z
 DTEND:20261117T023000Z
 SUMMARY:NSW Chapter | Private equity through the cycle: Investment\, value 
@@ -159,7 +160,7 @@ URL:https://web.cvent.com/event/27046b9c-8206-4502-bffe-40b916a831f3/summar
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-26e6799d5dce@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261118T010000Z
 DTEND:20261118T030000Z
 SUMMARY:NSW Chapter | Women in investment: Career stories and roundtable lu
@@ -174,22 +175,23 @@ URL:https://web.cvent.com/event/fe4662f5-7be6-4a7b-be2b-e48ee89f781c/summar
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-f809e4003ef4@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261125T063000Z
 DTEND:20261125T100000Z
 SUMMARY:STEP NSW Emerging Professionals Network | Wednesday 25 November 202
  6
 DESCRIPTION:Organiser: STEP NSW Emerging Professionals Network\nEligibility
- : Confirm eligibility with organiser.\nOriginal listing: https://stepaustr
- alia.com/events/step-nsw-emerging-professionals-network-wednesday-25-novem
- ber-2026/
+ : Students interested in trusts and estates welcome. Tickets $25 for membe
+ rs or $30 for non-members\; sales close 19 November.\nOriginal listing: ht
+ tps://stepaustralia.com/events/step-nsw-emerging-professionals-network-wed
+ nesday-25-november-2026/
 LOCATION:JustFund | Level 9/85 Castlereagh St\, Sydney NSW 2000
 URL:https://stepaustralia.com/events/step-nsw-emerging-professionals-networ
  k-wednesday-25-november-2026/
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-4bcf2300ad11@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261125T230000Z
 DTEND:20261126T040000Z
 SUMMARY:McKinsey & Company's 2026 AI and The Path to Progress Workshop
@@ -203,7 +205,7 @@ URL:https://www.fmaa.com.au/event/mckinsey-companys-2026-ai-and-the-path-to
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-21cc2d0a2a9b@finance-radar.unsw-student
-DTSTAMP:20261101T015517Z
+DTSTAMP:20261101T015805Z
 DTSTART:20261127T030000Z
 DTEND:20261127T060000Z
 SUMMARY:UNSW Fintech AI Innovation Consortium (FAIC) End of Year Event for 
