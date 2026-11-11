@@ -1,6 +1,6 @@
 {
   "schema": 3,
-  "generated_at": "2026-11-12T00:15:43+11:00",
+  "generated_at": "2026-11-12T06:03:12+11:00",
   "mode": "scheduled_sync",
   "notice": "Public event listings and society bio links only; Instagram and Facebook post feeds are not connected.",
   "sources": [
@@ -14,7 +14,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:19+11:00",
+        "checked_at": "2026-11-12T06:02:46+11:00",
         "url": "https://www.unit.org.au/"
       }
     },
@@ -28,7 +28,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-12T00:15:20+11:00",
+        "checked_at": "2026-11-12T06:02:48+11:00",
         "url": "https://www.fmaa.com.au/events"
       }
     },
@@ -42,7 +42,7 @@
       "last_check": {
         "status": "ok",
         "count": 2,
-        "checked_at": "2026-11-12T00:15:21+11:00",
+        "checked_at": "2026-11-12T06:02:49+11:00",
         "url": "https://www.unsw.edu.au/employability/events-news/events"
       }
     },
@@ -56,7 +56,7 @@
       "last_check": {
         "status": "error",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:23+11:00",
+        "checked_at": "2026-11-12T06:02:51+11:00",
         "url": "https://www.unswfinsoc.org.au/",
         "detail": "FINSOC events section missing"
       }
@@ -71,7 +71,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:19+11:00",
+        "checked_at": "2026-11-12T06:02:47+11:00",
         "url": "https://www.unit.org.au/upcoming-events"
       }
     },
@@ -86,7 +86,7 @@
         "status": "links_only",
         "count": 0,
         "signals": 2,
-        "checked_at": "2026-11-12T00:15:23+11:00",
+        "checked_at": "2026-11-12T06:02:52+11:00",
         "url": "https://linktr.ee/finsocunsw"
       }
     },
@@ -101,7 +101,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-12T00:15:24+11:00",
+        "checked_at": "2026-11-12T06:02:53+11:00",
         "url": "https://linktr.ee/unit_unsw"
       }
     },
@@ -116,7 +116,7 @@
         "status": "links_only",
         "count": 0,
         "signals": 1,
-        "checked_at": "2026-11-12T00:15:27+11:00",
+        "checked_at": "2026-11-12T06:02:54+11:00",
         "url": "https://linktr.ee/unswfintechsoc"
       }
     },
@@ -131,7 +131,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-12T00:15:27+11:00",
+        "checked_at": "2026-11-12T06:02:54+11:00",
         "url": "https://linktr.ee/unswquantsoc"
       }
     },
@@ -146,7 +146,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-12T00:15:27+11:00",
+        "checked_at": "2026-11-12T06:02:54+11:00",
         "url": "https://linktr.ee/unswbsoc"
       }
     },
@@ -161,7 +161,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-12T00:15:28+11:00",
+        "checked_at": "2026-11-12T06:02:55+11:00",
         "url": "https://linktr.ee/fmaaunsw"
       }
     },
@@ -176,7 +176,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-12T00:15:29+11:00",
+        "checked_at": "2026-11-12T06:02:57+11:00",
         "url": "https://unswbsocnewsletter.beehiiv.com/"
       }
     },
@@ -191,7 +191,7 @@
         "status": "accessible_empty",
         "count": 0,
         "signals": 0,
-        "checked_at": "2026-11-12T00:15:30+11:00",
+        "checked_at": "2026-11-12T06:02:58+11:00",
         "url": "https://www.unit.org.au/market-wrap?format=rss"
       }
     },
@@ -205,7 +205,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:30+11:00",
+        "checked_at": "2026-11-12T06:03:00+11:00",
         "url": "https://capitalw.org/events"
       }
     },
@@ -219,7 +219,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:31+11:00",
+        "checked_at": "2026-11-12T06:03:00+11:00",
         "url": "https://www.cmaunsw.com/"
       }
     },
@@ -233,7 +233,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:32+11:00",
+        "checked_at": "2026-11-12T06:03:02+11:00",
         "url": "https://www.unswaccsoc.com/upcoming-events"
       }
     },
@@ -247,7 +247,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:32+11:00",
+        "checked_at": "2026-11-12T06:03:02+11:00",
         "url": "https://www.unswbsoc.com/our-events"
       }
     },
@@ -261,7 +261,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-12T00:15:32+11:00",
+        "checked_at": "2026-11-12T06:03:02+11:00",
         "url": "https://www.unsw.edu.au/research/faic/events"
       }
     },
@@ -275,7 +275,7 @@
       "last_check": {
         "status": "error",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:32+11:00",
+        "checked_at": "2026-11-12T06:03:03+11:00",
         "url": "https://www.unswmathsoc.org/events",
         "detail": "503 Server Error: Service Unavailable for url: https://www.unswmathsoc.org/events"
       }
@@ -290,7 +290,7 @@
       "last_check": {
         "status": "social_only",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:33+11:00",
+        "checked_at": "2026-11-12T06:03:03+11:00",
         "url": "https://quantsoc.org/",
         "note": "Official page accessible; it does not expose a dated upcoming-event feed."
       }
@@ -305,7 +305,7 @@
       "last_check": {
         "status": "publications_only",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:33+11:00",
+        "checked_at": "2026-11-12T06:03:03+11:00",
         "url": "https://www.unswfinsoc.org.au/publications",
         "note": "Official page accessible; it does not expose a dated upcoming-event feed."
       }
@@ -320,7 +320,7 @@
       "last_check": {
         "status": "ok",
         "count": 2,
-        "checked_at": "2026-11-12T00:15:37+11:00",
+        "checked_at": "2026-11-12T06:03:06+11:00",
         "url": "https://cfas.org.au/Events/"
       }
     },
@@ -334,7 +334,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:38+11:00",
+        "checked_at": "2026-11-12T06:03:06+11:00",
         "url": "https://www.finma.au/events-1"
       }
     },
@@ -348,7 +348,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:35+11:00",
+        "checked_at": "2026-11-12T06:03:04+11:00",
         "url": "https://events.humanitix.com/host/unsw-finance-and-banking-society"
       }
     },
@@ -362,7 +362,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:42+11:00",
+        "checked_at": "2026-11-12T06:03:12+11:00",
         "url": "https://events.unsw.edu.au/"
       }
     },
@@ -376,7 +376,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:43+11:00",
+        "checked_at": "2026-11-12T06:03:12+11:00",
         "url": "https://www.unsw.edu.au/business/our-schools/accounting-auditing-taxation/news-events/birkett-memorial-lecture/bill-birkett-lecture-series-2026"
       }
     },
@@ -390,7 +390,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-12T00:15:39+11:00",
+        "checked_at": "2026-11-12T06:03:07+11:00",
         "url": "https://www.cafba.com.au/eventdetails/41443/cafba-end-of-year-networking-sydney"
       }
     },
@@ -404,7 +404,7 @@
       "last_check": {
         "status": "accessible_empty",
         "count": 0,
-        "checked_at": "2026-11-12T00:15:39+11:00",
+        "checked_at": "2026-11-12T06:03:08+11:00",
         "url": "https://www.rmia.org.au/risk-management-events/rmia-nsw-post-ro-networking-event"
       }
     },
@@ -418,7 +418,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-12T00:15:40+11:00",
+        "checked_at": "2026-11-12T06:03:09+11:00",
         "url": "https://stepaustralia.com/events/step-nsw-emerging-professionals-network-wednesday-25-november-2026/"
       }
     },
@@ -432,7 +432,7 @@
       "last_check": {
         "status": "ok",
         "count": 1,
-        "checked_at": "2026-11-12T00:15:41+11:00",
+        "checked_at": "2026-11-12T06:03:10+11:00",
         "url": "https://iccsydney.com.au/events/mymoney-expo/"
       }
     }
