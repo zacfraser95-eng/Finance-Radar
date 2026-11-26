@@ -8,22 +8,8 @@ X-WR-TIMEZONE:Australia/Sydney
 X-WR-CALDESC:Currently confirmed UNSW and Sydney finance events. Check orga
  niser details.
 BEGIN:VEVENT
-UID:evt-4bcf2300ad11@finance-radar.unsw-student
-DTSTAMP:20261126T072910Z
-DTSTART:20261125T230000Z
-DTEND:20261126T040000Z
-SUMMARY:McKinsey & Company's 2026 AI and The Path to Progress Workshop
-DESCRIPTION:Organiser: FMAA\nEligibility: Penultimate-year undergraduates a
- nd master's students. Not suitable for most first-year students.\nOriginal
-  listing: https://www.fmaa.com.au/event/mckinsey-companys-2026-ai-and-the-
- path-to-progress-workshop
-LOCATION:Sydney — see organiser for address
-URL:https://www.fmaa.com.au/event/mckinsey-companys-2026-ai-and-the-path-to
- -progress-workshop
-END:VEVENT
-BEGIN:VEVENT
 UID:evt-21cc2d0a2a9b@finance-radar.unsw-student
-DTSTAMP:20261126T072910Z
+DTSTAMP:20261126T132912Z
 DTSTART:20261127T030000Z
 DTEND:20261127T060000Z
 SUMMARY:UNSW Fintech AI Innovation Consortium (FAIC) End of Year Event for 
@@ -35,7 +21,7 @@ URL:https://luma.com/lxsi2n5i
 END:VEVENT
 BEGIN:VEVENT
 UID:evt-b6ebcdb7a9e4@finance-radar.unsw-student
-DTSTAMP:20261126T072910Z
+DTSTAMP:20261126T132912Z
 DTSTART;VALUE=DATE:20261128
 DTEND;VALUE=DATE:20261129
 SUMMARY:MyMoney Expo 2026 · Sydney
