@@ -8,20 +8,8 @@ X-WR-TIMEZONE:Australia/Sydney
 X-WR-CALDESC:Currently confirmed UNSW and Sydney finance events. Check orga
  niser details.
 BEGIN:VEVENT
-UID:evt-21cc2d0a2a9b@finance-radar.unsw-student
-DTSTAMP:20261127T072850Z
-DTSTART:20261127T030000Z
-DTEND:20261127T060000Z
-SUMMARY:UNSW Fintech AI Innovation Consortium (FAIC) End of Year Event for 
- 2026
-DESCRIPTION:Organiser: UNSW FAIC\nEligibility: Confirm eligibility with org
- aniser.\nOriginal listing: https://luma.com/lxsi2n5i
-LOCATION:UNSW Ainsworth Building J17\, Room 102
-URL:https://luma.com/lxsi2n5i
-END:VEVENT
-BEGIN:VEVENT
 UID:evt-b6ebcdb7a9e4@finance-radar.unsw-student
-DTSTAMP:20261127T072850Z
+DTSTAMP:20261127T132444Z
 DTSTART;VALUE=DATE:20261128
 DTEND;VALUE=DATE:20261129
 SUMMARY:MyMoney Expo 2026 · Sydney
