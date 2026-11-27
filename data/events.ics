@@ -9,7 +9,7 @@ X-WR-CALDESC:Currently confirmed UNSW and Sydney finance events. Check orga
  niser details.
 BEGIN:VEVENT
 UID:evt-b6ebcdb7a9e4@finance-radar.unsw-student
-DTSTAMP:20261127T132444Z
+DTSTAMP:20261127T190541Z
 DTSTART;VALUE=DATE:20261128
 DTEND;VALUE=DATE:20261129
 SUMMARY:MyMoney Expo 2026 · Sydney
