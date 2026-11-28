@@ -7,18 +7,4 @@ X-WR-CALNAME:Finance Radar - Confirmed Events
 X-WR-TIMEZONE:Australia/Sydney
 X-WR-CALDESC:Currently confirmed UNSW and Sydney finance events. Check orga
  niser details.
-BEGIN:VEVENT
-UID:evt-b6ebcdb7a9e4@finance-radar.unsw-student
-DTSTAMP:20261128T072304Z
-DTSTART;VALUE=DATE:20261128
-DTEND;VALUE=DATE:20261129
-SUMMARY:MyMoney Expo 2026 · Sydney
-DESCRIPTION:Organiser: MyMoney Expo\nEligibility: Free general admission ad
- vertised by organiser\; confirm ticket conditions and daily opening times.
- \nOriginal listing: https://tickets.lup.com.au/3a45f2ce-3748-4077-8b6f-e47
- a1987e1aa?cat=cat-other&s=mymoney-2026
-LOCATION:ICC Sydney\, Darling Harbour
-URL:https://tickets.lup.com.au/3a45f2ce-3748-4077-8b6f-e47a1987e1aa?cat=cat
- -other&s=mymoney-2026
-END:VEVENT
 END:VCALENDAR
